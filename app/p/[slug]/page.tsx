@@ -16,7 +16,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-gray-50">
+    <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
        <Card className="w-full max-w-lg p-0 overflow-hidden shadow-xl" style={{ backgroundColor: 'var(--color-surface)' }}>
         {product.imageUrl && (
           <div className="relative aspect-square w-full">

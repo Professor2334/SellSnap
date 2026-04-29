@@ -10,7 +10,7 @@ export default async function DashboardPage() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    redirect('/login');
+    redirect('/auth');
   }
 
   const products = await db.product.findMany({

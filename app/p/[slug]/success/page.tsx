@@ -18,8 +18,8 @@ export default function PaymentSuccessPage({
   return (
     <main className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md text-center flex flex-col items-center gap-6">
-        <div className="rounded-full bg-green-100 p-4">
-          <CheckCircle size={48} className="text-green-600" />
+        <div className="rounded-full bg-success-container p-4">
+          <CheckCircle size={48} className="text-on-success-container" />
         </div>
 
         <div className="flex flex-col gap-2">

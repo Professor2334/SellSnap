@@ -24,7 +24,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Link href="/signup">
+            <Link href="/auth">
               <Button size="sm">Get Started</Button>
             </Link>
           </div>
@@ -34,18 +34,18 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <div className="flex flex-col items-center gap-8 max-w-5xl mx-auto text-center" style={{ padding: '0 24px' }}>
+          <div className="flex flex-col items-center max-w-5xl mx-auto text-center" style={{ padding: '0 24px', gap: '15px' }}>
             <h1 className="text-display" style={{ maxWidth: '900px' }}>
               Sell anything in seconds<br />using just a link
             </h1>
             <p className="text-body text-ink-muted" style={{ maxWidth: '600px', fontWeight: 400 }}>
               Upload a product, share a link and get paid instantly
             </p>
-            <div className="flex gap-4 mt-6">
-              <Link href="/signup">
-                <Button size="lg">Get Started</Button>
-              </Link>
-            </div>
+          </div>
+          <div className="flex justify-center mt-8">
+            <Link href="/auth">
+              <Button size="lg">Get Started</Button>
+            </Link>
           </div>
         </div>
       </section>

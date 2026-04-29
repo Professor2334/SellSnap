@@ -9,7 +9,7 @@ export default async function OrdersPage() {
   const session = await getSession();
 
   if (!session?.user?.id) {
-    redirect('/login');
+    redirect('/auth');
   }
 
   const orders = await db.order.findMany({

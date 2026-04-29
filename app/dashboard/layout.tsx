@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const session = await getSession();
 
   if (!session?.user?.id) {
-    redirect('/login');
+    redirect('/auth');
   }
 
   const navItems = [
