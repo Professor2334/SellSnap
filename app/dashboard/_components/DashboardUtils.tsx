@@ -32,7 +32,7 @@ import { signOut } from 'next-auth/react';
 
 export function SignOutButton() {
   return (
-    <Button variant="ghost" size="sm" onClick={() => signOut({ callbackUrl: '/' })}>
+    <Button variant="ghost" size="sm" onClick={() => signOut({ callbackUrl: '/auth?mode=login' })}>
       Logout
     </Button>
   );

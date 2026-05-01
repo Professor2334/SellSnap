@@ -20,10 +20,11 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
        <Card className="w-full max-w-lg p-0 overflow-hidden shadow-xl" style={{ backgroundColor: 'var(--color-surface)' }}>
         {product.imageUrl && (
           <div className="relative aspect-square w-full">
-            <img 
+            <Image 
               src={product.imageUrl} 
               alt={product.name} 
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
           </div>
         )}

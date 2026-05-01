@@ -13,6 +13,7 @@ const envSchema = z.object({
   FLW_WEBHOOK_HASH: z.string().min(1),
   CLOUDINARY_URL: z.string().url().optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
+  EMAIL_FROM: z.string().min(1).optional(),
 });
 
 export const env = envSchema.parse({
@@ -24,4 +25,5 @@ export const env = envSchema.parse({
   FLW_WEBHOOK_HASH: process.env.FLW_WEBHOOK_HASH,
   CLOUDINARY_URL: process.env.CLOUDINARY_URL,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
+  EMAIL_FROM: process.env.EMAIL_FROM,
 });
