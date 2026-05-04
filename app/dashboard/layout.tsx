@@ -2,6 +2,7 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { SignOutButton } from './_components/DashboardUtils';
+import { SidebarNav } from './_components/SidebarNav';
 
 export default async function DashboardLayout({
   children,
@@ -15,52 +16,44 @@ export default async function DashboardLayout({
   }
 
   const navItems = [
-    { href: '/dashboard', label: 'Products', icon: '📦' },
-    { href: '/dashboard/orders', label: 'Orders', icon: '📋' },
+    { href: '/dashboard', label: 'Dashboard', icon: 'Dashboard' as const },
+    { href: '/dashboard/products', label: 'Products', icon: 'Products' as const },
+    { href: '/dashboard/orders', label: 'Orders', icon: 'Orders' as const },
   ];
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-64 bg-surface border-r border-[var(--color-border)] flex flex-col">
-        <div className="p-6 border-b border-[var(--color-border)]">
-          <Link href="/" className="text-h2 text-brand">
+    <div className="min-h-screen flex bg-bg w-full overflow-x-hidden">
+      <aside className="w-[240px] min-w-[240px] bg-surface border-r border-[var(--color-border)] flex flex-col sticky top-0 h-screen z-10">
+        <div className="px-6 py-8 mb-2">
+          <Link href="/dashboard" className="text-h2 text-brand font-bold tracking-tight">
             SellSnap
           </Link>
         </div>
 
-        <nav className="flex-1 p-4">
-          <ul className="flex flex-col gap-2">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="sidebar-link"
-                >
-                  <span className="icon">{item.icon}</span>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <nav className="flex-1 px-3">
+          <SidebarNav items={navItems} />
         </nav>
 
-        <div className="p-4 border-t border-[var(--color-border)]">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-brand)] text-white flex items-center justify-center text-sm font-semibold">
-              {session.user.name?.charAt(0).toUpperCase()}
+        <div className="px-3 py-5 mt-auto border-t border-[var(--color-border)]">
+          <div className="flex items-center gap-3 px-3 py-2 mb-4 rounded-lg">
+            <div className="w-10 h-10 rounded-full bg-[var(--sys-success-container-role)] text-[var(--sys-on-success-container-role)] flex items-center justify-center text-xs font-bold flex-shrink-0">
+              {session.user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-body-sm font-medium text-ink truncate">{session.user.name}</p>
+            <div className="flex flex-col min-w-0">
+              <p className="text-body-sm font-semibold text-ink truncate">{session.user.businessName || session.user.name}</p>
+              <p className="text-caption text-ink-muted truncate">{session.user.email}</p>
             </div>
           </div>
-          <div className="mt-2">
+          <div className="px-1">
             <SignOutButton />
           </div>
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">{children}</div>
+      <main className="flex-1 flex flex-col min-w-0 w-full">
+        <div className="p-8 px-10 pt-10 w-full flex-1 max-w-5xl">
+          {children}
+        </div>
       </main>
     </div>
   );
