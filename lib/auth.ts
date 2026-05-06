@@ -18,33 +18,50 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Email and password are required');
+        }
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email.toLowerCase() },
         });
 
-        if (!user) return null;
+        if (!user) {
+          throw new Error('No user found with this email');
+        }
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.passwordHash
         );
 
-        if (!isPasswordValid) return null;
+        if (!isPasswordValid) {
+          throw new Error('Incorrect password');
+        }
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
+          isOnboarded: (user as any).isOnboarded,
+          businessName: user.businessName,
         };
       },
     }),
   ],
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.isOnboarded = (user as any).isOnboarded;
+        token.businessName = (user as any).businessName;
+      }
+      return token;
+    },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.sub!;
+        session.user.isOnboarded = token.isOnboarded as boolean;
+        session.user.businessName = token.businessName as string | null;
       }
       return session;
     },

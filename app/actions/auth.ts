@@ -22,7 +22,8 @@ export async function signUp(formData: FormData) {
       return { success: false, error: parsed.error.errors[0].message };
     }
 
-    const { email, password, name, businessName } = parsed.data;
+    const { password, name, businessName } = parsed.data;
+    const email = parsed.data.email.toLowerCase();
 
     const existingUser = await db.user.findUnique({
       where: { email },

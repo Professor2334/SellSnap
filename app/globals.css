@@ -348,6 +348,7 @@ a {
 .p-8 { padding: 32px; }
 .py-4 { padding-top: 16px; padding-bottom: 16px; }
 .py-8 { padding-top: 32px; padding-bottom: 32px; }
+.py-12 { padding-top: 48px; padding-bottom: 48px; }
 .py-20 { padding-top: 80px; padding-bottom: 80px; }
 .px-4 { padding-left: 16px; padding-right: 16px; }
 .px-6 { padding-left: 24px; padding-right: 24px; }
@@ -355,6 +356,8 @@ a {
 .mt-4 { margin-top: 16px; }
 .mt-8 { margin-top: 32px; }
 .mb-4 { margin-bottom: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-6 { margin-bottom: 24px; }
 .mb-8 { margin-bottom: 32px; }
 
 /* Text */
@@ -482,6 +485,81 @@ a {
 .border-dashed { border-style: dashed; }
 .border-2 { border-width: 2px; }
 .uppercase { text-transform: uppercase; }
+.max-w-md { max-width: 448px; }
+.max-w-lg { max-width: 512px; }
+.max-w-xl { max-width: 576px; }
+.max-w-2xl { max-width: 672px; }
+.space-y-4 > * + * { margin-top: 16px; }
+.space-y-6 > * + * { margin-top: 24px; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Onboarding Modal Layout */
+.onboarding-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+  padding: 24px;
+}
+
+.onboarding-card {
+  width: 100%;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .onboarding-card {
+    padding: 56px;
+  }
+}
+
+.onboarding-logo {
+  font: var(--sys-font-headline-medium);
+  color: var(--color-brand);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.onboarding-step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.onboarding-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+  transition: all 0.3s ease;
+}
+
+.onboarding-dot.active {
+  background-color: var(--color-brand);
+  transform: scale(1.2);
+}
+
+.onboarding-dot.completed {
+  background-color: var(--color-brand);
+}
 
 .sidebar-link .icon {
   font-size: 20px;

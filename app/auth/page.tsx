@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 import { signUp } from '@/app/actions/auth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/FormPrimitives';
@@ -58,8 +58,8 @@ function AuthContent() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const emailVal = (formData.get('email') as string).trim();
-    const password = (formData.get('password') as string).trim();
+    const emailVal = (formData.get('email') as string).trim().toLowerCase();
+    const password = (formData.get('password') as string);
 
     const errors: { email?: string; password?: string } = {};
     if (!emailVal) errors.email = 'fields cannot be empty';
@@ -77,7 +77,7 @@ function AuthContent() {
 
     setLoading(false);
     if (result?.error) {
-      setError('Invalid email or password');
+      setError(result.error);
     } else {
       router.push('/dashboard');
       router.refresh();
@@ -189,13 +189,23 @@ function AuthContent() {
     formData.append('email', email);
     const result = await signUp(formData);
 
-    setLoading(false);
     if (result.success) {
-      setStep(1);
-      setName('');
-      setEmail('');
-      setMode('login');
+      const password = formData.get('password') as string;
+      const signInResult = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        setError(signInResult.error);
+        setLoading(false);
+      } else {
+        router.push('/onboarding');
+        router.refresh();
+      }
     } else {
+      setLoading(false);
       setError(result.error || 'Something went wrong');
     }
   }

@@ -71,7 +71,7 @@ export default async function ProductsPage() {
                 >
                   View Link
                 </Link>
-                <DeleteProductButton productId={product.id} />
+                <DeleteProductButton id={product.id} />
               </div>
             </div>
           ))}

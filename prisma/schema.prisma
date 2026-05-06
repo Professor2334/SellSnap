@@ -13,6 +13,7 @@ model User {
   email             String              @unique
   businessName      String?
   passwordHash      String
+  isOnboarded      Boolean             @default(false)
   createdAt         DateTime            @default(now())
   products          Product[]
   resetTokens       PasswordResetToken[]
