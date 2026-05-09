@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
       <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
         <div className="auth-card">
           <div className="auth-form-header">
-            <div className="auth-brand-name">SellSnap</div>
+            <Link href="/" className="auth-brand-name">SellSnap</Link>
             <h1 className="auth-form-title">Check your email</h1>
           </div>
           <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
     <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
       <div className="auth-card">
         <div className="auth-form-header">
-          <div className="auth-brand-name">SellSnap</div>
+          <Link href="/" className="auth-brand-name">SellSnap</Link>
           <h1 className="auth-form-title">Reset your password</h1>
         </div>
 

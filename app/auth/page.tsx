@@ -366,7 +366,7 @@ function AuthContent() {
             )}
 
             <Button type="submit" fullWidth size="lg" disabled={loading}>
-              {loading ? 'Creating account…' : 'Create account'}
+              {loading ? <Loader2 size={20} className="spinner" /> : 'Create account'}
             </Button>
 
             <button
@@ -400,7 +400,7 @@ function AuthContent() {
                   setError(null);
                 }}
               >
-                Sign up free
+                Create account
               </button>
             </>
           ) : (

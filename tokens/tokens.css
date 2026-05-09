@@ -273,4 +273,9 @@
   --sys-font-label-small-line-height: 16px;
   --sys-font-label-small-letter-spacing: -0.5px;
   --sys-font-label-small: 500 11px/16px 'Inter', sans-serif;
+
+  --sys-font-button-lg-size: 16px;
+  --sys-font-button-lg-weight: 400;
+  --sys-font-button-lg-family: 'Inter', sans-serif;
+  --sys-font-button-lg: 400 16px/24px 'Inter', sans-serif;
 }

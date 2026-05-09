@@ -74,7 +74,7 @@ function ResetPasswordContent() {
       <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
         <div className="auth-card">
           <div className="auth-form-header">
-            <div className="auth-brand-name">SellSnap</div>
+            <Link href="/" className="auth-brand-name">SellSnap</Link>
             <h1 className="auth-form-title">Invalid link</h1>
           </div>
           <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
@@ -93,7 +93,7 @@ function ResetPasswordContent() {
       <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
         <div className="auth-card">
           <div className="auth-form-header">
-            <div className="auth-brand-name">SellSnap</div>
+            <Link href="/" className="auth-brand-name">SellSnap</Link>
             <h1 className="auth-form-title">Password reset</h1>
           </div>
           <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
@@ -111,7 +111,7 @@ function ResetPasswordContent() {
     <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
       <div className="auth-card">
         <div className="auth-form-header">
-          <div className="auth-brand-name">SellSnap</div>
+          <Link href="/" className="auth-brand-name">SellSnap</Link>
           <h1 className="auth-form-title">Set new password</h1>
         </div>
 
