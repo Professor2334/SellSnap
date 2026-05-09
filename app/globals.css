@@ -514,8 +514,8 @@ a {
 
 .onboarding-card {
   width: 100%;
-  background-color: white;
-  border: 1px solid var(--color-border);
+  background-color: Canvas;
+  border: 1px solid color-mix(in srgb, var(--color-border) 95%, transparent);
   border-radius: 24px;
   padding: 40px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);

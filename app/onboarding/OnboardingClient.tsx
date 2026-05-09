@@ -91,12 +91,9 @@ export default function OnboardingClient({ userName }: { userName: string }) {
       <div className="onboarding-container" style={{ maxWidth: '605px', width: '100%', margin: '0 auto' }}>
         
         {/* Brand Logo Header */}
-        <div className="onboarding-logo" style={{ fontSize: '24px', marginBottom: '16px' }}>SellSnap</div>
+        <div className="onboarding-logo" style={{ fontSize: '24px', marginBottom: '8px' }}>SellSnap</div>
 
-        {/* Step Indicator Above */}
-        <div className="text-center text-ink-subtle font-bold tracking-widest text-caption uppercase mb-4" style={{ fontSize: '11px', letterSpacing: '0.1em' }}>
-          Step {step} of 3
-        </div>
+
 
         {/* Progress Dots */}
         {renderStepper()}
@@ -109,19 +106,19 @@ export default function OnboardingClient({ userName }: { userName: string }) {
         )}
 
         {/* The Card */}
-        <div className="onboarding-card animate-fade-in-up" style={{ padding: '48px 40px' }}>
+        <div className="onboarding-card animate-fade-in-up" style={{ padding: '40px 40px' }}>
           {step === 1 && (
               <div className="flex flex-col items-center">
               <div className="text-center" style={{ marginBottom: '15px' }}>
                 <h2 className="text-h1 mb-2 tracking-tight" style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '28px', fontWeight: '700' }}>
                   Welcome, {userName.split(' ')[0]}!
                 </h2>
-                <p style={{ color: 'var(--sys-outline-color-role)', fontSize: '13.5px', lineHeight: '1.6', fontWeight: '400' }}>
+                <p style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '14px', lineHeight: '1.6', fontWeight: '450' }}>
                   Turn any product into a shareable payment link.
                 </p>
               </div>
 
-              <div className="flex flex-col w-full max-w-sm" style={{ gap: '20px', marginBottom: '56px' }}>
+              <div className="flex flex-col w-full" style={{ gap: '20px', marginBottom: '28px', maxWidth: '420px' }}>
                 <div className="flex items-start" style={{ gap: '22px' }}>
                   <div className="flex-shrink-0 mt-1" style={{ color: 'var(--color-brand)' }}>
                     <Zap size={22} />
