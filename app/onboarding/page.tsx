@@ -9,5 +9,5 @@ export default async function OnboardingPage() {
     redirect('/auth');
   }
 
-  return <OnboardingClient userName={session.user.name || 'Merchant'} />;
+  return <OnboardingClient userName={session.user.name || 'Merchant'} businessName={session.user.businessName || ''} />;
 }

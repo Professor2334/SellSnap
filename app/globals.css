@@ -528,6 +528,13 @@ a {
   }
 }
 
+.hover-underline {
+  text-decoration: none;
+}
+.hover-underline:hover {
+  text-decoration: underline;
+}
+
 .onboarding-logo {
   font: var(--sys-font-headline-medium);
   color: var(--color-brand);
@@ -667,8 +674,7 @@ a {
 }
 
 .btn-lg {
-  height: 56px;
-  padding: 0 60px;
+  padding: 20px 55px;
   font-size: 18px;
   font-weight: 400;
 }
