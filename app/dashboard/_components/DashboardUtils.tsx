@@ -27,6 +27,39 @@ export function DeleteProductButton({ id }: { id: string }) {
   );
 }
 
+export function CopyLinkButton({ slug }: { slug: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  async function handleCopy() {
+    const url = `${window.location.origin}/p/${slug}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="text-body-sm font-medium hover:underline"
+      style={{ color: copied ? 'var(--color-success)' : 'var(--color-brand)' }}
+    >
+      {copied ? 'Copied!' : 'Copy Link'}
+    </button>
+  );
+}
+
 // SignOutButton
 import { signOut } from 'next-auth/react';
 

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/FormPrimitives';
 import { createFirstProduct } from '@/app/actions/onboarding';
-import { Loader2, ArrowRight, ArrowLeft, ShoppingBag, Store, Zap, ShieldCheck, BarChart3, Check, Info } from 'lucide-react';
+import { Loader2, ArrowLeft, ShoppingBag, Store, Zap, ShieldCheck, BarChart3, Check, Info, Upload } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export default function OnboardingClient({ userName, businessName: initialBusinessName }: { userName: string; businessName: string }) {
@@ -17,6 +17,8 @@ export default function OnboardingClient({ userName, businessName: initialBusine
   // Step 3 state
   const [productName, setProductName] = React.useState('');
   const [productPrice, setProductPrice] = React.useState('');
+  const [productDescription, setProductDescription] = React.useState('');
+  const [fieldErrors, setFieldErrors] = React.useState<{ name?: string; price?: string; description?: string }>({});
 
   async function handleStep1() {
     setStep(2);
@@ -29,8 +31,15 @@ export default function OnboardingClient({ userName, businessName: initialBusine
   async function handleStep3(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
+    const errors: { name?: string; price?: string; description?: string } = {};
+    if (!productName.trim()) errors.name = 'Field cannot be empty';
+    if (!productDescription.trim()) errors.description = 'Field cannot be empty';
+    if (!productPrice.trim()) errors.price = 'Field cannot be empty';
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
     const result = await createFirstProduct(formData);
 
@@ -95,19 +104,20 @@ export default function OnboardingClient({ userName, businessName: initialBusine
         <div 
           className="onboarding-card animate-fade-in-up" 
           style={{ 
-            padding: '40px 40px',
-            border: step === 1 ? 'none' : undefined,
-            outline: step === 1 ? 'none' : undefined,
-            boxShadow: step === 1 ? 'none' : undefined 
+            padding: step === 3 ? '24px 40px' : '40px 40px',
+            border: 'none',
+            outline: 'none',
+            boxShadow: 'none',
+            backgroundColor: 'transparent'
           }}
         >
           {step === 1 && (
-              <div className="flex flex-col items-center">
+              <div key={1} className="animate-fade-in-up flex flex-col items-center">
               <div className="text-center" style={{ marginBottom: '15px' }}>
-                <h2 className="text-h1 mb-2 tracking-tight" style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '28px', fontWeight: '700' }}>
+                <h2 className="onboarding-step1-title text-h1 mb-2 tracking-tight" style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '28px', fontWeight: '700', lineHeight: '1' }}>
                   Welcome, {userName.split(' ')[0]}!
                 </h2>
-                <p style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '14px', lineHeight: '1.6', fontWeight: '450' }}>
+                <p style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '14px', fontWeight: '400' }}>
                   Turn any product into a shareable payment link.
                 </p>
               </div>
@@ -116,10 +126,10 @@ export default function OnboardingClient({ userName, businessName: initialBusine
               <div className="w-full flex flex-col items-center gap-6 mt-4">
                 <Button 
                   onClick={handleStep1} 
-                  className="btn-primary btn-lg rounded-xl"
+                  className="btn-primary btn-lg rounded-xl onboarding-step1-btn"
                   style={{ height: '56px', fontSize: '16px', paddingLeft: '28px', paddingRight: '28px', width: '100%', maxWidth: '400px' }}
                 >
-                  Let&apos;s get started<ArrowRight size={20} />
+                  Let&apos;s Get Started
                 </Button>
                 <button 
                   onClick={handleSkip}
@@ -128,6 +138,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                     color: 'var(--sys-outline-color-role)',
                     fontSize: '14px', 
                     fontWeight: '500',
+                    opacity: 0.92,
                     cursor: 'pointer',
                     background: 'none',
                     border: 'none',
@@ -142,54 +153,59 @@ export default function OnboardingClient({ userName, businessName: initialBusine
           )}
 
           {step === 2 && (
-            <div className="flex flex-col items-center w-full">
-              <div className="text-center mb-6">
-                <h2 className="text-h1 text-ink mb-2 tracking-tight" style={{ fontSize: '24px', fontWeight: '700' }}>Your profile looks great 👤</h2>
-                <p className="text-ink-muted text-body leading-relaxed" style={{ fontSize: '14px', maxWidth: '380px', margin: '0 auto' }}>
-                  Here's how buyers will see your seller details on every product page. You can update these anytime from Settings.
+            <div key={2} className="animate-fade-in-up flex flex-col items-center w-full">
+              <div className="text-center mb-10">
+                <h2 className="onboarding-step2-title text-h1 mb-2 tracking-tight" style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '24px', fontWeight: '700', lineHeight: '1' }}>Your Profile Looks Great</h2>
+                <p style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '14px', fontWeight: '400', maxWidth: '380px', margin: '0 auto', marginBottom: '10px' }}>
+                  How buyers see you. Update anytime.
                 </p>
               </div>
 
-              <div className="w-full rounded-2xl p-6 flex flex-col items-center mb-4" style={{ backgroundColor: 'var(--sys-neutral-container-low)' }}>
-                <div className="flex items-center justify-center rounded-full mb-6" style={{ width: '64px', height: '64px', backgroundColor: 'var(--color-brand)', color: 'white', border: '3px solid var(--color-bg)', outline: '2px solid var(--color-brand)', outlineOffset: '2px', fontSize: '24px', fontWeight: '600' }}>
-                  {userName.charAt(0).toUpperCase()}
-                </div>
-                
-                <div className="w-full bg-white rounded-xl overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
-                  <div className="flex justify-between items-center p-4 border-b border-border">
-                    <span className="text-body-sm text-ink-muted font-medium">Full name</span>
-                    <span className="text-body-sm text-ink font-semibold">{userName}</span>
+              <div style={{ 
+                width: '100%', 
+                borderRadius: '16px', 
+                paddingLeft: '24px', 
+                paddingRight: '24px', 
+                paddingBottom: '24px', 
+                paddingTop: '76px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                marginBottom: '32px',
+                backgroundColor: 'var(--sys-neutral-container-low)' 
+              }}>
+                <div style={{ 
+                  width: '100%', 
+                  backgroundColor: 'var(--sys-neutral-container-lowest)', 
+                  borderRadius: '12px', 
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid var(--color-border)' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Full name</span>
+                    <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--sys-on-neutral-color-role)' }}>{userName}</span>
                   </div>
-                  <div className="flex justify-between items-center p-4">
-                    <span className="text-body-sm text-ink-muted font-medium">Business name</span>
-                    <span className="text-body-sm text-ink font-semibold">{initialBusinessName || userName}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Business name</span>
+                    <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--sys-on-neutral-color-role)' }}>{initialBusinessName || userName}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full flex items-center gap-3 p-3 rounded-xl mb-6" style={{ backgroundColor: 'var(--sys-neutral-container-low)', opacity: 0.9 }}>
-                <div style={{ color: 'var(--color-brand)' }}>
-                  <Info size={18} />
-                </div>
-                <span className="text-body-sm" style={{ color: 'var(--sys-on-neutral-variant-role)' }}>Your payment link will show your business name to buyers.</span>
-              </div>
-
-              <div className="w-full flex flex-col gap-3">
+              <div className="w-full flex flex-col gap-8">
                 <Button 
                   onClick={handleStep2Continue} 
                   className="btn-primary btn-lg btn-full rounded-xl"
                   style={{ height: '56px', fontSize: '16px' }}
                 >
-                  Looks good, continue →
+                  Looks Good, Continue
                 </Button>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between px-2 pb-4">
                   <button 
                     type="button"
                     onClick={handleBack}
-                    className="hover:text-brand transition-colors"
+                    className="hover:text-brand hover-underline transition-colors text-body-sm"
                     style={{ 
                       color: 'var(--sys-outline-color-role)',
-                      fontSize: '14px', 
                       fontWeight: '500',
                       cursor: 'pointer',
                       background: 'none',
@@ -206,10 +222,9 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                   <button 
                     type="button"
                     onClick={handleSkip}
-                    className="hover:text-brand transition-colors"
+                    className="hover:text-brand hover-underline transition-colors text-body-sm"
                     style={{ 
                       color: 'var(--sys-outline-color-role)',
-                      fontSize: '14px', 
                       fontWeight: '500',
                       cursor: 'pointer',
                       background: 'none',
@@ -226,47 +241,71 @@ export default function OnboardingClient({ userName, businessName: initialBusine
           )}
 
           {step === 3 && (
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border border-border" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-brand)' }}>
-                <ShoppingBag size={32} />
+            <div key={3} className="animate-fade-in-up flex flex-col w-full text-left">
+              <div className="mb-6">
+                <h2 className="onboarding-step3-title text-h1 text-ink mb-1 tracking-tight" style={{ fontSize: '24px', fontWeight: '700', lineHeight: '1' }}>Create Your First Product</h2>
+                  <p className="onboarding-step3-desc" style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '14px', fontWeight: '400' }}>
+                    Add a product to generate a shareable payment link instantly.
+                  </p>
               </div>
 
-              <div className="text-center mb-10">
-                <h2 className="text-h1 text-ink mb-3 tracking-tight" style={{ fontSize: '28px', fontWeight: '700' }}>First Product Link</h2>
-                <p className="text-ink-muted text-body leading-relaxed" style={{ fontSize: '15px' }}>
-                  Let&apos;s create your first payment link to share immediately.
-                </p>
-              </div>
+              <form onSubmit={handleStep3} className="w-full" noValidate onFocus={() => setError(null)}>
+                <div className="flex flex-col gap-5 mb-8">
+                  <Input
+                    id="name"
+                    name="name"
+                    label="Product Name"
+                    placeholder="e.g. Handmade Earrings"
+                    value={productName}
+                    onChange={(e) => { setProductName(e.target.value); setFieldErrors(prev => ({ ...prev, name: undefined })); }}
+                    onBlur={(e) => { if (!e.currentTarget.value.trim()) setFieldErrors(prev => ({ ...prev, name: 'Field cannot be empty' })); }}
+                    autoFocus
+                    error={fieldErrors.name}
+                  />
 
-              <form onSubmit={handleStep3} className="w-full max-w-sm">
-                <div className="space-y-6 mb-10">
                   <div>
-                    <label htmlFor="name" className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-ink-muted)' }}>Product Name</label>
-                    <input
-                      id="name"
-                      name="name"
-                      placeholder="e.g. Wireless Headphones"
-                      required
-                      value={productName}
-                      onChange={(e) => setProductName(e.target.value)}
-                      autoFocus
-                      className="input-field w-full"
-                      style={{ height: '52px', borderRadius: '12px', border: '1.5px solid var(--color-border)', fontSize: '16px' }}
+                    <label htmlFor="description" className="input-label mb-3 block" style={{ fontSize: '13px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Description</label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      placeholder="Describe your product — material, size, what makes it special..."
+                      value={productDescription}
+                      onChange={(e) => { setProductDescription(e.target.value); setFieldErrors(prev => ({ ...prev, description: undefined })); }}
+                      onBlur={(e) => { if (!e.currentTarget.value.trim()) setFieldErrors(prev => ({ ...prev, description: 'Field cannot be empty' })); }}
+                      className={clsx('input-field w-full', fieldErrors.description && 'input-error')}
+                      style={{ height: '96px', borderRadius: '12px', border: '1px solid var(--color-border)', fontSize: '14px', padding: '12px 16px', resize: 'none' }}
                     />
+                    {fieldErrors.description && (
+                      <p className="input-error-text" style={{ marginTop: '4px' }}>{fieldErrors.description}</p>
+                    )}
                   </div>
+
+                  <Input
+                    id="price"
+                    name="price"
+                    label="Price (NGN)"
+                    type="number"
+                    placeholder="e.g. 5000"
+                    value={productPrice}
+                    onChange={(e) => { setProductPrice(e.target.value); setFieldErrors(prev => ({ ...prev, price: undefined })); }}
+                    onBlur={(e) => { if (!e.currentTarget.value.trim()) setFieldErrors(prev => ({ ...prev, price: 'Field cannot be empty' })); }}
+                    error={fieldErrors.price}
+                  />
+
+
                   <div>
-                    <label htmlFor="price" className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-ink-muted)' }}>Price (₦)</label>
-                    <input
-                      id="price"
-                      name="price"
-                      type="number"
-                      placeholder="5000"
-                      required
-                      value={productPrice}
-                      onChange={(e) => setProductPrice(e.target.value)}
-                      className="input-field w-full"
-                      style={{ height: '52px', borderRadius: '12px', border: '1.5px solid var(--color-border)', fontSize: '16px' }}
-                    />
+                    <label className="input-label mb-3 block" style={{ fontSize: '13px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Product Image</label>
+                    <div 
+                      className="upload-zone w-full flex flex-col items-center justify-center rounded-xl cursor-pointer"
+                      style={{ height: '100px', border: '1px dashed var(--sys-outline-variant-color-role)' }}
+                    >
+                      <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} />
+                      <label htmlFor="product-image" className="flex flex-col items-center cursor-pointer w-full h-full justify-center">
+                        <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
+                        <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
+                        <span style={{ fontSize: '11px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '2px' }}>Max size 5MB</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -275,34 +314,26 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                     type="submit" 
                     disabled={loading} 
                     className="btn-primary btn-lg btn-full rounded-xl"
-                    style={{ height: '56px', fontSize: '16px' }}
+                    style={{ height: '56px', fontSize: '16px', backgroundColor: 'var(--color-brand)' }}
                   >
-                    {loading ? <Loader2 className="spinner mr-2" /> : 'Complete Setup'}
+                    {loading ? <Loader2 className="spinner mr-2" /> : 'Create Product'}
                   </Button>
                   <button 
                     type="button"
                     onClick={handleSkip}
-                    className="hover:text-brand transition-colors"
+                    className="hover:text-brand hover-underline transition-colors text-body-sm"
                     style={{ 
                       color: 'var(--sys-outline-color-role)',
-                      fontSize: '14px', 
                       fontWeight: '500',
                       cursor: 'pointer',
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      outline: 'none'
+                      outline: 'none',
+                      marginTop: '8px'
                     }}
                   >
-                    Skip for now
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={handleBack}
-                    className="text-ink-muted hover:text-brand font-semibold text-body-sm transition-colors"
-                    style={{ fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
-                  >
-                    <ArrowLeft size={16} /> Back
+                    Skip for now, I&apos;ll do this later
                   </button>
                 </div>
               </form>

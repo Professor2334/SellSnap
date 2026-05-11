@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/FormPrimitives';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function ProductPublicPage({ params }: { params: { slug: string } }) {
   const product = await db.product.findUnique({
@@ -47,9 +46,9 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
           )}
 
           <div className="mt-4 pt-6 border-t">
-            <Link href={`/api/payments/initialize?slug=${product.uniqueSlug}`}>
+            <a href={`/api/payments/initialize?slug=${product.uniqueSlug}`}>
               <Button fullWidth size="lg">Pay Now</Button>
-            </Link>
+            </a>
           </div>
           
           <div className="flex justify-center items-center gap-2 text-caption" style={{ color: 'var(--color-ink-subtle)' }}>

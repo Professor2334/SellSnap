@@ -1,34 +1,57 @@
 'use client';
 
+import * as React from 'react';
 import { Button } from '@/components/ui/Button';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LandingPage() {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
     <div className="min-h-screen">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="container navbar-inner" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '24px' }}>
+        <div className="container navbar-inner">
           <Link href="/" className="navbar-logo">
             SellSnap
           </Link>
-          <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            <Link href="#how-it-works" className="navbar-link">
+          <div className="navbar-links">
+            <Link href="#how-it-works" className="navbar-link" onClick={() => setMenuOpen(false)}>
               How It Works
             </Link>
-            <Link href="#pricing" className="navbar-link">
+            <Link href="#pricing" className="navbar-link" onClick={() => setMenuOpen(false)}>
               Pricing
             </Link>
-            <Link href="#company" className="navbar-link">
+            <Link href="#company" className="navbar-link" onClick={() => setMenuOpen(false)}>
               Company
             </Link>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Link href="/auth">
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px' }}>
+            <Link href="/auth" className="desktop-only">
               <Button size="sm">Get Started</Button>
             </Link>
+            <button className="navbar-mobile-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+        {menuOpen && (
+          <div className="navbar-mobile-menu container">
+            <Link href="#how-it-works" className="navbar-link" onClick={() => setMenuOpen(false)}>
+              How It Works
+            </Link>
+            <Link href="#pricing" className="navbar-link" onClick={() => setMenuOpen(false)}>
+              Pricing
+            </Link>
+            <Link href="#company" className="navbar-link" onClick={() => setMenuOpen(false)}>
+              Company
+            </Link>
+            <Link href="/auth" onClick={() => setMenuOpen(false)}>
+              <Button size="sm" fullWidth>Get Started</Button>
+            </Link>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}

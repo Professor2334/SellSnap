@@ -71,7 +71,7 @@ function ResetPasswordContent() {
 
   if (!token) {
     return (
-      <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
+      <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
         <div className="auth-card">
           <div className="auth-form-header">
             <Link href="/" className="auth-brand-name">SellSnap</Link>
@@ -90,7 +90,7 @@ function ResetPasswordContent() {
 
   if (success) {
     return (
-      <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
+      <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
         <div className="auth-card">
           <div className="auth-form-header">
             <Link href="/" className="auth-brand-name">SellSnap</Link>
@@ -108,7 +108,7 @@ function ResetPasswordContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
+    <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
       <div className="auth-card">
         <div className="auth-form-header">
           <Link href="/" className="auth-brand-name">SellSnap</Link>

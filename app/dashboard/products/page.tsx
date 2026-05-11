@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { DeleteProductButton } from '../_components/DashboardUtils';
+import { DeleteProductButton, CopyLinkButton } from '../_components/DashboardUtils';
 
 export default async function ProductsPage() {
   const session = await getSession();
@@ -20,7 +20,7 @@ export default async function ProductsPage() {
 
   return (
     <div className="w-full">
-      <div className="flex items-start justify-between mb-8">
+      <div className="dashboard-header flex items-start justify-between mb-8">
         <div style={{ paddingLeft: '20px' }}>
           <h1 className="text-h1 font-bold text-ink">Products</h1>
           <p className="text-body text-ink-muted mt-1">Manage your products and links</p>
@@ -34,7 +34,7 @@ export default async function ProductsPage() {
 
       {products.length === 0 ? (
         <div className="card-container min-h-[400px] flex items-center justify-center border-dashed border-2 bg-white/50" style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px' }}>
-          <div className="text-center p-24">
+          <div className="dashboard-empty text-center p-24">
             <div className="w-24 h-24 bg-surface rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
               <Icon name="Products" size={36} className="text-ink-muted" />
             </div>
@@ -46,7 +46,7 @@ export default async function ProductsPage() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4" style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+        <div className="products-list flex flex-col gap-4" style={{ paddingLeft: '20px', paddingRight: '20px' }}>
           {products.map((product) => (
             <div key={product.id} className="card-container p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -71,6 +71,7 @@ export default async function ProductsPage() {
                 >
                   View Link
                 </Link>
+                <CopyLinkButton slug={product.uniqueSlug} />
                 <DeleteProductButton id={product.id} />
               </div>
             </div>

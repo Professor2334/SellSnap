@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true }, { status: 200 });
   }
 
-  if (verified.data.amount !== order.amount || verified.data.currency !== 'NGN') {
-    console.warn('flutterwave.webhook.mismatch', { orderId: order.id });
+  if (verified.data.amount < order.amount || verified.data.currency !== 'NGN') {
+    console.warn('flutterwave.webhook.amount_too_low', { orderId: order.id, paid: verified.data.amount, expected: order.amount });
     return NextResponse.json({ success: true }, { status: 200 });
   }
 

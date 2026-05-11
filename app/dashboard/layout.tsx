@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-bg w-full overflow-x-hidden">
-      <aside className="w-[240px] min-w-[240px] bg-surface border-r border-[var(--color-border)] flex flex-col sticky top-0 h-screen z-10">
+      <aside className="dashboard-sidebar w-[240px] min-w-[240px] bg-surface border-r border-[var(--color-border)] flex flex-col sticky top-0 h-screen z-10">
         <div className="px-6 py-8 mb-2">
           <Link href="/dashboard" className="text-h2 text-brand font-bold tracking-tight">
             SellSnap
@@ -50,7 +50,7 @@ export default async function DashboardLayout({
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 w-full">
+      <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full">
         <div className="p-8 px-10 pt-10 w-full flex-1 max-w-5xl">
           {children}
         </div>

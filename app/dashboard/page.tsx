@@ -27,7 +27,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="w-full">
-      <div className="flex items-start justify-between mb-8">
+      <div className="dashboard-header flex items-start justify-between mb-8">
         <div style={{ paddingLeft: '20px' }}>
           <h1 className="text-h1 font-bold text-ink">Dashboard</h1>
           <p className="text-body text-ink-muted mt-1">Welcome back, {session.user.name}</p>
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div className="flex mb-10">
+      <div className="dashboard-stats-row flex mb-10">
         <div className="card-stat" style={{ paddingLeft: '20px', marginRight: '20px', flex: 1 }}>
           <p className="card-stat-label uppercase tracking-wider">Total Revenue</p>
           <p className="card-stat-value">₦{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="card-container min-h-[520px] flex items-center justify-center border-dashed border-2 bg-white/50">
-        <div className="text-center p-24">
+        <div className="dashboard-empty text-center p-24">
           <div className="w-24 h-24 bg-surface rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
             <Icon name="Orders" size={36} className="text-ink-muted" />
           </div>

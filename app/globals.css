@@ -27,6 +27,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-inter), sans-serif;
+  font-size: 16px; /* Base size */
 }
 
 a {
@@ -37,44 +38,41 @@ a {
 /* Typography Classes */
 .text-display {
   font: var(--sys-font-display-medium);
+  font-size: clamp(1.75rem, 5vw, 2.8125rem); /* 28px to 45px */
+  line-height: 1.2;
   letter-spacing: var(--sys-font-display-medium-letter-spacing);
-  color: var(--primitive-neutral20);
-}
-
-.text-display-sm {
-  font: var(--sys-font-display-small);
-  letter-spacing: var(--sys-font-display-small-letter-spacing);
-  color: var(--primitive-neutral20);
-}
-
-.text-display-lg {
-  font: var(--sys-font-display-large);
-  letter-spacing: var(--sys-font-display-large-letter-spacing);
   color: var(--primitive-neutral20);
 }
 
 .text-h1 {
   font: var(--sys-font-headline-large);
+  font-size: clamp(1.5rem, 4vw, 2rem); /* 24px to 32px */
+  line-height: 1.3;
   letter-spacing: var(--sys-font-headline-large-letter-spacing);
 }
 
 .text-h2 {
   font: var(--sys-font-title-large);
+  font-size: clamp(1.25rem, 3vw, 1.5rem); /* 20px to 24px */
+  line-height: 1.4;
   letter-spacing: var(--sys-font-title-large-letter-spacing);
 }
 
 .text-body {
-  font: var(--sys-font-body-large);
+  font-size: 1rem; /* 16px */
+  line-height: 1.6;
   letter-spacing: var(--sys-font-body-large-letter-spacing);
 }
 
 .text-body-sm {
-  font: var(--sys-font-body-small);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
   letter-spacing: var(--sys-font-body-small-letter-spacing);
 }
 
 .text-caption {
-  font: var(--sys-font-label-small);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
   letter-spacing: var(--sys-font-label-small-letter-spacing);
 }
 
@@ -116,6 +114,7 @@ a {
 
 .navbar-logo {
   font: var(--sys-font-title-large);
+  font-size: clamp(18px, 4vw, 22px);
   font-weight: 700;
   color: var(--color-brand);
   letter-spacing: -0.5px;
@@ -138,6 +137,24 @@ a {
 
 .navbar-link:hover {
   color: var(--color-brand);
+}
+
+.navbar-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--color-ink);
+}
+
+.navbar-mobile-menu {
+  display: none;
+  background-color: var(--color-bg);
+}
+
+.desktop-only {
+  display: block;
 }
 
 /* Sections */
@@ -499,7 +516,7 @@ a {
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.4s ease-out forwards;
+  animation: fadeInUp 1s ease-out forwards;
 }
 
 /* Onboarding Modal Layout */
@@ -518,7 +535,6 @@ a {
   border: 1px solid color-mix(in srgb, var(--color-border) 95%, transparent);
   border-radius: 24px;
   padding: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
 }
 
@@ -533,6 +549,14 @@ a {
 }
 .hover-underline:hover {
   text-decoration: underline;
+}
+
+.upload-zone {
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+.upload-zone:hover {
+  background-color: var(--sys-neutral-container-low);
 }
 
 .onboarding-logo {
@@ -674,7 +698,7 @@ a {
 }
 
 .btn-lg {
-  padding: 20px 55px;
+  padding: 18px 52px;
   font-size: 18px;
   font-weight: 400;
 }
@@ -699,15 +723,15 @@ a {
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
 }
 
 .input-label {
-  font: var(--sys-font-label-large-size) / var(--sys-font-label-large-line-height) var(--sys-font-label-large-family);
-  font-weight: 500;
+  font: var(--sys-font-label-large-size) / var(--sys-font-label-large-line-height) var(--sys-font-label-family);
+  font-weight: 400;
   letter-spacing: var(--sys-font-label-large-letter-spacing);
-  color: var(--sys-on-neutral-color-role);
+  color: var(--sys-on-neutral-variant-role);
 }
 
 .input-label-row {
@@ -1085,6 +1109,60 @@ a {
 
 /* ─── Responsive: stack on mobile ────────────────────────── */
 @media (max-width: 767px) {
+  .navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .navbar-mobile-toggle {
+    display: flex;
+  }
+
+  .navbar-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .navbar-mobile-menu .navbar-link {
+    font-size: 16px;
+  }
+
+  .hero {
+    min-height: 100dvh;
+    padding: 80px 20px 60px;
+  }
+
+  .section {
+    padding: 48px 20px;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .steps,
+  .features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .benefits {
+    gap: 16px;
+  }
+
   .auth-page-split {
     grid-template-columns: 1fr;
   }
@@ -1104,5 +1182,80 @@ a {
 
   .auth-form-inner {
     max-width: 100%;
+  }
+
+  .auth-page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .auth-card {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .auth-continue-arrow {
+    display: none;
+  }
+
+  .onboarding-step1-btn {
+    max-width: 100% !important;
+  }
+
+  .onboarding-step3-desc {
+    display: none;
+  }
+
+  .onboarding-step1-title {
+    font-size: clamp(1.375rem, 6vw, 1.75rem) !important;
+  }
+
+  .onboarding-step2-title,
+  .onboarding-step3-title {
+    font-size: clamp(1.125rem, 5vw, 1.5rem) !important;
+  }
+
+  /* ─── Dashboard Mobile ──────────────────────────────── */
+
+  .dashboard-sidebar {
+    display: none;
+  }
+
+  .dashboard-main {
+    padding: 0 !important;
+  }
+
+  .dashboard-main > div {
+    padding: 16px !important;
+  }
+
+  .dashboard-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .dashboard-header > div {
+    padding-left: 0 !important;
+  }
+
+  .dashboard-stats-row {
+    flex-direction: column !important;
+    gap: 12px;
+  }
+
+  .dashboard-stats-row .card-stat {
+    margin-right: 0 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .dashboard-empty {
+    padding: 32px 16px !important;
+  }
+
+  .products-list {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }

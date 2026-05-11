@@ -211,7 +211,7 @@ function AuthContent() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center py-12 px-4 bg-bg">
+    <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
       <div className="auth-card">
         <div className="auth-form-header">
           {error && (
@@ -314,7 +314,7 @@ function AuthContent() {
             />
 
             <Button type="submit" fullWidth size="lg">
-              Continue <ArrowRight size={18} style={{ verticalAlign: 'middle', marginLeft: '8px' }} />
+              Continue <span className="auth-continue-arrow"><ArrowRight size={18} style={{ verticalAlign: 'middle', marginLeft: '8px' }} /></span>
             </Button>
           </form>
         ) : (
