@@ -35,64 +35,70 @@ export default async function OrdersPage() {
     FAILED: 'var(--color-danger, #ef4444)',
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b" style={{ backgroundColor: 'var(--color-surface)' }}>
-        <div className="container h-16 flex items-center justify-between">
-          <Link href="/" className="text-h2" style={{ color: 'var(--color-brand)' }}>SellSnap</Link>
-          <Link href="/dashboard">
-            <Button variant="secondary" size="sm">Back to Products</Button>
-          </Link>
+    <div className="w-full animate-fade-in-up">
+      <div className="dashboard-header flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <h1 className="text-display font-bold text-ink mb-2">Orders</h1>
+          <p className="text-body text-ink-muted">Track and manage your sales performance and customer orders.</p>
         </div>
-      </header>
+      </div>
 
-      <main className="container py-8 flex-1">
-        <h1 className="text-h1 mb-8">Orders</h1>
-
-        {orders.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-body" style={{ color: 'var(--color-ink-muted)' }}>
-              No orders yet. Share your product links to start getting sales!
+      {orders.length === 0 ? (
+        <div className="card-container min-h-[400px] flex items-center justify-center border-dashed border-2 bg-surface/30 rounded-2xl">
+          <div className="dashboard-empty text-center p-12">
+            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
+              <Icon name="Orders" size={32} className="text-ink-subtle" />
+            </div>
+            <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
+            <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed">
+              When a customer pays via your link, their order will appear here.
             </p>
           </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {orders.map((order) => (
-              <Card key={order.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4">
-                <div className="flex flex-col gap-1">
-                  <Link
-                    href={`/p/${order.product.uniqueSlug}`}
-                    className="text-h2 hover:underline"
-                    style={{ color: 'var(--color-ink)' }}
-                  >
-                    {order.product.name}
-                  </Link>
-                  <div className="flex items-center gap-4 text-body-sm" style={{ color: 'var(--color-ink-muted)' }}>
-                    <span>₦{order.amount.toLocaleString()}</span>
-                    <span>•</span>
-                    <span>{new Date(order.createdAt).toLocaleDateString()}</span>
-                    {order.buyerEmail && (
-                      <>
-                        <span>•</span>
-                        <span>{order.buyerEmail}</span>
-                      </>
-                    )}
-                  </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {orders.map((order) => (
+            <div key={order.id} className="card-container p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-brand/30 transition-colors">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-h2 font-bold text-ink">{order.product.name}</h3>
+                  <span className="text-caption px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider" 
+                    style={{ 
+                      backgroundColor: order.status === 'PAID' ? 'var(--color-success)20' : 'var(--color-warning)20',
+                      color: order.status === 'PAID' ? 'var(--color-success)' : 'var(--color-warning)'
+                    }}>
+                    {order.status}
+                  </span>
                 </div>
-                <div
-                  className="px-3 py-1 rounded-full text-caption font-medium self-start sm:self-center"
-                  style={{
-                    backgroundColor: `${statusColors[order.status]}20`,
-                    color: statusColors[order.status],
-                  }}
+                <div className="flex items-center gap-3 mt-1">
+                  <p className="text-body-sm font-semibold text-ink">₦{order.amount.toLocaleString()}</p>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <p className="text-caption text-ink-muted">{new Date(order.createdAt).toLocaleDateString()}</p>
+                  {order.buyerEmail && (
+                    <>
+                      <span className="w-1 h-1 rounded-full bg-border" />
+                      <p className="text-caption text-ink-muted italic">{order.buyerEmail}</p>
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4 w-full sm:w-auto">
+                <p className="text-caption font-mono text-ink-subtle uppercase truncate max-w-[120px]">
+                  Ref: {order.transactionReference.split('_').pop()}
+                </p>
+                <div className="h-4 w-px bg-border hidden sm:block" />
+                <Link
+                  href={`/p/${order.product.uniqueSlug}`}
+                  target="_blank"
+                  className="text-body-sm text-brand font-medium hover:underline"
                 >
-                  {order.status}
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
-      </main>
+                  View Product
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  );
 }
