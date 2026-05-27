@@ -9,6 +9,7 @@ import { Upload, Loader2 } from 'lucide-react';
 export default function NewProductPage() {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -98,14 +99,27 @@ export default function NewProductPage() {
           <div>
             <label className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-variant-role)' }}>Product Image</label>
             <div 
-              className="w-full flex flex-col items-center justify-center rounded-xl cursor-pointer"
-              style={{ height: '120px', border: '1px dashed var(--sys-outline-variant-color-role)', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+              className="w-full flex flex-col items-center justify-center rounded-xl cursor-pointer overflow-hidden"
+              style={{ height: imagePreview ? 'auto' : '120px', border: '1px dashed var(--sys-outline-variant-color-role)', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
             >
-              <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} />
+              <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (ev) => setImagePreview(ev.target?.result as string);
+                  reader.readAsDataURL(file);
+                }
+              }} />
               <label htmlFor="product-image" className="flex flex-col items-center cursor-pointer w-full h-full justify-center">
-                <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
-                <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
-                <span style={{ fontSize: '12px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '4px' }}>Max size 5MB</span>
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
+                ) : (
+                  <>
+                    <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
+                    <span style={{ fontSize: '12px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '4px' }}>Max size 5MB</span>
+                  </>
+                )}
               </label>
             </div>
           </div>

@@ -4,13 +4,13 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { generateUniqueSlug } from '@/lib/slug';
+import { uploadImage } from '@/lib/cloudinary';
 import { revalidatePath } from 'next/cache';
 
 const productSchema = z.object({
   name: z.string().min(2, 'Name is too short'),
   price: z.preprocess((val) => Number(val), z.number().min(1, 'Price must be at least 1')),
   description: z.string().optional(),
-  imageUrl: z.string().url().optional().or(z.literal('')),
 });
 
 export async function createProduct(formData: FormData) {
@@ -20,23 +20,32 @@ export async function createProduct(formData: FormData) {
       return { success: false, error: 'Unauthorized' };
     }
 
-    const rawData = Object.fromEntries(formData);
-    const parsed = productSchema.safeParse(rawData);
+    const name = formData.get('name') as string | null;
+    const price = formData.get('price') as string | null;
+    const description = formData.get('description') as string | null;
+    const imageFile = formData.get('image') as File | null;
+
+    const parsed = productSchema.safeParse({ name, price, description });
 
     if (!parsed.success) {
       return { success: false, error: parsed.error.errors[0].message };
     }
 
-    const { name, price, description, imageUrl } = parsed.data;
+    const { name: validName, price: validPrice, description: validDescription } = parsed.data;
 
-    const slug = generateUniqueSlug(name);
+    let imageUrl: string | null = null;
+    if (imageFile && imageFile.size > 0 && imageFile.type.startsWith('image/')) {
+      imageUrl = await uploadImage(imageFile);
+    }
+
+    const slug = generateUniqueSlug(validName);
 
     await db.product.create({
       data: {
-        name,
-        price,
-        description,
-        imageUrl: imageUrl || null,
+        name: validName,
+        price: validPrice,
+        description: validDescription || null,
+        imageUrl,
         uniqueSlug: slug,
         userId: session.user.id,
       },

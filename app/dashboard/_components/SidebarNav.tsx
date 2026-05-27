@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Icon, IconName } from '@/components/ui/Icon';
 
 interface NavItem {
@@ -12,20 +12,24 @@ interface NavItem {
 
 interface SidebarNavProps {
   items: NavItem[];
+  onNavigate?: () => void;
 }
 
-export function SidebarNav({ items }: SidebarNavProps) {
-  const pathname = usePathname();
+export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'dashboard';
 
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col" style={{ listStyle: 'none', gap: '12px' }}>
       {items.map((item) => {
-        const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+        const tab = item.href.includes('tab=') ? item.href.split('tab=')[1] : 'dashboard';
+        const isActive = activeTab === tab;
         
         return (
           <li key={item.href}>
             <Link
               href={item.href}
+              onClick={onNavigate}
               className={`sidebar-link ${isActive ? 'active' : ''}`}
             >
               <Icon name={item.icon} size={20} />

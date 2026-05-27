@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { db } from '@/lib/db';
 import { env } from '@/lib/env';
 import { verifyTransaction } from '@/lib/flutterwave';
+import { sendPaymentConfirmationEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   // 1. Signature verification
@@ -42,6 +43,11 @@ export async function POST(req: NextRequest) {
   // 4. Find order and cross-check
   const order = await db.order.findUnique({
     where: { transactionReference: verified.data.tx_ref },
+    include: {
+      product: {
+        include: { user: true },
+      },
+    },
   });
 
   if (!order) {
@@ -85,6 +91,16 @@ export async function POST(req: NextRequest) {
     console.error('flutterwave.webhook.persist_failed', { error });
     return NextResponse.json({ success: false, error: 'Persistence failed' }, { status: 500 });
   }
+
+  // 6. Notify seller
+  sendPaymentConfirmationEmail({
+    sellerEmail: order.product.user.email,
+    sellerName: order.product.user.name,
+    productName: order.product.name,
+    amount: order.amount,
+    buyerEmail: order.buyerEmail,
+    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/orders`,
+  });
 
   return NextResponse.json({ success: true }, { status: 200 });
 }

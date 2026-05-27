@@ -12,6 +12,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
   const [step, setStep] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const router = useRouter();
 
   // Step 3 state
@@ -296,14 +297,27 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                   <div>
                     <label className="input-label mb-3 block" style={{ fontSize: '13px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Product Image</label>
                     <div 
-                      className="upload-zone w-full flex flex-col items-center justify-center rounded-xl cursor-pointer"
-                      style={{ height: '100px', border: '1px dashed var(--sys-outline-variant-color-role)' }}
+                      className="upload-zone w-full flex flex-col items-center justify-center rounded-xl cursor-pointer overflow-hidden"
+                      style={{ height: imagePreview ? 'auto' : '100px', border: '1px dashed var(--sys-outline-variant-color-role)' }}
                     >
-                      <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} />
+                      <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (ev) => setImagePreview(ev.target?.result as string);
+                          reader.readAsDataURL(file);
+                        }
+                      }} />
                       <label htmlFor="product-image" className="flex flex-col items-center cursor-pointer w-full h-full justify-center">
-                        <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
-                        <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
-                        <span style={{ fontSize: '11px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '2px' }}>Max size 5MB</span>
+                        {imagePreview ? (
+                          <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
+                        ) : (
+                          <>
+                            <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
+                            <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
+                            <span style={{ fontSize: '11px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '2px' }}>Max size 5MB</span>
+                          </>
+                        )}
                       </label>
                     </div>
                   </div>

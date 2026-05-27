@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyTransaction } from '@/lib/flutterwave';
+import { sendPaymentConfirmationEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,11 @@ export async function POST(req: NextRequest) {
 
     const order = await db.order.findUnique({
       where: { transactionReference: tx_ref },
+      include: {
+        product: {
+          include: { user: true },
+        },
+      },
     });
 
     if (!order) {
@@ -55,6 +61,15 @@ export async function POST(req: NextRequest) {
         });
       });
     }
+
+    sendPaymentConfirmationEmail({
+      sellerEmail: order.product.user.email,
+      sellerName: order.product.user.name,
+      productName: order.product.name,
+      amount: order.amount,
+      buyerEmail: order.buyerEmail,
+      dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/orders`,
+    });
 
     return NextResponse.json({ success: true, status: 'PAID' });
   } catch (error) {
