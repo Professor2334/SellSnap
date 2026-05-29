@@ -30,6 +30,34 @@ export default async function DashboardPage({ searchParams }: Props) {
     .filter(o => o.status === 'PAID')
     .reduce((sum, o) => sum + o.amount, 0);
 
+  const now = new Date();
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+  const thisMonthRevenue = allOrders
+    .filter(o => o.status === 'PAID' && o.createdAt >= thisMonthStart)
+    .reduce((sum, o) => sum + o.amount, 0);
+  const lastMonthRevenue = allOrders
+    .filter(o => o.status === 'PAID' && o.createdAt >= lastMonthStart && o.createdAt <= lastMonthEnd)
+    .reduce((sum, o) => sum + o.amount, 0);
+
+  const thisMonthOrders = allOrders.filter(o => o.createdAt >= thisMonthStart).length;
+  const lastMonthOrders = allOrders.filter(o => o.createdAt >= lastMonthStart && o.createdAt <= lastMonthEnd).length;
+
+  const thisMonthProducts = products.filter(p => p.createdAt >= thisMonthStart).length;
+  const lastMonthProducts = products.filter(p => p.createdAt >= lastMonthStart && p.createdAt <= lastMonthEnd).length;
+
+  function calcGrowth(current: number, previous: number): number {
+    if (previous === 0 && current === 0) return 0;
+    if (previous === 0) return 100;
+    return Math.round(((current - previous) / previous) * 100);
+  }
+
+  const revenueGrowth = calcGrowth(thisMonthRevenue, lastMonthRevenue);
+  const ordersGrowth = calcGrowth(thisMonthOrders, lastMonthOrders);
+  const productsGrowth = calcGrowth(thisMonthProducts, lastMonthProducts);
+
   const flatProducts = products.map(p => ({
     id: p.id,
     name: p.name,
@@ -74,6 +102,9 @@ export default async function DashboardPage({ searchParams }: Props) {
           totalRevenue={totalRevenue}
           totalOrders={totalOrders}
           totalProducts={totalProducts}
+          revenueGrowth={revenueGrowth}
+          ordersGrowth={ordersGrowth}
+          productsGrowth={productsGrowth}
           recentOrders={flatOrders.slice(0, 5)}
         />
       );

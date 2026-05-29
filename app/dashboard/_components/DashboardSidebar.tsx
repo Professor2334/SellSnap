@@ -28,8 +28,8 @@ export function DashboardSidebar({
     setIsOpen(false);
   }
 
-  function openSidebar() {
-    setIsOpen(true);
+  function toggleSidebar() {
+    setIsOpen((prev) => !prev);
   }
 
   useEffect(() => {
@@ -53,9 +53,9 @@ export function DashboardSidebar({
   return (
     <>
       <button
-        onClick={openSidebar}
+        onClick={toggleSidebar}
         className="mobile-menu-btn"
-        aria-label="Open menu"
+        aria-label="Toggle menu"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M3 5H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

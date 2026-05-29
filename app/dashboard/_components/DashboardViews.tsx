@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -27,17 +28,58 @@ type Order = {
   product: { name: string; uniqueSlug: string };
 };
 
+function GrowthBadge({ value }: { value: number }) {
+  const [display, setDisplay] = useState(0);
+  const isUp = value > 0;
+  const isDown = value < 0;
+  const color = isUp ? 'var(--color-success)' : isDown ? 'var(--sys-error-color-role)' : 'var(--color-ink-subtle)';
+  const target = Math.abs(value);
+
+  useEffect(() => {
+    setDisplay(0);
+    if (value === 0) return;
+    const duration = 1000;
+    const steps = 30;
+    const increment = target / steps;
+    let current = 0;
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setDisplay(target);
+        clearInterval(interval);
+      } else {
+        setDisplay(Math.round(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(interval);
+  }, [target, value]);
+
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: '12px', fontWeight: 600, color }}>
+      {isUp ? '↑' : isDown ? '↓' : '–'}
+      {' '}
+      {isUp || isDown ? `${display}%` : 'steady'}
+    </span>
+  );
+}
+
 export function DashboardView({
   userName,
   totalRevenue,
   totalOrders,
   totalProducts,
+  revenueGrowth,
+  ordersGrowth,
+  productsGrowth,
   recentOrders,
 }: {
   userName: string;
   totalRevenue: number;
   totalOrders: number;
   totalProducts: number;
+  revenueGrowth: number;
+  ordersGrowth: number;
+  productsGrowth: number;
   recentOrders: Order[];
 }) {
   return (
@@ -56,18 +98,27 @@ export function DashboardView({
 
       <div className="dashboard-stats-row grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" style={{ marginBottom: 15 }}>
         <div className="card-stat hover:border-brand/50 transition-all">
-          <p className="card-stat-label mb-1">Total Revenue</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+            <p className="card-stat-label">Total Revenue</p>
+            <GrowthBadge value={revenueGrowth} />
+          </div>
           <div className="flex items-baseline gap-1">
             <span className="text-h2 font-bold text-ink-muted">₦</span>
             <p className="text-h1 font-bold text-ink leading-none">{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           </div>
         </div>
         <div className="card-stat hover:border-brand/50 transition-all">
-          <p className="card-stat-label mb-1">Total Orders</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+            <p className="card-stat-label">Total Orders</p>
+            <GrowthBadge value={ordersGrowth} />
+          </div>
           <p className="text-h1 font-bold text-ink leading-none">{totalOrders}</p>
         </div>
         <div className="card-stat hover:border-brand/50 transition-all">
-          <p className="card-stat-label mb-1">Active Products</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+            <p className="card-stat-label">Active Products</p>
+            <GrowthBadge value={productsGrowth} />
+          </div>
           <p className="text-h1 font-bold text-ink leading-none">{totalProducts}</p>
         </div>
       </div>
