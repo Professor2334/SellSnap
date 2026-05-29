@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { SidebarNav } from './SidebarNav';
 import { SignOutButton } from './DashboardUtils';
@@ -21,6 +21,8 @@ export function DashboardSidebar({
   email: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
+  const logoutRef = useRef<HTMLDivElement>(null);
 
   function closeSidebar() {
     setIsOpen(false);
@@ -30,11 +32,22 @@ export function DashboardSidebar({
     setIsOpen(true);
   }
 
-  const initials = userName
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase() || 'U';
+  useEffect(() => {
+    if (!showLogout) return;
+    function handleClick(e: MouseEvent) {
+      if (logoutRef.current && !logoutRef.current.contains(e.target as Node)) {
+        setShowLogout(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showLogout]);
+
+  const nameParts = userName.split(' ').filter(Boolean);
+  const initials = (nameParts.length >= 2
+    ? nameParts[0][0] + nameParts[1][0]
+    : (nameParts[0]?.[0] || 'U') + (nameParts[0]?.[1] || '')
+  ).toUpperCase();
   const displayName = businessName || userName;
 
   return (
@@ -75,23 +88,26 @@ export function DashboardSidebar({
           </nav>
         </div>
 
-        <div className="px-4 py-6 border-t" style={{ borderColor: 'var(--color-border)', marginTop: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', padding: '0 8px' }}>
+        <div className="px-4" style={{ borderTop: '1px solid color-mix(in srgb, var(--sys-outline-variant-color-role) 50%, transparent)', marginTop: 'auto', padding: '20px 16px 16px' }}>
+          <div
+            ref={logoutRef}
+            onClick={() => setShowLogout((prev) => !prev)}
+            style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px', cursor: 'pointer' }}
+          >
             <div
               style={{
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-ink)',
+                backgroundColor: 'var(--sys-primary-color-role)',
+                border: 'none',
+                color: 'var(--sys-on-primary-color-role)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '10px',
                 fontWeight: 700,
                 flexShrink: 0,
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
               }}
             >
               {initials}
@@ -123,8 +139,26 @@ export function DashboardSidebar({
                 {email}
               </p>
             </div>
+
+            {showLogout && (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 'calc(100% + 8px)',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'var(--sys-on-primary-color-role)',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+
+                  padding: '4px',
+                  zIndex: 50,
+                }}
+              >
+                <SignOutButton />
+              </div>
+            )}
           </div>
-          <SignOutButton />
         </div>
       </aside>
     </>

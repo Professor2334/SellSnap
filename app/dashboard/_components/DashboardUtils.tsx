@@ -62,10 +62,12 @@ export function CopyLinkButton({ slug }: { slug: string }) {
 
 // SignOutButton
 import { signOut } from 'next-auth/react';
+import { Icon } from '@/components/ui/Icon';
 
 export function SignOutButton() {
   return (
-    <Button variant="ghost" size="sm" fullWidth onClick={() => signOut({ callbackUrl: '/auth?mode=login' })}>
+    <Button variant="ghost" size="sm" fullWidth className="logout-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }} onClick={() => signOut({ callbackUrl: '/auth?mode=login' })}>
+      <Icon name="Logout" size={16} />
       Logout
     </Button>
   );

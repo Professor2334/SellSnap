@@ -54,7 +54,7 @@ export function DashboardView({
         </Link>
       </div>
 
-      <div className="dashboard-stats-row grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
+      <div className="dashboard-stats-row grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" style={{ marginBottom: 15 }}>
         <div className="card-stat hover:border-brand/50 transition-all">
           <p className="card-stat-label mb-1">Total Revenue</p>
           <div className="flex items-baseline gap-1">
@@ -72,17 +72,15 @@ export function DashboardView({
         </div>
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-h1 font-bold text-ink">Recent Orders</h2>
+      <div style={{ marginBottom: '25px' }}>
+        <h2 className="text-h2 text-ink">Recent Orders</h2>
       </div>
 
       <div className="card-container min-h-[320px] flex items-center justify-center border-dashed border-2 bg-surface/30 rounded-2xl">
         <div className="dashboard-empty text-center p-12">
-          <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
-            <Icon name="Orders" size={32} className="text-ink-subtle" />
-          </div>
+          <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />
           <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
-          <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed">
+          <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed" style={{ paddingBottom: '65px' }}>
             Your recent sales will appear here. Start sharing your links to get paid!
           </p>
         </div>
@@ -185,7 +183,8 @@ export function OrdersView({ orders }: { orders: Order[] }) {
             <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
               <Icon name="Orders" size={32} className="text-ink-subtle" />
             </div>
-            <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
+          <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />
+          <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
             <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed">
               When a customer pays via your link, their order will appear here.
             </p>
