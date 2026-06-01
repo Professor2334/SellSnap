@@ -80,7 +80,6 @@ function AuthContent() {
       setError(result.error);
     } else {
       router.push('/dashboard');
-      router.refresh();
     }
   }
 
@@ -202,7 +201,6 @@ function AuthContent() {
         setLoading(false);
       } else {
         router.push('/onboarding');
-        router.refresh();
       }
     } else {
       setLoading(false);
