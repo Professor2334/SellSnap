@@ -40,6 +40,14 @@ function AuthContent() {
     }
   }, [mode, step]);
 
+  // Clear any stale validation errors when the mode changes (e.g. blur fires
+  // on the name input right before the "Log in" click handler runs, producing
+  // a spurious "field cannot be empty" message on the login form).
+  React.useEffect(() => {
+    setFieldErrors({});
+    setError(null);
+  }, [mode]);
+
   function setMode(m: AuthMode) {
     setStep(1);
     setFieldErrors({});
