@@ -1,6 +1,7 @@
 'use client'; // trigger fast refresh
 
 import * as React from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import {
   Menu,
@@ -26,7 +27,8 @@ import {
   LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
-
+import { StickyStorySection } from '@/components/landing/StickyStorySection';
+import { TrustSection } from '@/components/landing/TrustSection';
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
@@ -276,107 +278,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── 2. Social Proof Section [NEW] ─────────────────────── */}
-      <section className="sp-section" id="social-proof">
-        <div className="container">
-          <div className="section-header animate-fade-in-up">
-            <h2 className="section-title">Trusted by businesses selling smarter.</h2>
-            <p className="section-subtitle">
-              SellSnap helps entrepreneurs create products, share one payment link and receive payments in minutes.
-            </p>
-          </div>
+      <TrustSection />
 
-          <div className="sp-stats-grid">
-            <div className="sp-card animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <div className="sp-card-icon"><Zap className="text-brand" /></div>
-              <h3 className="sp-card-title">Under 60 Seconds</h3>
-              <p className="sp-card-desc">Average setup time</p>
-            </div>
-            <div className="sp-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="sp-card-icon"><Link2 className="text-brand" /></div>
-              <h3 className="sp-card-title">One Link</h3>
-              <p className="sp-card-desc">Share anywhere</p>
-            </div>
-            <div className="sp-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <div className="sp-card-icon"><Smartphone className="text-brand" /></div>
-              <h3 className="sp-card-title">Mobile Ready</h3>
-              <p className="sp-card-desc">Works on every device</p>
-            </div>
-            <div className="sp-card animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <div className="sp-card-icon"><ShieldCheck className="text-brand" /></div>
-              <h3 className="sp-card-title">Secure Payments</h3>
-              <p className="sp-card-desc">Powered by Flutterwave</p>
-            </div>
-          </div>
-
-          <div className="sp-trust-strip animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-            <span className="sp-trust-title">Powered by technologies you already trust</span>
-            <div className="sp-trust-logos">
-              <div className="sp-logo">
-                <svg width="24" height="24" viewBox="0 0 15 15" fill="none">
-                  <circle cx="7.5" cy="7.5" r="7.5" fill="currentColor" />
-                  <path d="M4.5 8C4.5 6.5 5.8 5.2 7.5 5.2s3 1.3 3 2.8-1.3 2.8-3 2.8-3-1.3-3-2.8z" fill="white" />
-                  <circle cx="7.5" cy="8" r="1.4" fill="white" />
-                </svg>
-                Flutterwave
-              </div>
-              <div className="sp-logo">
-                <MessageCircle size={24} />
-                WhatsApp
-              </div>
-              <div className="sp-logo">
-                <Instagram size={24} />
-                Instagram
-              </div>
-              <div className="sp-logo">
-                <Facebook size={24} />
-                Facebook
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. Features Section ("Everything You Need") ────────── */}
-      <section className="section bg-surface" id="features">
-        <div className="container">
-          <div className="section-header animate-fade-in-up">
-            <h2 className="section-title">Everything you need to start selling.</h2>
-            <p className="section-subtitle">Everything required to sell online without building a website.</p>
-          </div>
-          <div className="feature-grid-6">
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <div className="feature-icon"><Link2 size={24} /></div>
-              <h3 className="feature-title">Instant Payment Links</h3>
-              <p className="feature-desc">Generate unique, secure checkout links for any product instantly.</p>
-            </div>
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="feature-icon"><CreditCard size={24} /></div>
-              <h3 className="feature-title">Flutterwave Payments</h3>
-              <p className="feature-desc">Accept cards, bank transfers, and USSD securely via Flutterwave.</p>
-            </div>
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <div className="feature-icon"><MessageCircle size={24} /></div>
-              <h3 className="feature-title">WhatsApp Sharing</h3>
-              <p className="feature-desc">Share your products directly in WhatsApp chats for quick sales.</p>
-            </div>
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <div className="feature-icon"><LayoutDashboard size={24} /></div>
-              <h3 className="feature-title">Orders Dashboard</h3>
-              <p className="feature-desc">Track and manage all your orders from a single, clean dashboard.</p>
-            </div>
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-              <div className="feature-icon"><Smartphone size={24} /></div>
-              <h3 className="feature-title">Mobile Optimized</h3>
-              <p className="feature-desc">A checkout experience designed specifically for buyers on mobile devices.</p>
-            </div>
-            <div className="feature-card animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-              <div className="feature-icon"><TrendingUp size={24} /></div>
-              <h3 className="feature-title">Sales Analytics</h3>
-              <p className="feature-desc">Monitor your revenue, top products, and overall business growth.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── 3. Features Section (Sticky Story) ────────── */}
+      <StickyStorySection />
 
       {/* ── 4. How It Works Section ───────────────────────────── */}
       <section className="section" id="how-it-works">
@@ -385,34 +290,55 @@ export default function LandingPage() {
             <h2 className="section-title">How SellSnap Works</h2>
             <p className="section-subtitle">Start selling in three simple steps.</p>
           </div>
-          <div className="steps-grid">
-            <div className="step-card animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              <div className="step-icon-wrap"><Upload size={24} /></div>
+          <motion.div 
+            className="steps-grid"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+            }}
+          >
+            <motion.div 
+              className="step-card"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+            >
+              <div className="step-badge">01</div>
+              <div className="step-icon-wrap"><Upload size={28} /></div>
               <h3 className="step-title">Upload Product</h3>
-              <p className="step-desc">Create your product with photos, pricing and details.</p>
-            </div>
-            <div className="step-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <div className="step-icon-wrap"><Link2 size={24} /></div>
+              <p className="step-desc">Create your product with a photo, price, and description.</p>
+            </motion.div>
+            <motion.div 
+              className="step-card"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+            >
+              <div className="step-badge">02</div>
+              <div className="step-icon-wrap"><Link2 size={28} /></div>
               <h3 className="step-title">Share Link</h3>
-              <p className="step-desc">Share your payment link on WhatsApp, Instagram or anywhere online.</p>
-            </div>
-            <div className="step-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <div className="step-icon-wrap"><CreditCard size={24} /></div>
+              <p className="step-desc">Share your payment link anywhere your customers are.</p>
+            </motion.div>
+            <motion.div 
+              className="step-card"
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+            >
+              <div className="step-badge">03</div>
+              <div className="step-icon-wrap"><CreditCard size={28} /></div>
               <h3 className="step-title">Get Paid</h3>
-              <p className="step-desc">Receive payments instantly through Flutterwave.</p>
-            </div>
-          </div>
+              <p className="step-desc">Receive payments instantly and securely into your account.</p>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* ── 5. Why SellSnap Section ("Built for Social Commerce") */}
-      <section className="section bg-surface">
+      <section className="section" id="social-commerce">
         <div className="container">
           <div className="social-commerce-grid">
             <div className="sc-left">
-              <h2 className="text-h1 mb-6">Built for where your customers already are.</h2>
-              <p className="text-body text-ink-muted mb-8 max-w-md">
-                Businesses already sell through messaging apps and social media. Bring your products directly to them without changing their habits.
+              <h2 className="text-display mb-4 max-w-[14ch]">Sell Where Your Customers Already Are</h2>
+              <p className="text-body text-ink-muted mb-8 max-w-[42ch]">
+                Share one payment link across the platforms your customers already use. No website required.
               </p>
               <ul className="sc-checklist">
                 <li><span className="sc-check">✓</span> WhatsApp</li>
@@ -425,37 +351,41 @@ export default function LandingPage() {
             </div>
             
             <div className="sc-right" aria-hidden="true">
-              <div className="sc-float-container">
-                <div className="sc-float-card sc-wa">
-                  <div className="flex items-center gap-3">
-                    <span className="sc-icon sc-icon-wa"><MessageCircle size={16} /></span>
-                    <span className="text-body-sm font-medium">WhatsApp Share</span>
+              <div className="sc-right-container">
+                <div className="sc-orbit-system">
+                  <div className="sc-float-card sc-pos-1">
+                    <div className="sc-float-inner">
+                      <span className="sc-icon sc-icon-wa"><MessageCircle size={16} /></span>
+                      <span className="text-body-sm font-medium">WhatsApp</span>
+                    </div>
                   </div>
-                </div>
-                <div className="sc-float-card sc-ig">
-                  <div className="flex items-center gap-3">
-                    <span className="sc-icon sc-icon-ig"><Instagram size={16} /></span>
-                    <span className="text-body-sm font-medium">Instagram Share</span>
+                  
+                  <div className="sc-float-card sc-pos-2">
+                    <div className="sc-float-inner">
+                      <span className="sc-icon sc-icon-ig"><Instagram size={16} /></span>
+                      <span className="text-body-sm font-medium">Instagram</span>
+                    </div>
                   </div>
-                </div>
-                <div className="sc-float-card sc-fb">
-                  <div className="flex items-center gap-3">
-                    <span className="sc-icon sc-icon-fb"><Facebook size={16} /></span>
-                    <span className="text-body-sm font-medium">Facebook Share</span>
+                  
+                  <div className="sc-float-card sc-pos-3">
+                    <div className="sc-float-inner">
+                      <span className="sc-icon sc-icon-fb"><Facebook size={16} /></span>
+                      <span className="text-body-sm font-medium">Facebook</span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="sc-float-card sc-pay">
-                  <div className="flex items-center gap-3">
-                    <span className="sc-icon sc-icon-pay"><Shield size={16} /></span>
-                    <span className="text-body-sm font-medium">Payment Successful</span>
+
+                  <div className="sc-float-card sc-pos-4">
+                    <div className="sc-float-inner">
+                      <span className="sc-icon sc-icon-notify"><Zap size={16} /></span>
+                      <span className="text-body-sm font-medium">Instant Alerts</span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="sc-float-card sc-notify">
-                  <div className="flex items-center gap-3">
-                    <span className="sc-icon sc-icon-notify"><Zap size={16} /></span>
-                    <span className="text-body-sm font-medium">Order Notification</span>
+                  
+                  <div className="sc-float-card sc-pos-5">
+                    <div className="sc-float-inner">
+                      <span className="sc-icon sc-icon-pay"><ShieldCheck size={16} /></span>
+                      <span className="text-body-sm font-medium">Secure Payment</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -467,10 +397,10 @@ export default function LandingPage() {
       {/* ── 6. Pricing Section [NEW] ──────────────────────────── */}
       <section className="pricing-section" id="pricing">
         <div className="container">
-          <div className="section-header animate-fade-in-up">
-            <h2 className="section-title">Simple pricing. Start selling for free.</h2>
-            <p className="section-subtitle">
-              No monthly subscription. Create products and start selling today.
+          <div className="section-header animate-fade-in-up text-center">
+            <h2 className="text-display mb-5">Start Free. Upgrade When You Grow.</h2>
+            <p className="text-body text-ink-muted max-w-[42ch] mx-auto">
+              Everything you need to start selling today. Upgrade only when your business needs more.
             </p>
           </div>
           
@@ -517,8 +447,11 @@ export default function LandingPage() {
       {/* ── 7. FAQ ────────────────────────────────────────────── */}
       <section className="section" id="faq">
         <div className="container">
-          <div className="section-header animate-fade-in-up">
-            <h2 className="section-title">Frequently Asked Questions</h2>
+          <div className="section-header animate-fade-in-up text-center" style={{ marginBottom: '64px' }}>
+            <h2 className="text-display mb-5">Frequently Asked Questions</h2>
+            <p className="text-body text-ink-muted max-w-[42ch] mx-auto">
+              Everything you need to know before you start selling with SellSnap.
+            </p>
           </div>
           <div className="faq-container">
             <Accordion faqs={faqData} />
@@ -527,20 +460,22 @@ export default function LandingPage() {
       </section>
 
       {/* ── 8. Final Call To Action ───────────────────────────── */}
-      <section className="section final-cta-section bg-surface">
+      <section className="section final-cta-section" id="cta">
         <div className="container">
-          <div className="final-cta-card">
-            <h2 className="text-h1 mb-4 text-center">Start selling today.</h2>
-            <p className="text-body text-ink-muted mb-8 text-center max-w-lg mx-auto">
+          <div className="final-cta-card animate-fade-in-up">
+            <h2 className="text-display text-center cta-heading">Start selling today.</h2>
+            <p className="text-body text-center max-w-lg mx-auto cta-subtitle">
               Create products, generate payment links and receive payments in minutes.
             </p>
-            <div className="flex justify-center gap-4 flex-wrap">
+            <div className="cta-actions flex justify-center gap-6 flex-wrap">
               <Link href="/auth">
                 <Button size="lg" variant="primary">Create Free Account</Button>
               </Link>
-              <Link href="/auth">
-                <Button size="lg" variant="secondary">Sign In</Button>
-              </Link>
+            </div>
+            <div className="cta-trust-indicators">
+              <div className="cta-trust-item"><Check size={18} /> No monthly fees</div>
+              <div className="cta-trust-item"><Zap size={18} /> Setup in under 60 seconds</div>
+              <div className="cta-trust-item"><ShieldCheck size={18} /> Powered by Flutterwave</div>
             </div>
           </div>
         </div>

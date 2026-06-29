@@ -1,0 +1,122 @@
+/* ── Section: Trust Section ── */
+.trust-features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 768px) {
+  .trust-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .trust-features-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.trust-card {
+  background-color: var(--color-bg);
+  border-radius: var(--sys-radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--sys-elevation-level1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent; /* No visible border initially */
+}
+.trust-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sys-elevation-level2), var(--sys-elevation-glow);
+}
+.trust-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--sys-radius-md);
+  background-color: var(--sys-primary-container-role);
+  color: var(--color-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.trust-card-title {
+  font: var(--sys-font-title-medium);
+  color: var(--color-ink);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.trust-card-desc {
+  font: var(--sys-font-body-small);
+  color: var(--color-ink-muted);
+}
+
+.marquee-container-wrapper {
+  margin-top: 64px;
+}
+@media (min-width: 768px) {
+  .marquee-container-wrapper {
+    margin-top: 96px;
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  white-space: nowrap;
+  background-color: var(--color-bg);
+  border-radius: 16px;
+  box-shadow: var(--sys-elevation-level1);
+  padding: 20px 32px;
+}
+.marquee-track {
+  display: inline-flex;
+  animation: marquee 20s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-content {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.trust-metric-item {
+  text-align: left;
+  padding: 0 40px;
+  display: inline-block;
+  min-width: max-content;
+}
+@media (min-width: 768px) {
+  .trust-metric-item {
+    padding: 0 50px;
+  }
+}
+
+.trust-metric-value {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--color-ink);
+  opacity: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+@media (min-width: 768px) {
+  .trust-metric-value {
+    font-size: 22px;
+  }
+}
+.trust-metric-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  margin-bottom: 4px;
+}
+.trust-metric-desc {
+  font-size: 12px;
+  color: var(--color-ink-subtle);
+}
