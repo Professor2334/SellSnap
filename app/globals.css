@@ -2291,8 +2291,8 @@ a {
   background: linear-gradient(
     135deg,
     var(--color-surface) 0%,
-    color-mix(in srgb, var(--sys-primary-color-role) 3%, transparent) 45%,
-    color-mix(in srgb, var(--sys-primary-container-role) 6%, transparent) 70%,
+    color-mix(in srgb, var(--sys-primary-color-role) 1%, transparent) 45%,
+    color-mix(in srgb, var(--sys-primary-container-role) 2%, transparent) 70%,
     var(--color-surface) 100%
   );
 }

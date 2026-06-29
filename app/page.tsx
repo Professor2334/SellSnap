@@ -332,8 +332,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 5. Why SellSnap Section ("Built for Social Commerce") */}
-      <section className="section" id="social-commerce">
-        <div className="container">
+      <section className="section" id="social-commerce" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div className="sc-bg-container" style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+          <div className="auth-glow-center"></div>
+          <div className="auth-orb-tl"></div>
+          <div className="auth-orb-br"></div>
+        </div>
+        <div className="container" style={{ position: 'relative', zIndex: 10 }}>
           <div className="social-commerce-grid">
             <div className="sc-left">
               <h2 className="text-display mb-4 max-w-[14ch]">Sell Where Your Customers Already Are</h2>
