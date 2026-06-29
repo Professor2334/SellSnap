@@ -29,50 +29,75 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
-        <div className="auth-card">
-          <div className="auth-form-header">
-            <Link href="/" className="auth-brand-name">SellSnap</Link>
-            <h1 className="auth-form-title">Check your email</h1>
+      <main className="auth-page-refined">
+        <div className="auth-bg-container">
+          <div className="auth-glow-center"></div>
+          <div className="auth-orb-tl"></div>
+          <div className="auth-orb-br"></div>
+          <div className="auth-edge-pattern-left"></div>
+          <div className="auth-edge-pattern-right"></div>
+          <div className="auth-floating-shape auth-shape-1"></div>
+          <div className="auth-floating-shape auth-shape-2"></div>
+          <div className="auth-floating-shape auth-shape-3"></div>
+        </div>
+        <div className="auth-form-container">
+          <div className="auth-header-refined auth-stagger-1">
+            <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
+            <h1 className="auth-form-title-refined">Check your email</h1>
           </div>
-          <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
+          <p className="auth-form-subtitle auth-stagger-2" style={{ textAlign: 'center', marginBottom: '24px' }}>
             If an account exists with that email, we&apos;ve sent a password reset link.
           </p>
-          <Link href="/auth?mode=login" className="auth-form-link" style={{ textAlign: 'center' }}>
-            Back to login
-          </Link>
+          <div className="auth-stagger-3" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Link href="/auth?mode=login" className="auth-form-link" style={{ fontWeight: 500 }}>
+              Back to login
+            </Link>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
-      <div className="auth-card">
-        <div className="auth-form-header">
-          <Link href="/" className="auth-brand-name">SellSnap</Link>
-          <h1 className="auth-form-title">Reset your password</h1>
+    <main className="auth-page-refined">
+      <div className="auth-bg-container">
+        <div className="auth-glow-center"></div>
+        <div className="auth-orb-tl"></div>
+        <div className="auth-orb-br"></div>
+        <div className="auth-edge-pattern-left"></div>
+        <div className="auth-edge-pattern-right"></div>
+        <div className="auth-floating-shape auth-shape-1"></div>
+        <div className="auth-floating-shape auth-shape-2"></div>
+        <div className="auth-floating-shape auth-shape-3"></div>
+      </div>
+      
+      <div className="auth-form-container">
+        <div className="auth-header-refined auth-stagger-1">
+          <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
+          <h1 className="auth-form-title-refined">Reset your password</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form" noValidate>
-          <Input
-            id="reset-email"
-            label="Enter Email"
-            name="email"
-            type="email"
-            required
-            placeholder="john@example.com"
-            autoComplete="email"
-            error={error || undefined}
-          />
-          <Button type="submit" fullWidth size="lg" disabled={loading}>
+        <form onSubmit={handleSubmit} className="auth-form auth-stagger-2" noValidate>
+          <div className="auth-input-refined" style={{ marginBottom: '24px' }}>
+            <Input
+              id="reset-email"
+              label="Email address"
+              name="email"
+              type="email"
+              required
+              placeholder="john@example.com"
+              autoComplete="email"
+              error={error || undefined}
+            />
+          </div>
+          <Button type="submit" fullWidth size="lg" disabled={loading} style={{ height: '56px', borderRadius: '12px' }}>
             {loading ? 'Sending…' : 'Send reset link'}
           </Button>
         </form>
 
-        <p className="auth-form-footer">
+        <p className="auth-form-footer auth-stagger-3" style={{ textAlign: 'center', marginTop: '32px' }}>
           Remember your password?{' '}
-          <Link href="/auth?mode=login" className="auth-form-link">
+          <Link href="/auth?mode=login" style={{ color: 'var(--color-brand)', fontWeight: 500 }}>
             Log in
           </Link>
         </p>

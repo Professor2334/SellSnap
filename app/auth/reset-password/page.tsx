@@ -71,18 +71,30 @@ function ResetPasswordContent() {
 
   if (!token) {
     return (
-      <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
-        <div className="auth-card">
-          <div className="auth-form-header">
-            <Link href="/" className="auth-brand-name">SellSnap</Link>
-            <h1 className="auth-form-title">Invalid link</h1>
+      <main className="auth-page-refined">
+        <div className="auth-bg-container">
+          <div className="auth-glow-center"></div>
+          <div className="auth-orb-tl"></div>
+          <div className="auth-orb-br"></div>
+          <div className="auth-edge-pattern-left"></div>
+          <div className="auth-edge-pattern-right"></div>
+          <div className="auth-floating-shape auth-shape-1"></div>
+          <div className="auth-floating-shape auth-shape-2"></div>
+          <div className="auth-floating-shape auth-shape-3"></div>
+        </div>
+        <div className="auth-form-container">
+          <div className="auth-header-refined auth-stagger-1">
+            <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
+            <h1 className="auth-form-title-refined">Invalid link</h1>
           </div>
-          <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
+          <p className="auth-form-subtitle auth-stagger-2" style={{ textAlign: 'center', marginBottom: '24px' }}>
             This reset link is invalid or missing.
           </p>
-          <Link href="/auth/forgot-password" className="auth-form-link" style={{ textAlign: 'center' }}>
-            Request a new reset link
-          </Link>
+          <div className="auth-stagger-3" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Link href="/auth/forgot-password" className="auth-form-link" style={{ fontWeight: 500 }}>
+              Request a new reset link
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -90,36 +102,59 @@ function ResetPasswordContent() {
 
   if (success) {
     return (
-      <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
-        <div className="auth-card">
-          <div className="auth-form-header">
-            <Link href="/" className="auth-brand-name">SellSnap</Link>
-            <h1 className="auth-form-title">Password reset</h1>
+      <main className="auth-page-refined">
+        <div className="auth-bg-container">
+          <div className="auth-glow-center"></div>
+          <div className="auth-orb-tl"></div>
+          <div className="auth-orb-br"></div>
+          <div className="auth-edge-pattern-left"></div>
+          <div className="auth-edge-pattern-right"></div>
+          <div className="auth-floating-shape auth-shape-1"></div>
+          <div className="auth-floating-shape auth-shape-2"></div>
+          <div className="auth-floating-shape auth-shape-3"></div>
+        </div>
+        <div className="auth-form-container">
+          <div className="auth-header-refined auth-stagger-1">
+            <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
+            <h1 className="auth-form-title-refined">Password reset</h1>
           </div>
-          <p className="auth-form-subtitle" style={{ textAlign: 'center' }}>
+          <p className="auth-form-subtitle auth-stagger-2" style={{ textAlign: 'center', marginBottom: '24px' }}>
             Your password has been reset successfully.
           </p>
-          <Link href="/auth?mode=login" className="auth-form-link" style={{ textAlign: 'center' }}>
-            Log in
-          </Link>
+          <div className="auth-stagger-3" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Link href="/auth?mode=login" className="auth-form-link" style={{ fontWeight: 500 }}>
+              Log in
+            </Link>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="auth-page min-h-screen flex items-center justify-center py-12 bg-bg">
-      <div className="auth-card">
-        <div className="auth-form-header">
-          <Link href="/" className="auth-brand-name">SellSnap</Link>
-          <h1 className="auth-form-title">Set new password</h1>
+    <main className="auth-page-refined">
+      <div className="auth-bg-container">
+        <div className="auth-glow-center"></div>
+        <div className="auth-orb-tl"></div>
+        <div className="auth-orb-br"></div>
+        <div className="auth-edge-pattern-left"></div>
+        <div className="auth-edge-pattern-right"></div>
+        <div className="auth-floating-shape auth-shape-1"></div>
+        <div className="auth-floating-shape auth-shape-2"></div>
+        <div className="auth-floating-shape auth-shape-3"></div>
+      </div>
+      
+      <div className="auth-form-container">
+        <div className="auth-header-refined auth-stagger-1">
+          <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
+          <h1 className="auth-form-title-refined">Set new password</h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form" noValidate>
-          <div className="password-input-wrapper">
+        <form onSubmit={handleSubmit} className="auth-form auth-stagger-2" noValidate>
+          <div className="password-input-wrapper auth-input-refined" style={{ marginBottom: '16px' }}>
             <Input
               id="new-password"
-              label="New Password"
+              label="New password"
               name="password"
               type={showPassword ? 'text' : 'password'}
               required
@@ -140,7 +175,7 @@ function ResetPasswordContent() {
           </div>
 
           {passwordReqs && (
-            <ul className="password-reqs">
+            <ul className="password-reqs" style={{ marginBottom: '16px' }}>
               {!passwordReqs.upper && <li>Password must contain at least one uppercase letter</li>}
               {passwordReqs.upper && !passwordReqs.lower && <li>Password must contain at least a lowercase letter</li>}
               {passwordReqs.upper && passwordReqs.lower && !passwordReqs.number && <li>Password must contain at least 1 number</li>}
@@ -150,18 +185,18 @@ function ResetPasswordContent() {
           )}
 
           {error && (
-            <p className="auth-form-error" role="alert">
+            <p className="auth-form-error-banner" role="alert" style={{ marginBottom: '16px' }}>
               {error}
             </p>
           )}
 
-          <Button type="submit" fullWidth size="lg" disabled={loading}>
+          <Button type="submit" fullWidth size="lg" disabled={loading} style={{ height: '56px', borderRadius: '12px' }}>
             {loading ? 'Resetting…' : 'Reset password'}
           </Button>
         </form>
 
-        <p className="auth-form-footer">
-          <Link href="/auth?mode=login" className="auth-form-link">
+        <p className="auth-form-footer auth-stagger-3" style={{ textAlign: 'center', marginTop: '32px' }}>
+          <Link href="/auth?mode=login" style={{ color: 'var(--color-brand)', fontWeight: 500 }}>
             Back to login
           </Link>
         </p>

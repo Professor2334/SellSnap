@@ -1,0 +1,116 @@
+/* Auth Background Decorative Elements */
+.auth-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Central Radial Glow */
+.auth-glow-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--color-brand) 0%, transparent 70%);
+  opacity: 0.03;
+  filter: blur(100px);
+}
+
+/* Orbs */
+.auth-orb-tl {
+  position: absolute;
+  top: -150px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background-color: var(--color-brand);
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.04;
+}
+
+.auth-orb-br {
+  position: absolute;
+  bottom: -200px;
+  right: -200px;
+  width: 700px;
+  height: 700px;
+  background-color: var(--color-brand);
+  border-radius: 50%;
+  filter: blur(180px);
+  opacity: 0.03;
+}
+
+/* Edge Patterns (Dot grid) */
+.auth-edge-pattern-left,
+.auth-edge-pattern-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35vw;
+  max-width: 400px;
+  opacity: 0.1;
+  background-image: radial-gradient(var(--color-ink) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.auth-edge-pattern-left {
+  left: 0;
+  mask-image: linear-gradient(to right, black, transparent);
+  -webkit-mask-image: linear-gradient(to right, black, transparent);
+}
+
+.auth-edge-pattern-right {
+  right: 0;
+  mask-image: linear-gradient(to left, black, transparent);
+  -webkit-mask-image: linear-gradient(to left, black, transparent);
+}
+
+/* Floating Shapes */
+.auth-floating-shape {
+  position: absolute;
+  background-color: var(--color-brand);
+  border-radius: 40px;
+  filter: blur(40px);
+  opacity: 0.02;
+  animation: floatBgShape 10s infinite alternate ease-in-out;
+}
+
+.auth-shape-1 {
+  width: 200px;
+  height: 300px;
+  top: 20%;
+  left: 10%;
+  animation-duration: 9s;
+}
+
+.auth-shape-2 {
+  width: 250px;
+  height: 150px;
+  top: 60%;
+  right: 15%;
+  animation-duration: 11s;
+  animation-delay: -2s;
+}
+
+.auth-shape-3 {
+  width: 150px;
+  height: 250px;
+  bottom: 10%;
+  left: 20%;
+  animation-duration: 8s;
+  animation-delay: -5s;
+}
+
+@keyframes floatBgShape {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(20px, 30px) rotate(5deg);
+  }
+}

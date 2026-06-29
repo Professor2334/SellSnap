@@ -1,31 +1,34 @@
-import { getToken } from 'next-auth/jwt';
-import { NextResponse, type NextRequest } from 'next/server';
+import NextAuth from 'next-auth';
+import { authConfig } from './auth.config';
+import { NextResponse } from 'next/server';
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+const { auth } = NextAuth(authConfig);
 
-  const isOnboarded = token?.isOnboarded as boolean | undefined;
+export default auth((req) => {
+  const token = req.auth;
+  const isOnboarded = (token?.user as any)?.isOnboarded as boolean | undefined;
+  
   const isAuthPage = req.nextUrl.pathname.startsWith('/auth');
   const isDashboardPage = req.nextUrl.pathname.startsWith('/dashboard');
   const isOnboardingPage = req.nextUrl.pathname.startsWith('/onboarding');
 
   // Unauthenticated user trying to access a protected page → send to login
   if (!token && (isDashboardPage || isOnboardingPage)) {
-    return NextResponse.redirect(new URL('/auth', req.url));
+    return NextResponse.redirect(new URL('/auth', req.nextUrl));
   }
 
   // Authenticated user visiting the auth page → send them home
   if (token && isAuthPage) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   }
 
   // Fully onboarded user trying to re-do onboarding → skip to dashboard
   if (token && isOnboarded && isOnboardingPage) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ['/dashboard/:path*', '/onboarding/:path*', '/auth'],
