@@ -17,14 +17,22 @@ export default auth((req) => {
     return NextResponse.redirect(new URL('/auth', req.nextUrl));
   }
 
-  // Authenticated user visiting the auth page → send them home
+  // Authenticated user visiting the auth page → send them home or to onboarding
   if (token && isAuthPage) {
+    if (!isOnboarded) {
+      return NextResponse.redirect(new URL('/onboarding', req.nextUrl));
+    }
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   }
 
   // Fully onboarded user trying to re-do onboarding → skip to dashboard
   if (token && isOnboarded && isOnboardingPage) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  }
+
+  // Authenticated but NOT onboarded user trying to access dashboard → send to onboarding
+  if (token && !isOnboarded && isDashboardPage) {
+    return NextResponse.redirect(new URL('/onboarding', req.nextUrl));
   }
 
   return NextResponse.next();
