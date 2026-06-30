@@ -1,5 +1,6 @@
 @import "../tokens/tokens.css";
 @import "./auth-bg.css";
+@import "./onboarding-bg.css";
 
 :root {
   --color-bg: var(--sys-neutral-container-lowest);

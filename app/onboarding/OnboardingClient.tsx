@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/FormPrimitives';
-import { createFirstProduct } from '@/app/actions/onboarding';
+import { createFirstProduct, skipOnboarding } from '@/app/actions/onboarding';
 import { Loader2, ArrowLeft, ShoppingBag, Store, Zap, ShieldCheck, BarChart3, Check, Info, Upload } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -14,6 +15,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
   const [error, setError] = React.useState<string | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const router = useRouter();
+  const { update } = useSession();
 
   // Step 3 state
   const [productName, setProductName] = React.useState('');
@@ -46,6 +48,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
 
     setLoading(false);
     if (result.success) {
+      await update({ isOnboarded: true });
       router.push('/dashboard');
       router.refresh();
     } else {
@@ -53,8 +56,18 @@ export default function OnboardingClient({ userName, businessName: initialBusine
     }
   }
 
-  const handleSkip = () => {
-    router.push('/dashboard');
+  const handleSkip = async () => {
+    setLoading(true);
+    const result = await skipOnboarding();
+    
+    if (result.success) {
+      await update({ isOnboarded: true });
+      router.push('/dashboard');
+      router.refresh();
+    } else {
+      setError(result.error || 'Failed to skip onboarding');
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -83,8 +96,18 @@ export default function OnboardingClient({ userName, businessName: initialBusine
   );
 
   return (
-    <div className="onboarding-screen">
-      <div className="onboarding-container" style={{ maxWidth: '605px', width: '100%', margin: '0 auto' }}>
+    <div className="onboarding-screen" style={{ position: 'relative' }}>
+      {/* Decorative Premium Background */}
+      <div className="onboarding-bg-container">
+        <div className="onboarding-glow-center" />
+        <div className="onboarding-edge-pattern-left" />
+        <div className="onboarding-edge-pattern-right" />
+        <div className="onboarding-floating-shape onboarding-shape-1" />
+        <div className="onboarding-floating-shape onboarding-shape-2" />
+        <div className="onboarding-floating-shape onboarding-shape-3" />
+      </div>
+
+      <div className="onboarding-container" style={{ maxWidth: '605px', width: '100%', margin: '0 auto', position: 'relative', zIndex: 10 }}>
         
         {/* Brand Logo Header */}
         <div className="onboarding-logo" style={{ fontSize: '24px', marginBottom: '8px' }}>SellSnap</div>
@@ -297,8 +320,9 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                   <div>
                     <label className="input-label mb-3 block" style={{ fontSize: '13px', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)' }}>Product Image</label>
                     <div 
-                      className="upload-zone w-full flex flex-col items-center justify-center rounded-xl cursor-pointer overflow-hidden"
-                      style={{ height: imagePreview ? 'auto' : '100px', border: '1px dashed var(--sys-outline-variant-color-role)' }}
+                      className="upload-zone w-full flex flex-col items-center justify-center rounded-xl overflow-hidden"
+                      style={{ height: imagePreview ? 'auto' : '100px', border: '1px dashed var(--sys-outline-variant-color-role)', cursor: 'pointer' }}
+                      onClick={() => document.getElementById('product-image')?.click()}
                     >
                       <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -308,7 +332,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                           reader.readAsDataURL(file);
                         }
                       }} />
-                      <label htmlFor="product-image" className="flex flex-col items-center cursor-pointer w-full h-full justify-center">
+                      <label htmlFor="product-image" className="flex flex-col items-center w-full h-full justify-center" style={{ cursor: 'pointer', width: '100%', height: '100%' }}>
                         {imagePreview ? (
                           <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
                         ) : (

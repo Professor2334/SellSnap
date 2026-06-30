@@ -27,6 +27,8 @@ function AuthContent() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loginEmailDone, setLoginEmailDone] = React.useState(false);
   const [loginPasswordDone, setLoginPasswordDone] = React.useState(false);
+  const [loginEmail, setLoginEmail] = React.useState('');
+  const [loginPassword, setLoginPassword] = React.useState('');
 
   const [passwordReqs, setPasswordReqs] = React.useState<{ min: boolean; upper: boolean; lower: boolean; number: boolean; special: boolean } | null>(null);
   const router = useRouter();
@@ -59,6 +61,8 @@ function AuthContent() {
     setPasswordReqs(null);
     setLoginEmailDone(false);
     setLoginPasswordDone(false);
+    setLoginEmail('');
+    setLoginPassword('');
     router.push(`/auth?mode=${m}`);
   }
 
@@ -79,12 +83,6 @@ function AuthContent() {
     const formData = new FormData(e.currentTarget);
     const emailVal = (formData.get('email') as string).trim().toLowerCase();
     const password = (formData.get('password') as string);
-
-    const errors: { email?: string; password?: string } = {};
-    if (!emailVal) errors.email = 'fields cannot be empty';
-    if (!password) errors.password = 'fields cannot be empty';
-    setFieldErrors(errors);
-    if (Object.keys(errors).length > 0) return;
 
     setLoading(true);
 
@@ -300,10 +298,10 @@ function AuthContent() {
                 required
                 placeholder="john@example.com"
                 autoComplete="email"
-                error={fieldErrors.email}
+                value={loginEmail}
                 className={`auth-input-refined ${loginEmailDone ? 'input-field-completed' : ''}`}
-                onChange={e => { if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.currentTarget.value.trim())) setFieldErrors(prev => ({ ...prev, email: undefined })); }}
-                onBlur={e => { if (!e.currentTarget.value.trim()) setFieldErrors(prev => ({ ...prev, email: 'This field cannot be empty' })); else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.currentTarget.value.trim())) setLoginEmailDone(true); }}
+                onChange={e => { setLoginEmail(e.currentTarget.value); if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.currentTarget.value.trim())) setLoginEmailDone(true); }}
+                onBlur={e => { if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.currentTarget.value.trim())) setLoginEmailDone(true); }}
               />
               <div className="password-input-wrapper">
                 <Input
@@ -314,8 +312,9 @@ function AuthContent() {
                   required
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  error={fieldErrors.password}
+                  value={loginPassword}
                   className={`auth-input-refined ${loginPasswordDone ? 'input-field-completed' : ''}`}
+                  onChange={e => { setLoginPassword(e.currentTarget.value); }}
                   onBlur={e => { if (e.currentTarget.value.trim()) setLoginPasswordDone(true); }}
                 />
                 <button
@@ -338,8 +337,12 @@ function AuthContent() {
                 type="submit"
                 fullWidth
                 size="lg"
-                disabled={loading}
-                style={{ height: '56px', borderRadius: '12px' }}
+                disabled={loading || !loginEmail.trim() || !loginPassword.trim()}
+                style={{ 
+                  height: '56px', 
+                  borderRadius: '12px',
+                  cursor: (!loginEmail.trim() || !loginPassword.trim()) ? 'not-allowed' : undefined
+                }}
               >
                 {loading ? <Loader2 size={20} className="spinner" /> : 'Log in'}
               </Button>

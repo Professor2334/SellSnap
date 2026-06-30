@@ -1,6 +1,7 @@
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import OnboardingClient from './OnboardingClient';
+import { SessionProvider } from 'next-auth/react';
 
 export default async function OnboardingPage() {
   const session = await getSession();
@@ -9,5 +10,9 @@ export default async function OnboardingPage() {
     redirect('/auth');
   }
 
-  return <OnboardingClient userName={session.user.name || 'Merchant'} businessName={session.user.businessName || ''} />;
+  return (
+    <SessionProvider session={session}>
+      <OnboardingClient userName={session.user.name || 'Merchant'} businessName={session.user.businessName || ''} />
+    </SessionProvider>
+  );
 }

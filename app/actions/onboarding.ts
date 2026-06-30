@@ -85,3 +85,19 @@ export async function createFirstProduct(formData: FormData) {
     return { success: false, error: 'Failed to create product' };
   }
 }
+
+export async function skipOnboarding() {
+  const session = await getSession();
+  if (!session?.user?.id) return { success: false, error: 'Unauthorized' };
+
+  try {
+    await db.user.update({
+      where: { id: session.user.id },
+      data: { isOnboarded: true },
+    });
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to skip onboarding' };
+  }
+}
