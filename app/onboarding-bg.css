@@ -17,8 +17,8 @@
   height: 100vh;
   background: radial-gradient(
     circle at top center,
-    color-mix(in srgb, var(--sys-primary-color-role) 5%, transparent) 0%,
-    color-mix(in srgb, var(--sys-primary-color-role) 2%, transparent) 35%,
+    color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent) 0%,
+    color-mix(in srgb, var(--sys-primary-color-role) 3%, transparent) 35%,
     transparent 75%
   );
 }

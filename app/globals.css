@@ -432,15 +432,14 @@ a {
 }
 
 .card-stat {
-  background-color: white;
-  border: 1px solid var(--color-border);
+  background-color: var(--sys-neutral-container-lowest);
+  border: none;
   border-radius: 12px;
   padding: 20px 22px 45px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  opacity: 0.9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .card-stat-label {
@@ -458,17 +457,18 @@ a {
 }
 
 .card-container {
-  background-color: white;
-  border: 1px solid var(--color-border);
+  background-color: var(--sys-neutral-container-lowest);
+  border: none;
   border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .stat-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background-color: var(--sys-neutral-container-lowest);
+  border: none;
   border-radius: 11px;
   padding: 20px;
-  opacity: 0.9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .stat-card-label {
@@ -495,10 +495,14 @@ a {
 
 /* Sidebar */
 .dashboard-sidebar {
-  background-color: rgba(242, 242, 242, 0.9);
+  background-color: var(--sys-neutral-container-lowest);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  width: 260px;
+  border-right: none;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03);
+  position: relative;
 }
 
 @media (max-width: 1023px) {
@@ -2953,4 +2957,21 @@ a {
 .auth-stagger-4 {
   opacity: 0;
   animation: authFadeUp 250ms ease-out 240ms forwards;
+}
+
+
+.sidebar-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  width: 100%;
+}
+.sidebar-profile-card:hover {
+  background-color: var(--color-surface);
+  transform: translateY(-1px);
 }

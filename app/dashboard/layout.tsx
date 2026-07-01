@@ -14,13 +14,13 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen flex bg-bg w-full">
+    <div className="min-h-screen flex bg-surface w-full">
       <DashboardSidebar
         userName={session.user.name || 'Merchant'}
         businessName={session.user.businessName}
         email={session.user.email || ''}
       />
-      <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full bg-bg">
+      <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full bg-surface">
         <div className="w-full flex-1 mx-auto max-w-6xl p-6 md:p-10 lg:p-12">
           {children}
         </div>

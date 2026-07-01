@@ -1,0 +1,15 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "businessAddress" TEXT,
+ADD COLUMN     "businessDescription" TEXT,
+ADD COLUMN     "businessLogo" TEXT,
+ADD COLUMN     "currency" TEXT NOT NULL DEFAULT 'NGN',
+ADD COLUMN     "dateFormat" TEXT NOT NULL DEFAULT 'DD/MM/YYYY',
+ADD COLUMN     "notifyMarketing" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "notifyOrderReceived" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "notifyPaymentSuccess" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "notifyProductUpdates" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "notifyWelcome" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "phone" TEXT,
+ADD COLUMN     "supportEmail" TEXT,
+ADD COLUMN     "supportPhone" TEXT,
+ADD COLUMN     "timeZone" TEXT NOT NULL DEFAULT 'Africa/Lagos';

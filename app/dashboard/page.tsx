@@ -2,6 +2,7 @@ import { getSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { DashboardView, ProductsView, OrdersView } from './_components/DashboardViews';
+import { SettingsClient } from './settings/SettingsClient';
 
 type Props = {
   searchParams: { tab?: string };
@@ -95,6 +96,16 @@ export default async function DashboardPage({ searchParams }: Props) {
       return <ProductsView products={flatProducts} />;
     case 'orders':
       return <OrdersView orders={flatOrders} />;
+    case 'settings': {
+      const user = await db.user.findUnique({
+        where: { id: session.user.id },
+        include: { accounts: { select: { provider: true } } },
+      });
+      if (!user) return redirect('/auth');
+      const hasGoogleAccount = user.accounts.some((acc: any) => acc.provider === 'google');
+      // @ts-ignore
+      return <SettingsClient user={user} hasGoogleAccount={hasGoogleAccount} />;
+    }
     default:
       return (
         <DashboardView

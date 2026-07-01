@@ -127,7 +127,7 @@ export function DashboardView({
         <h2 className="text-h2 text-ink">Recent Orders</h2>
       </div>
 
-      <div className="card-container min-h-[320px] flex items-center justify-center border-dashed border-2 bg-surface/30 rounded-2xl">
+      <div className="card-container min-h-[320px] flex items-center justify-center  rounded-2xl">
         <div className="dashboard-empty text-center p-12">
           <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />
           <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
@@ -156,9 +156,9 @@ export function ProductsView({ products }: { products: Product[] }) {
       </div>
 
       {products.length === 0 ? (
-        <div className="card-container min-h-[400px] flex items-center justify-center border-dashed border-2 bg-surface/30 rounded-2xl">
+        <div className="card-container min-h-[400px] flex items-center justify-center  rounded-2xl">
           <div className="dashboard-empty text-center p-12">
-            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
+            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6  shadow-sm">
               <Icon name="Products" size={32} className="text-ink-subtle" />
             </div>
             <h3 className="text-h2 font-bold text-ink mb-2">No products yet</h3>
@@ -175,7 +175,7 @@ export function ProductsView({ products }: { products: Product[] }) {
           {products.map((product) => (
             <div key={product.id} className="card-container p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-brand/30 transition-colors">
               <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-xl bg-surface border border-[var(--color-border)] flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+                <div className="w-16 h-16 rounded-xl bg-surface  flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
                   {product.imageUrl ? (
                     <Image 
                       src={product.imageUrl} 
@@ -229,9 +229,9 @@ export function OrdersView({ orders }: { orders: Order[] }) {
       </div>
 
       {orders.length === 0 ? (
-        <div className="card-container min-h-[400px] flex items-center justify-center border-dashed border-2 bg-surface/30 rounded-2xl">
+        <div className="card-container min-h-[400px] flex items-center justify-center  rounded-2xl">
           <div className="dashboard-empty text-center p-12">
-            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[var(--color-border)] shadow-sm">
+            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6  shadow-sm">
               <Icon name="Orders" size={32} className="text-ink-subtle" />
             </div>
           <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />

@@ -8,19 +8,33 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(cuid())
-  name              String
-  email             String              @unique
-  emailVerified     DateTime?
-  image             String?
-  businessName      String?
-  passwordHash      String?
-  isOnboarded       Boolean             @default(false)
-  createdAt         DateTime            @default(now())
-  products          Product[]
-  resetTokens       PasswordResetToken[]
-  accounts          Account[]
-  sessions          Session[]
+  id                   String              @id @default(cuid())
+  name                 String
+  email                String              @unique
+  emailVerified        DateTime?
+  image                String?
+  phone                String?
+  businessName         String?
+  businessDescription  String?
+  businessLogo         String?
+  supportEmail         String?
+  supportPhone         String?
+  businessAddress      String?
+  notifyOrderReceived  Boolean             @default(true)
+  notifyPaymentSuccess Boolean             @default(true)
+  notifyWelcome        Boolean             @default(true)
+  notifyProductUpdates Boolean             @default(true)
+  notifyMarketing      Boolean             @default(false)
+  currency             String              @default("NGN")
+  timeZone             String              @default("Africa/Lagos")
+  dateFormat           String              @default("DD/MM/YYYY")
+  passwordHash         String?
+  isOnboarded          Boolean             @default(false)
+  createdAt            DateTime            @default(now())
+  products             Product[]
+  resetTokens          PasswordResetToken[]
+  accounts             Account[]
+  sessions             Session[]
 }
 
 model PasswordResetToken {

@@ -1,9 +1,9 @@
-import { LucideIcon, LayoutDashboard, Package, ClipboardList, LogOut, Plus, Search, Mail, Lock, User, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { LucideIcon, LayoutDashboard, Package, ShoppingBag, LogOut, Plus, Search, Mail, Lock, User, CheckCircle2, ShieldCheck, Zap, Settings } from 'lucide-react';
 
 export const Icons = {
   Dashboard: LayoutDashboard,
   Products: Package,
-  Orders: ClipboardList,
+  Orders: ShoppingBag,
   Logout: LogOut,
   Add: Plus,
   Search: Search,
@@ -13,6 +13,7 @@ export const Icons = {
   Success: CheckCircle2,
   Security: ShieldCheck,
   Fast: Zap,
+  Settings: Settings,
 };
 
 export type IconName = keyof typeof Icons;

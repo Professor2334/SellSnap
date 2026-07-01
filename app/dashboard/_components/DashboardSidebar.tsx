@@ -9,6 +9,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: 'Dashboard' as const },
   { href: '/dashboard?tab=products', label: 'Products', icon: 'Products' as const },
   { href: '/dashboard?tab=orders', label: 'Orders', icon: 'Orders' as const },
+  { href: '/dashboard?tab=settings', label: 'Settings', icon: 'Settings' as const },
 ];
 
 export function DashboardSidebar({
@@ -73,11 +74,12 @@ export function DashboardSidebar({
         style={{ height: '100vh' }}
       >
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '24px 24px 20px' }}>
+          <div style={{ padding: '32px 24px 40px' }}>
             <Link
               href="/dashboard"
               className="text-h2 text-brand font-bold tracking-tight"
               onClick={closeSidebar}
+              style={{ display: 'block', lineHeight: 1 }}
             >
               SellSnap
             </Link>
@@ -88,35 +90,35 @@ export function DashboardSidebar({
           </nav>
         </div>
 
-        <div className="px-4" style={{ borderTop: '1px solid color-mix(in srgb, var(--sys-outline-variant-color-role) 50%, transparent)', marginTop: 'auto', padding: '20px 16px 16px' }}>
+        <div style={{ padding: '24px 16px 20px' }}>
           <div
             ref={logoutRef}
+            className="sidebar-profile-card"
             onClick={() => setShowLogout((prev) => !prev)}
-            style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px', cursor: 'pointer' }}
           >
             <div
               style={{
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                backgroundColor: 'var(--sys-primary-color-role)',
+                backgroundColor: 'var(--color-brand)',
                 border: 'none',
-                color: 'var(--sys-on-primary-color-role)',
+                color: 'white',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '10px',
+                fontSize: '11px',
                 fontWeight: 700,
                 flexShrink: 0,
               }}
             >
               {initials}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
               <p
                 style={{
                   fontSize: '13px',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: 'var(--color-ink)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
@@ -128,8 +130,8 @@ export function DashboardSidebar({
               </p>
               <p
                 style={{
-                  fontSize: '11px',
-                  color: 'var(--color-ink-subtle)',
+                  fontSize: '12px',
+                  color: 'var(--sys-on-neutral-variant-role)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -139,6 +141,9 @@ export function DashboardSidebar({
                 {email}
               </p>
             </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sys-on-neutral-variant-role)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.8 }}>
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
 
             {showLogout && (
               <div
@@ -147,17 +152,32 @@ export function DashboardSidebar({
                   bottom: 'calc(100% + 8px)',
                   left: 0,
                   right: 0,
-                  backgroundColor: 'var(--sys-on-primary-color-role)',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
-
-                  padding: '4px',
+                  backgroundColor: 'var(--color-surface)',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                  border: '1px solid var(--color-border)',
+                  padding: '8px',
                   zIndex: 50,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  cursor: 'default'
                 }}
+                onClick={(e) => e.stopPropagation()}
               >
-                <SignOutButton />
+                <Link href="/dashboard?tab=settings&section=profile" className="hover:bg-gray-50 transition-colors" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
+                  My Profile
+                </Link>
+                <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
+                <div style={{ padding: '4px 8px' }}>
+                  <SignOutButton />
+                </div>
               </div>
             )}
+          </div>
+          
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <span style={{ fontSize: '11px', color: 'var(--sys-on-surface-variant-role)', opacity: 0.6 }}>SellSnap v1.0</span>
           </div>
         </div>
       </aside>
