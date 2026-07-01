@@ -74,7 +74,7 @@ export function DashboardSidebar({
         style={{ height: '100vh' }}
       >
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '32px 24px 40px' }}>
+          <div style={{ padding: '28px 20px 32px' }}>
             <Link
               href="/dashboard"
               className="text-h2 text-brand font-bold tracking-tight"
@@ -85,12 +85,12 @@ export function DashboardSidebar({
             </Link>
           </div>
 
-          <nav style={{ flex: 1, padding: '0 16px' }}>
+          <nav style={{ flex: 1, padding: '0 12px' }}>
             <SidebarNav items={navItems} onNavigate={closeSidebar} />
           </nav>
         </div>
 
-        <div style={{ padding: '24px 16px 20px' }}>
+        <div style={{ padding: '32px 12px 24px' }}>
           <div
             ref={logoutRef}
             className="sidebar-profile-card"
@@ -152,10 +152,10 @@ export function DashboardSidebar({
                   bottom: 'calc(100% + 8px)',
                   left: 0,
                   right: 0,
-                  backgroundColor: 'var(--color-surface)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-                  border: '1px solid var(--color-border)',
+                  backgroundColor: 'var(--sys-neutral-container-lowest)',
+                  borderRadius: '16px',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.10)',
+                  border: 'none',
                   padding: '8px',
                   zIndex: 50,
                   display: 'flex',

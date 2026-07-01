@@ -20,7 +20,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
   const activeTab = searchParams.get('tab') || 'dashboard';
 
   return (
-    <ul className="flex flex-col" style={{ listStyle: 'none', gap: '12px' }}>
+    <ul className="flex flex-col" style={{ listStyle: 'none', gap: '6px' }}>
       {items.map((item) => {
         const tab = item.href.includes('tab=') ? item.href.split('tab=')[1] : 'dashboard';
         const isActive = activeTab === tab;

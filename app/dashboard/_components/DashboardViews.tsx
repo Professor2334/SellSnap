@@ -63,6 +63,45 @@ function GrowthBadge({ value }: { value: number }) {
   );
 }
 
+/* ── Shared elevated page header ─────────────────────── */
+function PageHeader({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="dashboard-page-header">
+      <div>
+        <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>{title}</h1>
+        <p className="text-body-sm text-ink-muted">{subtitle}</p>
+      </div>
+      {action && <div style={{ flexShrink: 0 }}>{action}</div>}
+    </div>
+  );
+}
+
+/* ── Empty state icon cell ────────────────────────────── */
+function EmptyIcon({ name }: { name: 'Orders' | 'Products' }) {
+  return (
+    <div style={{
+      width: 52, height: 52,
+      borderRadius: '14px',
+      backgroundColor: 'var(--primitive-neutral95)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      margin: '0 auto 16px',
+    }}>
+      <Icon name={name} size={24} className="text-ink-subtle" />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   Dashboard Overview
+══════════════════════════════════════════════════════ */
 export function DashboardView({
   userName,
   totalRevenue,
@@ -83,86 +122,114 @@ export function DashboardView({
   recentOrders: Order[];
 }) {
   return (
-    <div className="w-full animate-fade-in-up">
-      <div className="flex items-start justify-between gap-6" style={{ marginBottom: '50px' }}>
-        <div>
-          <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Dashboard</h1>
-          <p className="text-body text-ink-muted">Welcome, {userName}</p>
-        </div>
-        <Link href="/dashboard/products/new" className="flex-shrink-0">
-          <Button size="lg" variant="primary" className="shadow-lg shadow-brand/20" style={{ paddingLeft: 24, paddingRight: 24 }}>
-            Create Product
-          </Button>
-        </Link>
-      </div>
+    <div className="w-full animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
-      <div className="dashboard-stats-row grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" style={{ marginBottom: 15 }}>
-        <div className="card-stat hover:border-brand/50 transition-all">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+      {/* Elevated header card */}
+      <PageHeader
+        title="Dashboard"
+        subtitle={`Welcome back, ${userName}`}
+        action={
+          <Link href="/dashboard/products/new">
+            <Button size="lg" variant="primary">Create Product</Button>
+          </Link>
+        }
+      />
+
+      {/* KPI Cards */}
+      <div className="dashboard-stats-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+        <div className="card-stat">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <p className="card-stat-label">Total Revenue</p>
             <GrowthBadge value={revenueGrowth} />
           </div>
-          <div className="flex items-baseline gap-1">
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
             <span className="text-h2 font-bold text-ink-muted">₦</span>
-            <p className="text-h1 font-bold text-ink leading-none">{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+            <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>
+              {totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </p>
           </div>
         </div>
-        <div className="card-stat hover:border-brand/50 transition-all">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+
+        <div className="card-stat">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <p className="card-stat-label">Total Orders</p>
             <GrowthBadge value={ordersGrowth} />
           </div>
-          <p className="text-h1 font-bold text-ink leading-none">{totalOrders}</p>
+          <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>{totalOrders}</p>
         </div>
-        <div className="card-stat hover:border-brand/50 transition-all">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+
+        <div className="card-stat">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <p className="card-stat-label">Active Products</p>
             <GrowthBadge value={productsGrowth} />
           </div>
-          <p className="text-h1 font-bold text-ink leading-none">{totalProducts}</p>
+          <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>{totalProducts}</p>
         </div>
       </div>
 
-      <div style={{ marginBottom: '25px' }}>
-        <h2 className="text-h2 text-ink">Recent Orders</h2>
+      {/* Recent Orders */}
+      <div>
+        <h2 className="text-h2 font-semibold text-ink" style={{ marginBottom: 16 }}>Recent Orders</h2>
+        {recentOrders.length === 0 ? (
+          <div className="card-container" style={{ minHeight: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <EmptyIcon name="Orders" />
+              <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 8 }}>No orders yet</h3>
+              <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto' }}>
+                Your recent sales will appear here. Start sharing your links to get paid!
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {recentOrders.map((order) => (
+              <div key={order.id} className="card-container" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                <div>
+                  <p className="text-body font-semibold text-ink">{order.product.name}</p>
+                  <p className="text-caption text-ink-muted">₦{order.amount.toLocaleString()}</p>
+                </div>
+                <span className="text-caption font-semibold"
+                  style={{
+                    padding: '3px 10px', borderRadius: 6,
+                    textTransform: 'uppercase', letterSpacing: '0.06em',
+                    backgroundColor: order.status === 'PAID' ? 'color-mix(in srgb, var(--color-success) 12%, transparent)' : 'color-mix(in srgb, var(--color-warning) 12%, transparent)',
+                    color: order.status === 'PAID' ? 'var(--color-success)' : 'var(--color-warning)',
+                  }}>
+                  {order.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="card-container min-h-[320px] flex items-center justify-center  rounded-2xl">
-        <div className="dashboard-empty text-center p-12">
-          <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />
-          <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
-          <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed" style={{ paddingBottom: '65px' }}>
-            Your recent sales will appear here. Start sharing your links to get paid!
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Products
+══════════════════════════════════════════════════════ */
 export function ProductsView({ products }: { products: Product[] }) {
   return (
-    <div className="w-full animate-fade-in-up">
-      <div className="dashboard-header flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-          <h1 className="text-display font-bold text-ink mb-2">Products</h1>
-          <p className="text-body text-ink-muted">Manage your products and their shareable payment links.</p>
-        </div>
-        <Link href="/dashboard/products/new">
-          <Button size="lg" variant="primary" className="shadow-lg shadow-brand/20">
-            Create Product
-          </Button>
-        </Link>
-      </div>
+    <div className="w-full animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+      <PageHeader
+        title="Products"
+        subtitle="Manage your products and their shareable payment links."
+        action={
+          <Link href="/dashboard/products/new">
+            <Button size="lg" variant="primary">Create Product</Button>
+          </Link>
+        }
+      />
 
       {products.length === 0 ? (
-        <div className="card-container min-h-[400px] flex items-center justify-center  rounded-2xl">
-          <div className="dashboard-empty text-center p-12">
-            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6  shadow-sm">
-              <Icon name="Products" size={32} className="text-ink-subtle" />
-            </div>
-            <h3 className="text-h2 font-bold text-ink mb-2">No products yet</h3>
-            <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed mb-8">
+        <div className="card-container" style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <EmptyIcon name="Products" />
+            <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 8 }}>No products yet</h3>
+            <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto 24px' }}>
               Create your first product to get a unique link you can share on WhatsApp or social media.
             </p>
             <Link href="/dashboard/products/new">
@@ -171,42 +238,38 @@ export function ProductsView({ products }: { products: Product[] }) {
           </div>
         </div>
       ) : (
-        <div className="products-list flex flex-col gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {products.map((product) => (
-            <div key={product.id} className="card-container p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-brand/30 transition-colors">
-              <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-xl bg-surface  flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+            <div key={product.id} className="card-container" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{
+                  width: 52, height: 52,
+                  borderRadius: '12px',
+                  backgroundColor: 'var(--primitive-neutral95)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0, overflow: 'hidden',
+                }}>
                   {product.imageUrl ? (
-                    <Image 
-                      src={product.imageUrl} 
-                      alt={product.name} 
-                      width={64} 
-                      height={64} 
-                      className="w-full h-full object-cover" 
-                    />
+                    <Image src={product.imageUrl} alt={product.name} width={52} height={52} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <Icon name="Products" size={24} className="text-ink-subtle" />
+                    <Icon name="Products" size={22} className="text-ink-subtle" />
                   )}
                 </div>
                 <div>
-                  <h3 className="text-h2 font-bold text-ink">{product.name}</h3>
-                  <div className="flex items-center gap-3 mt-1">
+                  <h3 className="text-body font-bold text-ink">{product.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
                     <p className="text-body-sm font-semibold text-brand">₦{product.price.toLocaleString()}</p>
-                    <span className="w-1 h-1 rounded-full bg-border" />
+                    <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--color-ink-subtle)' }} />
                     <p className="text-caption text-ink-muted">{new Date(product.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 w-full sm:w-auto">
-                <Link
-                  href={`/p/${product.uniqueSlug}`}
-                  target="_blank"
-                  className="text-body-sm text-ink-muted font-medium hover:text-brand transition-colors"
-                >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <Link href={`/p/${product.uniqueSlug}`} target="_blank" className="text-body-sm text-ink-muted font-medium hover:text-brand transition-colors">
                   View Page
                 </Link>
-                <div className="h-4 w-px bg-border hidden sm:block" />
+                <div style={{ width: 1, height: 16, backgroundColor: 'var(--color-border)' }} />
                 <CopyLinkButton slug={product.uniqueSlug} />
                 <DeleteProductButton id={product.id} />
               </div>
@@ -218,67 +281,64 @@ export function ProductsView({ products }: { products: Product[] }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════
+   Orders
+══════════════════════════════════════════════════════ */
 export function OrdersView({ orders }: { orders: Order[] }) {
   return (
-    <div className="w-full animate-fade-in-up">
-      <div className="dashboard-header flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-          <h1 className="text-display font-bold text-ink mb-2">Orders</h1>
-          <p className="text-body text-ink-muted">Track and manage your sales performance and customer orders.</p>
-        </div>
-      </div>
+    <div className="w-full animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+      <PageHeader
+        title="Orders"
+        subtitle="Track and manage your sales performance and customer orders."
+      />
 
       {orders.length === 0 ? (
-        <div className="card-container min-h-[400px] flex items-center justify-center  rounded-2xl">
-          <div className="dashboard-empty text-center p-12">
-            <div className="w-20 h-20 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6  shadow-sm">
-              <Icon name="Orders" size={32} className="text-ink-subtle" />
-            </div>
-          <Icon name="Orders" size={32} className="text-ink-subtle mx-auto mb-6" />
-          <h3 className="text-h2 font-bold text-ink mb-2">No orders yet</h3>
-            <p className="text-body-sm text-ink-muted max-w-[340px] mx-auto leading-relaxed">
+        <div className="card-container" style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <EmptyIcon name="Orders" />
+            <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 8 }}>No orders yet</h3>
+            <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto' }}>
               When a customer pays via your link, their order will appear here.
             </p>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {orders.map((order) => (
-            <div key={order.id} className="card-container p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-brand/30 transition-colors">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-h2 font-bold text-ink">{order.product.name}</h3>
-                  <span className="text-caption px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider" 
-                    style={{ 
-                      backgroundColor: order.status === 'PAID' ? 'var(--color-success)20' : 'var(--color-warning)20',
-                      color: order.status === 'PAID' ? 'var(--color-success)' : 'var(--color-warning)'
+            <div key={order.id} className="card-container" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <h3 className="text-body font-bold text-ink">{order.product.name}</h3>
+                  <span className="text-caption font-semibold"
+                    style={{
+                      padding: '2px 10px', borderRadius: 6,
+                      textTransform: 'uppercase', letterSpacing: '0.06em',
+                      backgroundColor: order.status === 'PAID' ? 'color-mix(in srgb, var(--color-success) 12%, transparent)' : 'color-mix(in srgb, var(--color-warning) 12%, transparent)',
+                      color: order.status === 'PAID' ? 'var(--color-success)' : 'var(--color-warning)',
                     }}>
                     {order.status}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 mt-1">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <p className="text-body-sm font-semibold text-ink">₦{order.amount.toLocaleString()}</p>
-                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--color-ink-subtle)' }} />
                   <p className="text-caption text-ink-muted">{new Date(order.createdAt).toLocaleDateString()}</p>
                   {order.buyerEmail && (
                     <>
-                      <span className="w-1 h-1 rounded-full bg-border" />
-                      <p className="text-caption text-ink-muted italic">{order.buyerEmail}</p>
+                      <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--color-ink-subtle)' }} />
+                      <p className="text-caption text-ink-muted">{order.buyerEmail}</p>
                     </>
                   )}
                 </div>
               </div>
-              
-              <div className="flex items-center gap-4 w-full sm:w-auto">
-                <p className="text-caption font-mono text-ink-subtle uppercase truncate max-w-[120px]">
-                  Ref: {order.transactionReference.split('_').pop()}
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <p className="text-caption font-mono text-ink-subtle" style={{ textTransform: 'uppercase' }}>
+                  #{order.transactionReference.split('_').pop()}
                 </p>
-                <div className="h-4 w-px bg-border hidden sm:block" />
-                <Link
-                  href={`/p/${order.product.uniqueSlug}`}
-                  target="_blank"
-                  className="text-body-sm text-brand font-medium hover:underline"
-                >
+                <div style={{ width: 1, height: 16, backgroundColor: 'var(--color-border)' }} />
+                <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="text-body-sm text-brand font-medium hover:underline">
                   View Product
                 </Link>
               </div>

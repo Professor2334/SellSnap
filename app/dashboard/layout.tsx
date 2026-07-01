@@ -21,7 +21,7 @@ export default async function DashboardLayout({
         email={session.user.email || ''}
       />
       <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full bg-surface">
-        <div className="w-full flex-1 mx-auto max-w-6xl p-6 md:p-10 lg:p-12">
+        <div className="dashboard-content-wrapper">
           {children}
         </div>
       </main>

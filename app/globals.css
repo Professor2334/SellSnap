@@ -4,7 +4,7 @@
 
 :root {
   --color-bg: var(--sys-neutral-container-lowest);
-  --color-surface: var(--sys-neutral-container-low);
+  --color-surface: var(--primitive-neutral98);
   --color-ink: var(--sys-on-neutral-color-role);
   --color-ink-muted: var(--sys-on-neutral-container-role);
   --color-ink-subtle: var(--sys-on-neutral-variant-role);
@@ -424,6 +424,33 @@ a {
 .rounded-lg { border-radius: 12px; }
 .rounded-md { border-radius: 8px; }
 
+/* Dashboard content wrapper */
+.dashboard-content-wrapper {
+  width: 100%;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+@media (min-width: 1280px) {
+  .dashboard-content-wrapper {
+    padding: 40px 32px;
+  }
+}
+
+/* Elevated page header card */
+.dashboard-page-header {
+  background-color: var(--sys-neutral-container-lowest);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 /* Dashboard specific */
 .dashboard-stats {
   display: grid;
@@ -501,8 +528,9 @@ a {
   flex-shrink: 0;
   width: 260px;
   border-right: none;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.03);
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.04), 1px 0 0 rgba(0, 0, 0, 0.03);
   position: relative;
+  z-index: 10;
 }
 
 @media (max-width: 1023px) {
@@ -521,30 +549,34 @@ a {
 .sidebar-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font: var(--sys-font-label-large);
-  color: var(--sys-on-neutral-color-role);
-  transition: all 0.2s ease;
+  gap: 14px;
+  padding: 0 14px;
+  min-height: 48px;
+  border-radius: 14px;
+  font-size: 14px;
   font-weight: 500;
-  font-size: 15px;
+  font-family: inherit;
+  color: var(--sys-on-neutral-color-role);
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
   background: transparent;
   border: none;
   cursor: pointer;
   outline: none;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar-link:hover {
-  background-color: var(--primitive-primary95);
-  color: var(--color-brand);
-  transform: none;
+  background-color: var(--primitive-neutral98);
+  color: var(--color-ink);
 }
 
 .sidebar-link.active {
   background-color: var(--color-brand);
   color: var(--sys-on-primary-color-role);
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 60, 230, 0.22), 0 1px 3px rgba(0, 60, 230, 0.14);
 }
 
 /* Mobile menu button */
@@ -685,8 +717,12 @@ a {
 }
 
 .sidebar-link .icon {
-  font-size: 20px;
-  line-height: 1;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Product card improvements */
@@ -761,12 +797,16 @@ a {
 .btn-ghost {
   background-color: transparent;
   color: var(--color-ink);
+  border: none;
 }
 
 .btn-ghost:hover:not(:disabled) {
   background-color: var(--sys-neutral-container-low);
 }
 
+.logout-btn {
+  border: none !important;
+}
 .logout-btn:hover:not(:disabled) {
   background-color: var(--sys-neutral-container-low) !important;
   color: var(--sys-error-color-role) !important;
