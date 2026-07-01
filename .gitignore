@@ -35,3 +35,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch / test scripts — never commit these
+cloudinary-test.js
+*-test.js
+*.scratch.js
+update-css.js
+update_bg*.js
+append-css.js
+inject-css.js
+refine-sidebar.js
