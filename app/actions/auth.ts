@@ -74,7 +74,7 @@ export async function forgotPassword(formData: FormData) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const resetLink = `${appUrl}/auth/reset-password?token=${token}`;
-    await sendPasswordResetEmail(email, resetLink);
+    await sendPasswordResetEmail(email, user.name, resetLink);
 
     return { success: true };
   } catch (error) {

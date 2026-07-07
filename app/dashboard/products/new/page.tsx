@@ -3,21 +3,29 @@
 import * as React from 'react';
 import { createProduct } from '@/app/actions/products';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
-import { Upload, Loader2 } from 'lucide-react';
+import { Upload, Loader2, Image as ImageIcon } from 'lucide-react';
+import Link from 'next/link';
 
 export default function NewProductPage() {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  
+  // State for live preview
+  const [productName, setProductName] = React.useState('');
+  const [productPrice, setProductPrice] = React.useState('');
+  const [productDescription, setProductDescription] = React.useState('');
+  
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
 
-    const name = (e.currentTarget.elements.namedItem('name') as HTMLInputElement)?.value?.trim();
-    const price = (e.currentTarget.elements.namedItem('price') as HTMLInputElement)?.value?.trim();
+    const name = productName.trim();
+    const price = productPrice.trim();
 
     if (!name) {
       setError('Product name is required');
@@ -35,7 +43,7 @@ export default function NewProductPage() {
       const result = await createProduct(formData);
 
       if (result.success) {
-        router.push('/dashboard/products');
+        router.push('/dashboard?tab=products');
       } else {
         setError(result.error || 'Something went wrong');
       }
@@ -48,96 +56,212 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div className="min-h-screen flex flex-col relative" style={{ backgroundColor: 'var(--color-bg)' }}>
 
+      <main className="w-full flex-1 mx-auto" style={{ maxWidth: '1100px', padding: '32px 24px', paddingBottom: '64px' }}>
+        
+        {/* Header */}
+        <div className="flex items-start justify-between" style={{ marginBottom: '40px' }}>
+          <div>
+            <h1 className="text-display font-bold text-ink" style={{ marginBottom: '8px' }}>Create Product</h1>
+            <p className="text-body-sm text-ink-muted" style={{ maxWidth: '420px', opacity: 0.9 }}>
+              Add a product to instantly generate a shareable payment link.
+            </p>
+          </div>
 
-      <main className="container py-12 max-w-lg mx-auto flex flex-col">
-        <div className="mb-8">
-          <h1 className="text-h1 text-ink mb-2 tracking-tight" style={{ fontSize: '24px', fontWeight: '700' }}>Create a product 🛍️</h1>
-          <p className="text-ink-muted text-body leading-relaxed" style={{ fontSize: '14px', maxWidth: '420px' }}>
-            Add a product and we&apos;ll generate a shareable payment link instantly.
-          </p>
         </div>
         
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-          <div>
-            <label htmlFor="name" className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-variant-role)' }}>Product Name</label>
-            <input
-              id="name"
-              name="name"
-              placeholder="e.g. Handmade Earrings"
-              required
-              className="input-field w-full"
-              style={{ height: '48px', borderRadius: '12px', border: '1px solid var(--color-border)', fontSize: '14px', padding: '0 16px', backgroundColor: '#ffffff' }}
-            />
-          </div>
+        <form id="create-product-form" onSubmit={handleSubmit} className="w-full">
+          {/* We will use a media query for grid if possible, but inline grid with minmax can work. Actually better to use a custom class or basic flex. */}
+          {/* Let's wrap in a div that handles responsive layout */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', width: '100%' }}>
+            
+            {/* Left Column - Form Fields */}
+            <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', gap: '64px' }}>
+              
+              {/* Product Details Section */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                <h2 className="text-h2 font-semibold text-ink" style={{ paddingBottom: '16px', borderBottom: '1px solid var(--color-border)' }}>Product Details</h2>
+                
+                <div>
+                  <label htmlFor="name" className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px' }}>Product Name</label>
+                  <input
+                    id="name"
+                    name="name"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    placeholder="e.g. Handmade Earrings"
+                    required
+                    className="input-field w-full dashboard-input-soft"
+                    style={{ height: '48px', borderRadius: '12px', fontSize: '15px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                  />
+                </div>
 
-          <div>
-            <label htmlFor="description" className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-variant-role)' }}>Description</label>
-            <textarea
-              id="description"
-              name="description"
-              placeholder="Describe your product — material, size, what makes it special..."
-              className="input-field w-full"
-              style={{ height: '96px', borderRadius: '12px', border: '1px solid var(--color-border)', fontSize: '14px', padding: '12px 16px', resize: 'none', backgroundColor: '#ffffff' }}
-            />
-          </div>
+                <div>
+                  <label htmlFor="description" className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px' }}>Description</label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                    placeholder="Include size, material, colour, condition or anything customers should know."
+                    className="input-field w-full dashboard-input-soft"
+                    style={{ height: '110px', borderRadius: '12px', fontSize: '15px', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                  />
+                </div>
+              </div>
 
-          <div>
-            <label htmlFor="price" className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-variant-role)' }}>Price (NGN)</label>
-            <input
-              id="price"
-              name="price"
-              type="number"
-              placeholder="e.g. 5000"
-              required
-              className="input-field w-full"
-              style={{ height: '48px', borderRadius: '12px', border: '1px solid var(--color-border)', fontSize: '14px', padding: '0 16px', backgroundColor: '#ffffff' }}
-            />
-          </div>
+              {/* Pricing Section */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                <h2 className="text-h2 font-semibold text-ink" style={{ paddingBottom: '16px', borderBottom: '1px solid var(--color-border)' }}>Pricing</h2>
+                
+                <div>
+                  <label htmlFor="price" className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px' }}>Price (₦)</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} className="text-ink-muted font-medium">₦</span>
+                    <input
+                      id="price"
+                      name="price"
+                      type="number"
+                      value={productPrice}
+                      onChange={(e) => setProductPrice(e.target.value)}
+                      placeholder="0.00"
+                      required
+                      className="input-field w-full dashboard-input-soft"
+                      style={{ height: '48px', borderRadius: '12px', fontSize: '15px', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    />
+                  </div>
+                </div>
+              </div>
 
-          <div>
-            <label className="input-label mb-2 block" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-variant-role)' }}>Product Image</label>
-            <div 
-              className="w-full flex flex-col items-center justify-center rounded-xl cursor-pointer overflow-hidden"
-              style={{ height: imagePreview ? 'auto' : '120px', border: '1px dashed var(--sys-outline-variant-color-role)', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
-            >
-              <input type="file" name="image" id="product-image" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = (ev) => setImagePreview(ev.target?.result as string);
-                  reader.readAsDataURL(file);
-                }
-              }} />
-              <label htmlFor="product-image" className="flex flex-col items-center cursor-pointer w-full h-full justify-center">
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
-                ) : (
-                  <>
-                    <Upload size={20} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
-                    <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>Click or drag file to upload</span>
-                    <span style={{ fontSize: '12px', color: 'var(--sys-on-neutral-variant-role)', marginTop: '4px' }}>Max size 5MB</span>
-                  </>
-                )}
-              </label>
+              {/* Media Section */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                <h2 className="text-h2 font-semibold text-ink" style={{ paddingBottom: '16px', borderBottom: '1px solid var(--color-border)' }}>Media</h2>
+                
+                <div>
+                  <label className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px' }}>Product Image</label>
+                  <div 
+                    className="w-full flex flex-col items-center justify-center cursor-pointer overflow-hidden upload-zone-soft"
+                    style={{ 
+                      height: imagePreview ? 'auto' : '220px', 
+                      borderRadius: '16px'
+                    }}
+                  >
+                    <input type="file" name="image" id="product-image" accept="image/png, image/jpeg, image/webp" style={{ display: 'none' }} onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => setImagePreview(ev.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }} />
+                    <label htmlFor="product-image" className="flex flex-col items-center justify-center cursor-pointer w-full h-full" style={{ padding: '40px 24px' }}>
+                      {imagePreview ? (
+                        <div style={{ position: 'relative', width: '100%' }}>
+                          <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '400px', borderRadius: '12px' }} />
+                          <div style={{ 
+                            position: 'absolute', top: '16px', right: '16px', 
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(4px)',
+                            padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                          }}>
+                            <span className="text-caption font-medium text-ink-muted">Click to replace</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center text-center gap-2">
+                          <div style={{ 
+                            width: '56px', height: '56px', borderRadius: '50%', 
+                            backgroundColor: 'var(--sys-neutral-container-low)', 
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            marginBottom: '4px'
+                          }}>
+                            <Upload size={24} className="text-brand" />
+                          </div>
+                          <div>
+                            <p className="text-body font-medium text-ink" style={{ marginBottom: '4px' }}>Click to upload or drag and drop</p>
+                            <p className="text-body-sm text-ink-muted">PNG, JPG or WEBP (max. 5MB)</p>
+                          </div>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              {error && (
+                <div style={{ padding: '16px', borderRadius: '12px', backgroundColor: 'color-mix(in srgb, var(--color-danger) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-danger) 20%, transparent)' }}>
+                  <p className="text-body-sm" style={{ color: 'var(--color-danger)' }}>{error}</p>
+                </div>
+              )}
+              
+              <div style={{ marginTop: '-24px' }}>
+                <Button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="btn-primary w-full"
+                  style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '16px' }}
+                >
+                  {loading ? <Loader2 className="spinner mr-2" size={20} /> : 'Create Product'}
+                </Button>
+              </div>
+
             </div>
-          </div>
-          
-          {error && <p className="text-caption mt-2" style={{ color: 'var(--color-danger)' }}>{error}</p>}
+            
+            {/* Right Column - Live Preview */}
+            <div style={{ flex: '1 1 350px', maxWidth: '380px' }}>
+              
+              <div style={{ position: 'sticky', top: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <h3 className="text-body font-semibold text-ink-muted" style={{ marginBottom: '-8px' }}>Preview</h3>
+                
+                {/* Live Product Card */}
+                <div className="card-container overflow-hidden p-0 card-soft" style={{ borderRadius: '16px' }}>
+                  {/* Image Area */}
+                  <div className="w-full flex items-center justify-center" style={{ aspectRatio: '1/1', borderBottom: '1px solid color-mix(in srgb, var(--color-ink) 8%, transparent)', backgroundColor: 'var(--color-surface)', position: 'relative' }}>
+                    {imagePreview ? (
+                       <img src={imagePreview} alt="Live Preview" className="w-full h-full object-cover" />
+                    ) : (
+                       <ImageIcon size={48} className="text-ink-subtle" style={{ opacity: 0.3 }} />
+                    )}
+                  </div>
+                  
+                  {/* Content Area */}
+                  <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>
+                      <h4 className="text-h2 font-bold text-ink" style={{ marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {productName || "Your product name"}
+                      </h4>
+                      <p className="text-brand font-bold text-h2">
+                        ₦{productPrice ? Number(productPrice).toLocaleString() : "0"}
+                      </p>
+                    </div>
+                    
+                    <p className="text-body-sm text-ink-muted" style={{ opacity: 0.9, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {productDescription || "A short description will appear here."}
+                    </p>
+                    
+                    <Button variant="primary" size="lg" className="w-full" style={{ marginTop: '8px', cursor: 'default', pointerEvents: 'none', opacity: 0.9 }}>
+                      Pay Now
+                    </Button>
+                  </div>
+                </div>
 
-          <div className="flex flex-col mt-4">
-            <Button 
-              type="submit" 
-              disabled={loading} 
-              className="btn-primary btn-lg btn-full rounded-xl"
-              style={{ height: '56px', fontSize: '16px', backgroundColor: 'var(--color-brand)' }}
-            >
-              {loading ? <Loader2 className="spinner mr-2" /> : 'Create Product'}
-            </Button>
+                {/* Helper Card */}
+                <div style={{ padding: '16px', borderRadius: '16px', display: 'flex', alignItems: 'flex-start', gap: '12px', backgroundColor: 'color-mix(in srgb, var(--color-success) 8%, transparent)', border: '1px solid color-mix(in srgb, var(--color-success) 20%, transparent)' }}>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'var(--color-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <p className="text-body-sm text-ink-muted font-medium" style={{ paddingTop: '2px' }}>
+                    Shareable payment link will be generated automatically after publishing.
+                  </p>
+                </div>
+              </div>
+              
+            </div>
           </div>
         </form>
       </main>
+
     </div>
   );
 }

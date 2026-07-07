@@ -32,7 +32,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
               onClick={onNavigate}
               className={`sidebar-link ${isActive ? 'active' : ''}`}
             >
-              <Icon name={item.icon} size={20} />
+              <Icon name={item.icon} size={18} />
               <span>{item.label}</span>
             </Link>
           </li>

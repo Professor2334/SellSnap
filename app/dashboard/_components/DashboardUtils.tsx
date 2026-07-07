@@ -16,14 +16,24 @@ export function DeleteProductButton({ id }: { id: string }) {
   }
 
   return (
-    <Button 
-      variant="danger" 
-      size="sm" 
+    <button 
       onClick={handleDelete} 
       disabled={loading}
+      className="text-body-sm font-medium hover:bg-gray-50 transition-colors"
+      style={{ 
+        width: '100%', 
+        textAlign: 'left', 
+        padding: '8px 12px', 
+        borderRadius: '8px', 
+        color: 'var(--color-danger)', 
+        backgroundColor: 'transparent', 
+        border: 'none', 
+        cursor: loading ? 'not-allowed' : 'pointer',
+        opacity: loading ? 0.7 : 1
+      }}
     >
-      {loading ? '...' : 'Delete'}
-    </Button>
+      {loading ? 'Deleting...' : 'Delete'}
+    </button>
   );
 }
 
@@ -50,13 +60,14 @@ export function CopyLinkButton({ slug }: { slug: string }) {
   }
 
   return (
-    <button
+    <Button
       onClick={handleCopy}
-      className="text-body-sm font-medium hover:underline"
-      style={{ color: copied ? 'var(--color-success)' : 'var(--color-brand)' }}
+      variant="secondary"
+      size="sm"
+      style={{ color: copied ? 'var(--color-success)' : undefined }}
     >
       {copied ? 'Copied!' : 'Copy Link'}
-    </button>
+    </Button>
   );
 }
 

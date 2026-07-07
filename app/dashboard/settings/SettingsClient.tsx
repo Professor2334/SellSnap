@@ -1,44 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/FormPrimitives';
 import { Button } from '@/components/ui/Button';
-import { Toggle } from '@/components/ui/Toggle';
 import { updateSettings, disconnectGoogle, signOutAllDevices } from '@/app/actions/settings';
-
-type Section = 'Profile' | 'Business' | 'Security' | 'Notifications' | 'Preferences';
-
-const sections: { id: Section; label: string; icon: any }[] = [
-  { id: 'Profile', label: 'Profile', icon: 'User' },
-  { id: 'Business', label: 'Business', icon: 'Products' },
-  { id: 'Security', label: 'Security', icon: 'Security' },
-  { id: 'Notifications', label: 'Notifications', icon: 'Email' },
-  { id: 'Preferences', label: 'Preferences', icon: 'Settings' },
-];
 
 export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogleAccount: boolean }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   
-  const querySection = searchParams.get('section');
-  const initialSection = (querySection 
-    ? querySection.charAt(0).toUpperCase() + querySection.slice(1).toLowerCase() 
-    : 'Profile') as Section;
-
-  const [activeSection, setActiveSection] = useState<Section>(
-    sections.some(s => s.id === initialSection) ? initialSection : 'Profile'
-  );
-
-  useEffect(() => {
-    if (querySection) {
-      const parsed = (querySection.charAt(0).toUpperCase() + querySection.slice(1).toLowerCase()) as Section;
-      if (sections.some(s => s.id === parsed)) {
-        setActiveSection(parsed);
-      }
-    }
-  }, [querySection]);
   const [formData, setFormData] = useState({
     name: user.name || '',
     email: user.email || '',
@@ -48,11 +19,6 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
     supportEmail: user.supportEmail || '',
     supportPhone: user.supportPhone || '',
     businessAddress: user.businessAddress || '',
-    notifyOrderReceived: user.notifyOrderReceived ?? true,
-    notifyPaymentSuccess: user.notifyPaymentSuccess ?? true,
-    notifyWelcome: user.notifyWelcome ?? true,
-    notifyProductUpdates: user.notifyProductUpdates ?? true,
-    notifyMarketing: user.notifyMarketing ?? false,
     currency: user.currency || 'NGN',
     timeZone: user.timeZone || 'Africa/Lagos',
     dateFormat: user.dateFormat || 'DD/MM/YYYY',
@@ -61,6 +27,15 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
   const [initialData, setInitialData] = useState(formData);
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+
+  type SettingsView = 'settings' | 'support' | 'terms' | 'privacy';
+  const [activeView, setActiveView] = useState<SettingsView>('settings');
+
+  // For security card form (does not trigger global save)
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
 
@@ -87,10 +62,21 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
 
   const handleCancel = () => {
     setFormData(initialData);
+    setIsEditingProfile(false);
   };
 
+  const nameParts = (formData.name || 'Merchant').split(' ').filter(Boolean);
+  const initials = (nameParts.length >= 2
+    ? nameParts[0][0] + nameParts[1][0]
+    : (nameParts[0]?.[0] || 'U') + (nameParts[0]?.[1] || '')
+  ).toUpperCase();
+
+  if (activeView === 'support') return <SupportView onBack={() => setActiveView('settings')} />;
+  if (activeView === 'terms') return <TermsView onBack={() => setActiveView('settings')} />;
+  if (activeView === 'privacy') return <PrivacyView onBack={() => setActiveView('settings')} />;
+
   return (
-    <div className="flex flex-col relative pb-24 h-full">
+    <div className="flex flex-col relative pb-24 h-full w-full animate-fade-in-up">
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
@@ -102,218 +88,518 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
       )}
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-display text-ink tracking-tight mb-2">Settings</h1>
-        <p className="text-body text-ink-subtle max-w-2xl">
-          Manage your account, business information and preferences.
-        </p>
+      <div className="dashboard-page-header">
+        <div>
+          <h1 className="text-display font-bold text-ink" style={{ marginBottom: 8 }}>Settings</h1>
+          <p className="text-body-sm text-ink-muted max-w-2xl">
+            Manage your account preferences and security settings.
+          </p>
+        </div>
+        {hasChanges && (
+          <div className="flex items-center gap-3 animate-in fade-in zoom-in-95 duration-200">
+            <Button variant="secondary" onClick={handleCancel} disabled={isSaving}>Cancel</Button>
+            <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 flex-1">
-        {/* Left Nav */}
-        <aside className="w-full lg:w-64 flex-shrink-0">
-          <nav className="flex flex-col gap-2 sticky top-8">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`sidebar-link ${activeSection === section.id ? 'active' : ''}`}
-                style={{ width: '100%', justifyContent: 'flex-start' }}
-              >
-                <Icon name={section.icon} size={20} />
-                <span>{section.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
+      <div className="settings-grid">
+        
+        {/* LEFT COLUMN */}
+        <div className="settings-column">
+          
+          {/* Profile Information Card */}
+          <div className="settings-card">
+            <div className="flex items-center gap-2 mb-8">
+              <Icon name="User" size={20} className="text-brand" />
+              <h2 className="text-body font-bold text-ink">Profile Information</h2>
+            </div>
 
-        {/* Right Content */}
-        <main className="flex-1 max-w-3xl">
-          <div className="bg-bg rounded-[20px] p-6 lg:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.03)] border-none">
-            {activeSection === 'Profile' && (
+            {isEditingProfile ? (
               <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-                <h2 className="text-h2 text-ink mb-2">Profile Information</h2>
-                <div className="flex items-center gap-6 mb-4">
-                  <div className="w-20 h-20 rounded-full bg-brand text-white flex items-center justify-center text-2xl font-bold">
-                    {formData.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <Button variant="secondary" size="sm">Change Photo</Button>
-                    <p className="text-xs text-ink-subtle mt-2">JPG, GIF or PNG. 1MB max.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name" value={formData.name} onChange={(e) => handleChange('name', e.target.value)} />
-                  <Input label="Email Address" type="email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} />
-                  <Input label="Phone Number (optional)" value={formData.phone} onChange={(e) => handleChange('phone', e.target.value)} />
-                </div>
-              </div>
-            )}
-
-            {activeSection === 'Business' && (
-              <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-                <h2 className="text-h2 text-ink mb-2">Business Details</h2>
+                <Input label="Full Name" value={formData.name} onChange={(e) => handleChange('name', e.target.value)} />
+                <Input label="Email Address" type="email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} />
+                <Input label="Phone Number (optional)" value={formData.phone} onChange={(e) => handleChange('phone', e.target.value)} />
+                
+                <h3 className="text-body font-bold text-ink mt-2">Business Details</h3>
                 <Input label="Business Name" value={formData.businessName} onChange={(e) => handleChange('businessName', e.target.value)} />
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-ink">Business Description</label>
                   <textarea
-                    className="w-full rounded-lg  bg-transparent px-3 py-2 text-ink placeholder:text-ink-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand min-h-[100px]"
+                    className="w-full rounded-lg bg-transparent px-3 py-2 text-ink placeholder:text-ink-subtle border border-border focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand min-h-[100px]"
                     value={formData.businessDescription}
                     onChange={(e) => handleChange('businessDescription', e.target.value)}
                     placeholder="Briefly describe what you sell..."
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Support Email" type="email" value={formData.supportEmail} onChange={(e) => handleChange('supportEmail', e.target.value)} />
-                  <Input label="Support Phone" value={formData.supportPhone} onChange={(e) => handleChange('supportPhone', e.target.value)} />
-                </div>
-                <Input label="Business Address (optional)" value={formData.businessAddress} onChange={(e) => handleChange('businessAddress', e.target.value)} />
-              </div>
-            )}
-
-            {activeSection === 'Security' && (
-              <div className="flex flex-col gap-8 animate-in fade-in duration-300">
-                <div>
-                  <h2 className="text-h2 text-ink mb-4">Security Settings</h2>
-                  <div className="flex flex-col gap-4">
-                    <Button variant="secondary">Change Password</Button>
-                    {hasGoogleAccount ? (
-                      <div className="flex items-center justify-between p-4 bg-primary-container rounded-lg ">
-                        <div className="flex flex-col">
-                          <span className="font-medium text-ink">Google Account Connected</span>
-                          <span className="text-xs text-ink-subtle">You can sign in using your Google account.</span>
-                        </div>
-                        <Button variant="danger" size="sm" onClick={async () => {
-                          const res = await disconnectGoogle();
-                          if (res.success) {
-                            setToast({ message: 'Google account disconnected.', type: 'success' });
-                            setTimeout(() => setToast(null), 3000);
-                            router.refresh();
-                          }
-                        }}>Disconnect</Button>
-                      </div>
-                    ) : (
-                      <div className="p-4 bg-surface rounded-lg  flex items-center justify-between">
-                        <span className="text-sm text-ink-subtle">No Google account connected.</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className=" pt-8">
-                  <h3 className="text-h2 text-ink mb-2">Active Sessions</h3>
-                  <p className="text-body-sm text-ink-subtle mb-4">Manage your active sessions across all devices.</p>
-                  <Button variant="danger" onClick={async () => {
-                    const res = await signOutAllDevices();
-                    if (res.success) {
-                      setToast({ message: 'Signed out of all devices.', type: 'success' });
-                      setTimeout(() => setToast(null), 3000);
-                      router.push('/login');
-                    }
-                  }}>Sign out of all devices</Button>
+                
+                <div className="h-px bg-border w-full my-2" />
+                <div className="flex justify-start gap-3">
+                  <Button variant="primary" onClick={() => setIsEditingProfile(false)}>Done</Button>
                 </div>
               </div>
-            )}
-
-            {activeSection === 'Notifications' && (
-              <div className="flex flex-col gap-2 animate-in fade-in duration-300">
-                <h2 className="text-h2 text-ink mb-4">Notification Preferences</h2>
-                <Toggle
-                  label="Order Received Emails"
-                  description="Get notified immediately when a buyer places a new order."
-                  checked={formData.notifyOrderReceived}
-                  onChange={(val) => handleChange('notifyOrderReceived', val)}
-                />
-                <hr className="border-border my-2" />
-                <Toggle
-                  label="Payment Successful Emails"
-                  description="Receive confirmations when a payment is processed successfully."
-                  checked={formData.notifyPaymentSuccess}
-                  onChange={(val) => handleChange('notifyPaymentSuccess', val)}
-                />
-                <hr className="border-border my-2" />
-                <Toggle
-                  label="Welcome Emails"
-                  description="Receive helpful onboarding tips and platform guides."
-                  checked={formData.notifyWelcome}
-                  onChange={(val) => handleChange('notifyWelcome', val)}
-                />
-                <hr className="border-border my-2" />
-                <Toggle
-                  label="Product Updates"
-                  description="Hear about new features and improvements to SellSnap."
-                  checked={formData.notifyProductUpdates}
-                  onChange={(val) => handleChange('notifyProductUpdates', val)}
-                />
-                <hr className="border-border my-2" />
-                <Toggle
-                  label="Marketing Emails"
-                  description="Receive promotional offers and growth tips."
-                  checked={formData.notifyMarketing}
-                  onChange={(val) => handleChange('notifyMarketing', val)}
-                />
-              </div>
-            )}
-
-            {activeSection === 'Preferences' && (
-              <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-                <h2 className="text-h2 text-ink mb-4">Platform Preferences</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-ink">Default Currency</label>
-                    <select
-                      className="w-full rounded-lg  bg-transparent px-3 py-2 text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
-                      value={formData.currency}
-                      onChange={(e) => handleChange('currency', e.target.value)}
-                    >
-                      <option value="NGN">Nigerian Naira (₦)</option>
-                      <option value="USD">US Dollar ($)</option>
-                    </select>
+            ) : (
+              <div className="flex flex-row items-start animate-in fade-in duration-300" style={{ gap: '24px' }}>
+                <div 
+                  className="flex items-center justify-center text-2xl font-bold flex-shrink-0"
+                  style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: 'var(--sys-primary-container-role)', color: 'var(--sys-on-primary-container-role)' }}
+                >
+                  {initials}
+                </div>
+                <div className="flex flex-col min-w-0" style={{ alignItems: 'flex-start', flex: 1 }}>
+                  <h3 className="text-h2 font-bold text-ink truncate" style={{ marginBottom: '12px' }}>{formData.name}</h3>
+                  <div className="text-ink-subtle text-body-sm truncate" style={{ marginBottom: '24px' }}>
+                    {formData.email}
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-ink">Time Zone</label>
-                    <select
-                      className="w-full rounded-lg  bg-transparent px-3 py-2 text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
-                      value={formData.timeZone}
-                      onChange={(e) => handleChange('timeZone', e.target.value)}
-                    >
-                      <option value="Africa/Lagos">West Africa Time (Lagos)</option>
-                      <option value="UTC">UTC</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-ink">Date Format</label>
-                    <select
-                      className="w-full rounded-lg  bg-transparent px-3 py-2 text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
-                      value={formData.dateFormat}
-                      onChange={(e) => handleChange('dateFormat', e.target.value)}
-                    >
-                      <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                    </select>
+                  <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.5, marginBottom: '24px' }} />
+                  <div>
+                    <Button variant="primary" onClick={() => setIsEditingProfile(true)}>Edit Profile</Button>
                   </div>
                 </div>
               </div>
             )}
           </div>
-        </main>
-      </div>
 
-      {/* Sticky Footer */}
-      {hasChanges && (
-        <div className="fixed bottom-0 left-0 lg:left-64 right-0 p-4 bg-bg  shadow-[0_-4px_16px_rgba(0,0,0,0.03)] z-40 animate-in slide-in-from-bottom-full duration-300">
-          <div className="max-w-4xl mx-auto flex items-center justify-between px-4 lg:px-8">
-            <span className="text-sm text-ink-subtle font-medium hidden sm:block">You have unsaved changes.</span>
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <Button variant="secondary" onClick={handleCancel} disabled={isSaving}>Cancel</Button>
-              <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+          {/* Preferences Card */}
+          {/* Preferences Card */}
+          <div className="settings-card" style={{ padding: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }}>
+              <Icon name="Settings" size={20} className="text-brand" />
+              <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Preferences</h2>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Currency */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Currency</label>
+                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Display currency for your store</p>
+                <select
+                  className="input-field"
+                  style={{
+                    height: '48px',
+                    padding: '0 16px',
+                    borderRadius: '10px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    width: '100%',
+                    appearance: 'none',
+                    backgroundImage: `url('data:image/svg+xml;utf8,<svg fill="none" stroke="%230F1115" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 16px center',
+                    backgroundSize: '16px',
+                    border: '1px solid var(--color-border)',
+                    backgroundColor: 'var(--color-bg)',
+                    color: 'var(--color-ink)'
+                  }}
+                  value={formData.currency}
+                  onChange={(e) => handleChange('currency', e.target.value)}
+                >
+                  <option value="NGN">NGN (₦)</option>
+                  <option value="USD">USD ($)</option>
+                </select>
+              </div>
+              
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.3, marginTop: '24px', marginBottom: '24px' }} />
+              
+              {/* Time Zone */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Time Zone</label>
+                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Time zone for orders and analytics</p>
+                <select
+                  className="input-field"
+                  style={{
+                    height: '48px',
+                    padding: '0 16px',
+                    borderRadius: '10px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    width: '100%',
+                    appearance: 'none',
+                    backgroundImage: `url('data:image/svg+xml;utf8,<svg fill="none" stroke="%230F1115" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 16px center',
+                    backgroundSize: '16px',
+                    border: '1px solid var(--color-border)',
+                    backgroundColor: 'var(--color-bg)',
+                    color: 'var(--color-ink)'
+                  }}
+                  value={formData.timeZone}
+                  onChange={(e) => handleChange('timeZone', e.target.value)}
+                >
+                  <option value="Africa/Lagos">WAT (Lagos)</option>
+                  <option value="UTC">UTC</option>
+                </select>
+              </div>
+
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.3, marginTop: '24px', marginBottom: '24px' }} />
+
+              {/* Date Format */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Date Format</label>
+                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Format for displaying dates</p>
+                <select
+                  className="input-field"
+                  style={{
+                    height: '48px',
+                    padding: '0 16px',
+                    borderRadius: '10px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    width: '100%',
+                    appearance: 'none',
+                    backgroundImage: `url('data:image/svg+xml;utf8,<svg fill="none" stroke="%230F1115" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 16px center',
+                    backgroundSize: '16px',
+                    border: '1px solid var(--color-border)',
+                    backgroundColor: 'var(--color-bg)',
+                    color: 'var(--color-ink)'
+                  }}
+                  value={formData.dateFormat}
+                  onChange={(e) => handleChange('dateFormat', e.target.value)}
+                >
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.5, marginTop: '32px', marginBottom: '24px' }} />
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button 
+                variant="primary" 
+                onClick={handleSave} 
+                disabled={isSaving || !(formData.currency !== initialData.currency || formData.timeZone !== initialData.timeZone || formData.dateFormat !== initialData.dateFormat)}
+                style={{ height: '44px', paddingLeft: '24px', paddingRight: '24px', borderRadius: '10px', fontWeight: 500 }}
+              >
                 {isSaving ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </div>
         </div>
-      )}
+
+        {/* RIGHT COLUMN */}
+        <div className="settings-column">
+          
+          {/* Security Card */}
+          <div className="settings-card" style={{ maxWidth: '85%' }}>
+            <div className="flex items-center gap-2 mb-6">
+              <Icon name="Security" size={20} className="text-brand" />
+              <h2 className="text-body font-bold text-ink">Security</h2>
+            </div>
+            
+            <div className="flex flex-col gap-6">
+              <h3 className="text-sm font-bold text-ink">Change Password</h3>
+              
+              {hasGoogleAccount ? (
+                <div className="p-4 bg-primary-container rounded-lg">
+                  <p className="text-sm text-ink-subtle mb-3">You sign in using your Google account.</p>
+                  <Button variant="danger" size="sm" onClick={async () => {
+                    const res = await disconnectGoogle();
+                    if (res.success) {
+                      setToast({ message: 'Google account disconnected.', type: 'success' });
+                      setTimeout(() => setToast(null), 3000);
+                      router.refresh();
+                    }
+                  }}>Disconnect Google</Button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4" style={{ width: '100%' }}>
+                    <Input 
+                      placeholder="Current Password" 
+                      type="password" 
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)' }}
+                    />
+                    <Input 
+                      placeholder="New Password" 
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)' }}
+                    />
+                  </div>
+                  <div>
+                    <Button variant="secondary">Update Password</Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.5, marginTop: '20px', marginBottom: '20px' }} />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-bold text-ink">Sign Out</h3>
+                <p className="text-body-sm text-ink-subtle">End your session on this device.</p>
+              </div>
+              <div>
+                <Button 
+                  variant="danger" 
+                  onClick={async () => {
+                    const res = await signOutAllDevices();
+                    if (res.success) {
+                      router.push('/login');
+                    }
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Support & Legal Card */}
+          <div className="settings-card" style={{ padding: '32px', marginTop: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <Icon name="Support" size={20} className="text-brand" />
+              <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Support & Legal</h2>
+            </div>
+            <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '32px', marginTop: 0 }}>
+              Get help, review our policies, and learn how SellSnap works.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Contact Support */}
+              <button 
+                onClick={() => setActiveView('support')}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '56px', borderRadius: '10px', padding: '0 16px', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s', width: '100%', textAlign: 'left' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(4px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(0)'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Icon name="Support" size={18} className="text-brand" />
+                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Contact Support</span>
+                </div>
+                <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
+              </button>
+              
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.3, margin: '8px 0' }} />
+
+              {/* Terms of Service */}
+              <button 
+                onClick={() => setActiveView('terms')}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '56px', borderRadius: '10px', padding: '0 16px', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s', width: '100%', textAlign: 'left' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(4px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(0)'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Icon name="Terms" size={18} className="text-ink-subtle" />
+                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Terms of Service</span>
+                </div>
+                <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
+              </button>
+
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.3, margin: '8px 0' }} />
+
+              {/* Privacy Policy */}
+              <button 
+                onClick={() => setActiveView('privacy')}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '56px', borderRadius: '10px', padding: '0 16px', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s', width: '100%', textAlign: 'left' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(4px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; const c = e.currentTarget.querySelector('.chevron') as HTMLElement; if (c) c.style.transform = 'translateX(0)'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Icon name="Security" size={18} className="text-ink-subtle" />
+                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Privacy Policy</span>
+                </div>
+                <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+  );
+}
+
+function SupportView({ onBack }: { onBack: () => void }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [supportData, setSupportData] = useState({ name: '', email: '', subject: '', message: '' });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setTimeout(() => { setSubmitted(false); setSupportData({ name: '', email: '', subject: '', message: '' }); }, 3000);
+    }, 1500);
+  };
+
+  return (
+    <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
+      <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
+          <Icon name="ArrowLeft" size={18} /> Back to Settings
+        </button>
+        <div>
+          <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Contact Support</h1>
+          <p className="text-body-sm text-ink-muted">Need help with your SellSnap account? Our support team is here to assist you.</p>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: '800px', paddingTop: '16px' }}>
+        <p style={{ fontSize: '16px', color: 'var(--color-ink-subtle)', lineHeight: 1.6, marginBottom: '40px' }}>
+          Expect a response within 24 hours. Alternatively, you can email us directly at support@sellsnap.com.
+        </p>
+
+        <div className="settings-card" style={{ padding: '40px' }}>
+          {submitted ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 0', textAlign: 'center' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--sys-success-container-role)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <Icon name="Success" size={24} className="text-success" />
+              </div>
+              <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Message Sent!</h3>
+              <p style={{ fontSize: '15px', color: 'var(--color-ink-subtle)' }}>We've received your request and will get back to you shortly.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', gap: '24px' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Name</label>
+                  <Input required placeholder="Your name" value={supportData.name} onChange={(e) => setSupportData(prev => ({ ...prev, name: e.target.value }))} />
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Email</label>
+                  <Input required type="email" placeholder="you@example.com" value={supportData.email} onChange={(e) => setSupportData(prev => ({ ...prev, email: e.target.value }))} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Subject</label>
+                <Input required placeholder="How can we help?" value={supportData.subject} onChange={(e) => setSupportData(prev => ({ ...prev, subject: e.target.value }))} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Message</label>
+                <textarea 
+                  required
+                  style={{ minHeight: '160px', padding: '16px', borderRadius: '10px', border: '1.5px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '16px', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  placeholder="Please describe your issue in detail..."
+                  value={supportData.message}
+                  onChange={(e) => setSupportData(prev => ({ ...prev, message: e.target.value }))}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ height: '48px', padding: '0 32px', borderRadius: '10px', fontSize: '15px', fontWeight: 500 }}>
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TermsView({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
+      <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
+          <Icon name="ArrowLeft" size={18} /> Back to Settings
+        </button>
+        <div>
+          <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Terms of Service</h1>
+          <p className="text-body-sm text-ink-muted">Last Updated: October 2023</p>
+        </div>
+      </div>
+      
+      <div style={{ maxWidth: '720px', paddingTop: '16px' }}>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>1. Introduction</h2>
+            <p>Welcome to SellSnap. These Terms of Service govern your use of our platform. By creating an account and generating payment links through SellSnap, you agree to abide by these terms. SellSnap is designed exclusively to help merchants create products, generate shareable payment links, and manage incoming customer orders quickly and securely.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>2. User Accounts & Eligibility</h2>
+            <p>To use SellSnap, you must be a registered business or an individual over 18 capable of forming a binding contract. You are responsible for safeguarding your account credentials. You must provide accurate business information and maintain the security of your SellSnap account.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>3. Merchant Responsibilities</h2>
+            <p>As a merchant on SellSnap, you are solely responsible for the products you list, the accuracy of your descriptions, and fulfilling orders once a payment is confirmed. SellSnap provides the payment link infrastructure but is not a party to the transaction between you and your buyers.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>4. Payments & Transactions</h2>
+            <p>All payments generated via SellSnap links are processed securely through our trusted payment gateway partners (e.g., Flutterwave). SellSnap does not hold your funds. We reserve the right to delay or decline transactions that trigger our automated fraud detection systems to protect both you and your buyers.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>5. Prohibited Activities</h2>
+            <p>You may not use SellSnap to sell illegal goods, counterfeit items, or highly regulated products without authorization. You must not attempt to manipulate the platform, bypass security measures, or use our payment links to facilitate money laundering or fraudulent activities.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>6. Account Suspension & Termination</h2>
+            <p>We reserve the right to suspend or terminate your account immediately if we detect a violation of these Terms of Service, a high volume of chargebacks, or suspicious activity. In such cases, outstanding links will be deactivated.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PrivacyView({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
+      <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
+          <Icon name="ArrowLeft" size={18} /> Back to Settings
+        </button>
+        <div>
+          <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Privacy Policy</h1>
+          <p className="text-body-sm text-ink-muted">Last Updated: October 2023</p>
+        </div>
+      </div>
+      
+      <div style={{ maxWidth: '720px', paddingTop: '16px' }}>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>1. Information We Collect</h2>
+            <p>When you register for SellSnap, we collect basic account information including your name, email address, and business details. When you create products, we store the product metadata, descriptions, and uploaded images necessary to generate your payment links.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>2. Order & Buyer Information</h2>
+            <p>When a buyer interacts with your SellSnap payment link, we securely collect the transaction details necessary to verify the payment and notify you. We do not store sensitive payment card details; these are handled directly by our certified payment processors.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>3. How We Use Your Data</h2>
+            <p>We use your data strictly to provide the SellSnap service: generating secure product links, verifying incoming payments, updating your dashboard, and sending transactional email notifications regarding your orders and account security.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>4. Data Protection</h2>
+            <p>We implement industry-standard security measures, including encryption in transit and at rest, to protect your account and product data. Your dashboard is protected by secure authentication protocols to prevent unauthorized access.</p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>5. Data Retention</h2>
+            <p>We retain your account and order history for as long as your account remains active. If you choose to delete your SellSnap account, your personal information and product links will be permanently removed from our active systems within 30 days.</p>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
