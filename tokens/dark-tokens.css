@@ -1,0 +1,246 @@
+/* ═══════════════════════════════════════════════════════════
+   SELLSNAP — Dark Theme Tokens
+   Applied when <html data-theme="dark">
+   ════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] {
+
+  /* ── Surface Hierarchy ───────────────────────────────────
+     Depth is created by layering progressively lighter
+     surfaces, not by heavy borders or large shadows.
+     bg (darkest) → sidebar → card → elevated → modal
+  ─────────────────────────────────────────────────────── */
+  --color-bg:      #0d0d0d;   /* page background — deepest layer   */
+  --color-surface: #171717;   /* cards, panels, elevated surfaces   */
+
+  /* ── Ink / Text ────────────────────────────────────────── */
+  --color-ink:        #f0f0f0;   /* primary text                    */
+  --color-ink-muted:  #9a9a9a;   /* secondary / labels              */
+  --color-ink-subtle: #5c5c5c;   /* captions, placeholders          */
+
+  /* ── Brand ─────────────────────────────────────────────── */
+  /* Brand color uses --sys-primary-color-role defined in tokens.css */
+
+  /* ── Border & Divider ─────────────────────────────────── */
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Feedback ─────────────────────────────────────────── */
+  --color-success: #4ade80;   /* green-400 — bright enough on dark  */
+  --color-warning: #fbbf24;   /* amber-400                          */
+  --color-danger:  #f87171;   /* red-400                            */
+
+  /* ══════════════════════════════════════════════════════════
+     System Color Roles — remapped to dark primitive values
+  ══════════════════════════════════════════════════════════ */
+
+  /* Primary (brand blue) */
+  --sys-primary-color-role:          var(--primitive-primary-key-color);
+  --sys-on-primary-color-role:       #ffffff;
+  --sys-primary-container-role:      #0d2a5e;   /* deep navy container      */
+  --sys-on-primary-container-role:   #a8c4ff;
+
+  /* Secondary (purple) */
+  --sys-secondary-color-role:        #9f7dff;
+  --sys-on-secondary-role:           #ffffff;
+  --sys-secondary-container-role:    #2a1a5e;
+  --sys-on-secondary-container-role: #d4c3ff;
+
+  /* Tertiary (indigo) */
+  --sys-tertiary-color-role:         #8887c4;
+  --sys-on-tertiary-color-role:      #ffffff;
+  --sys-tertiary-container-role:     #1e1e3e;
+  --sys-on-tertiary-container-role:  #c4c3e8;
+
+  /* Neutral — surface & container hierarchy */
+  --sys-neutral-color-role:          #0d0d0d;   /* same as --color-bg        */
+  --sys-on-neutral-color-role:       #f0f0f0;   /* same as --color-ink       */
+  --sys-neutral-container-role:      #222222;
+  --sys-on-neutral-container-role:   #d4d4d4;
+  --sys-neutral-container-low:       #1a1a1a;   /* same as --color-surface   */
+  --sys-neutral-container-lowest:    #141414;   /* sidebar                   */
+  --sys-neutral-variant:             #2a2a2a;
+  --sys-on-neutral-variant:          #b0b0b0;
+  --sys-neutral-variant-container:   #232323;
+  --sys-on-neutral-variant-role:     #9a9a9a;   /* same as --color-ink-muted */
+
+  /* Error */
+  --sys-error-color-role:            #f87171;   /* red-400                   */
+  --sys-on-error-color-role:         #1a0000;
+  --sys-error-container-role:        #3d0f0f;
+  --sys-on-error-container-role:     #fca5a5;
+
+  /* Success */
+  --sys-success-color-role:          #4ade80;   /* green-400                 */
+  --sys-on-success-role:             #052010;
+  --sys-success-conatiner-role:      #0d2e18;   /* typo preserved from light */
+  --sys-on-success-container-role:   #86efac;
+
+  /* Accent (gold) */
+  --sys-accent-color-role:           #e6b45a;
+  --sys-on-accent-color-role:        #1a0d00;
+  --sys-accent-container-role:       #3d2800;
+  --sys-on-accent-container-role:    #f5d599;
+
+  /* Warning */
+  --sys-warning-color-role:          #fbbf24;   /* amber-400                 */
+  --sys-on-warning-color-role:       #1a0f00;
+  --sys-warning-container-role:      #3d2800;
+  --sys-on-warnimg-container-role:   #fde68a;
+
+  /* Outline */
+  --sys-outline-color-role:          #5c5c5c;
+  --sys-outline-variant-color-role:  rgba(255, 255, 255, 0.08);
+
+  /* Surface container (used by landing nav, cards) */
+  --sys-surface-container-low-role:  rgba(255, 255, 255, 0.04);
+
+  /* ══════════════════════════════════════════════════════════
+     Elevation — dark-appropriate shadows
+     Use dark ambient shadows; avoid pure black or large blurs
+  ══════════════════════════════════════════════════════════ */
+  --sys-elevation-level1: 0 2px 8px  rgba(0, 0, 0, 0.40), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --sys-elevation-level2: 0 4px 16px rgba(0, 0, 0, 0.50), 0 2px 4px rgba(0, 0, 0, 0.30);
+  --sys-elevation-level3: 0 12px 32px rgba(0, 0, 0, 0.60), 0 4px 8px rgba(0, 0, 0, 0.35);
+  --sys-elevation-glow:   0 0 60px color-mix(in srgb, var(--sys-primary-color-role) 12%, transparent);
+
+  /* ══════════════════════════════════════════════════════════
+     Semantic UI Tokens — extended dark values
+     These extend the light system with additional roles
+     needed for precise component theming.
+  ══════════════════════════════════════════════════════════ */
+
+  /* Sidebar */
+  --dk-sidebar-bg:          #141414;
+  --dk-sidebar-border:      rgba(255, 255, 255, 0.05);
+  --dk-sidebar-active-bg:   var(--color-brand);
+  --dk-sidebar-hover-bg:    rgba(255, 255, 255, 0.05);
+
+  /* Cards */
+  --dk-card-bg:             #1a1a1a;
+  --dk-card-elevated-bg:    #202020;
+  --dk-card-border:         rgba(255, 255, 255, 0.07);
+
+  /* Inputs */
+  --dk-input-bg:            #1a1a1a;
+  --dk-input-border:        rgba(255, 255, 255, 0.12);
+  --dk-input-hover-border:  rgba(255, 255, 255, 0.20);
+  --dk-input-focus-border:  var(--color-brand);
+  --dk-input-placeholder:   #5c5c5c;
+
+  /* Dropdowns & Menus */
+  --dk-dropdown-bg:         #242424;
+  --dk-dropdown-border:     rgba(255, 255, 255, 0.08);
+  --dk-dropdown-hover:      rgba(255, 255, 255, 0.05);
+  --dk-dropdown-shadow:     0 16px 48px rgba(0, 0, 0, 0.60), 0 4px 12px rgba(0, 0, 0, 0.40);
+
+  /* Stat / KPI cards */
+  --dk-stat-bg:             #1a1a1a;
+  --dk-stat-label-color:    #6b6b6b;
+
+  /* Badges */
+  --dk-badge-paid-bg:       rgba(74, 222, 128, 0.12);
+  --dk-badge-paid-text:     #4ade80;
+  --dk-badge-pending-bg:    rgba(251, 191, 36, 0.12);
+  --dk-badge-pending-text:  #fbbf24;
+  --dk-badge-failed-bg:     rgba(248, 113, 113, 0.12);
+  --dk-badge-failed-text:   #f87171;
+
+  /* Buttons */
+  --dk-btn-secondary-bg:    #252525;
+  --dk-btn-secondary-text:  #e0e0e0;
+  --dk-btn-secondary-border: rgba(255, 255, 255, 0.10);
+  --dk-btn-secondary-hover-bg: #2e2e2e;
+  --dk-btn-ghost-hover-bg:  rgba(255, 255, 255, 0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   System dark mode media query — auto-detects OS preference
+   when theme is "system" (i.e. no data-theme attribute set).
+   The JS ThemeProvider also handles this, but this CSS rule
+   acts as a zero-JS fallback.
+   ════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg:      #0d0d0d;
+    --color-surface: #171717;
+    --color-ink:        #f0f0f0;
+    --color-ink-muted:  #9a9a9a;
+    --color-ink-subtle: #5c5c5c;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-success: #4ade80;
+    --color-warning: #fbbf24;
+    --color-danger:  #f87171;
+    --sys-primary-color-role:          var(--primitive-primary-key-color);
+    --sys-on-primary-color-role:       #ffffff;
+    --sys-primary-container-role:      #0d2a5e;
+    --sys-on-primary-container-role:   #a8c4ff;
+    --sys-secondary-color-role:        #9f7dff;
+    --sys-on-secondary-role:           #ffffff;
+    --sys-secondary-container-role:    #2a1a5e;
+    --sys-on-secondary-container-role: #d4c3ff;
+    --sys-tertiary-color-role:         #8887c4;
+    --sys-on-tertiary-color-role:      #ffffff;
+    --sys-tertiary-container-role:     #1e1e3e;
+    --sys-on-tertiary-container-role:  #c4c3e8;
+    --sys-neutral-color-role:          #0d0d0d;
+    --sys-on-neutral-color-role:       #f0f0f0;
+    --sys-neutral-container-role:      #222222;
+    --sys-on-neutral-container-role:   #d4d4d4;
+    --sys-neutral-container-low:       #1a1a1a;
+    --sys-neutral-container-lowest:    #141414;
+    --sys-neutral-variant:             #2a2a2a;
+    --sys-on-neutral-variant:          #b0b0b0;
+    --sys-neutral-variant-container:   #232323;
+    --sys-on-neutral-variant-role:     #9a9a9a;
+    --sys-error-color-role:            #f87171;
+    --sys-on-error-color-role:         #1a0000;
+    --sys-error-container-role:        #3d0f0f;
+    --sys-on-error-container-role:     #fca5a5;
+    --sys-success-color-role:          #4ade80;
+    --sys-on-success-role:             #052010;
+    --sys-success-conatiner-role:      #0d2e18;
+    --sys-on-success-container-role:   #86efac;
+    --sys-accent-color-role:           #e6b45a;
+    --sys-on-accent-color-role:        #1a0d00;
+    --sys-accent-container-role:       #3d2800;
+    --sys-on-accent-container-role:    #f5d599;
+    --sys-warning-color-role:          #fbbf24;
+    --sys-on-warning-color-role:       #1a0f00;
+    --sys-warning-container-role:      #3d2800;
+    --sys-on-warnimg-container-role:   #fde68a;
+    --sys-outline-color-role:          #5c5c5c;
+    --sys-outline-variant-color-role:  rgba(255, 255, 255, 0.08);
+    --sys-surface-container-low-role:  rgba(255, 255, 255, 0.04);
+    --sys-elevation-level1: 0 2px 8px  rgba(0, 0, 0, 0.40), 0 1px 2px rgba(0, 0, 0, 0.25);
+    --sys-elevation-level2: 0 4px 16px rgba(0, 0, 0, 0.50), 0 2px 4px rgba(0, 0, 0, 0.30);
+    --sys-elevation-level3: 0 12px 32px rgba(0, 0, 0, 0.60), 0 4px 8px rgba(0, 0, 0, 0.35);
+    --sys-elevation-glow:   0 0 60px color-mix(in srgb, var(--sys-primary-color-role) 12%, transparent);
+    --dk-sidebar-bg:          #141414;
+    --dk-sidebar-border:      rgba(255, 255, 255, 0.05);
+    --dk-card-bg:             #1a1a1a;
+    --dk-card-elevated-bg:    #202020;
+    --dk-card-border:         rgba(255, 255, 255, 0.07);
+    --dk-input-bg:            #1a1a1a;
+    --dk-input-border:        rgba(255, 255, 255, 0.12);
+    --dk-input-hover-border:  rgba(255, 255, 255, 0.20);
+    --dk-input-focus-border:  var(--color-brand);
+    --dk-input-placeholder:   #5c5c5c;
+    --dk-dropdown-bg:         #242424;
+    --dk-dropdown-border:     rgba(255, 255, 255, 0.08);
+    --dk-dropdown-hover:      rgba(255, 255, 255, 0.05);
+    --dk-dropdown-shadow:     0 16px 48px rgba(0, 0, 0, 0.60), 0 4px 12px rgba(0, 0, 0, 0.40);
+    --dk-stat-bg:             #1a1a1a;
+    --dk-stat-label-color:    #6b6b6b;
+    --dk-badge-paid-bg:       rgba(74, 222, 128, 0.12);
+    --dk-badge-paid-text:     #4ade80;
+    --dk-badge-pending-bg:    rgba(251, 191, 36, 0.12);
+    --dk-badge-pending-text:  #fbbf24;
+    --dk-badge-failed-bg:     rgba(248, 113, 113, 0.12);
+    --dk-badge-failed-text:   #f87171;
+    --dk-btn-secondary-bg:    #252525;
+    --dk-btn-secondary-text:  #e0e0e0;
+    --dk-btn-secondary-border: rgba(255, 255, 255, 0.10);
+    --dk-btn-secondary-hover-bg: #2e2e2e;
+    --dk-btn-ghost-hover-bg:  rgba(255, 255, 255, 0.06);
+  }
+}

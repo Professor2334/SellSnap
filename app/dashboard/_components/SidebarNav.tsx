@@ -46,7 +46,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
   }
 
   return (
-    <ul className="flex flex-col" style={{ listStyle: 'none', gap: '6px' }}>
+    <ul className="flex flex-col" style={{ listStyle: 'none', gap: '8px' }}>
       {items.map((item) => {
         const isActive = isItemActive(item);
 

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { SidebarNav } from './SidebarNav';
 import { SignOutButton } from './DashboardUtils';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: 'Dashboard' as const },
@@ -90,7 +91,9 @@ export function DashboardSidebar({
           </nav>
         </div>
 
-        <div style={{ marginTop: 'auto', padding: '32px 12px 24px' }}>
+        <div style={{ marginTop: 'auto', padding: '24px 12px 24px' }}>
+
+
           <div
             ref={logoutRef}
             className="sidebar-profile-card"
@@ -176,7 +179,10 @@ export function DashboardSidebar({
             )}
           </div>
           
-          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', padding: '0 4px', position: 'relative', minHeight: '40px' }}>
+            <div style={{ position: 'absolute', left: '4px' }}>
+              <ThemeToggle />
+            </div>
             <span style={{ fontSize: '0.6875rem', color: 'var(--sys-on-surface-variant-role)', opacity: 0.6 }}>SellSnap v1.0</span>
           </div>
         </div>

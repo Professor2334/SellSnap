@@ -144,7 +144,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
         }
 
         .product-title {
-          font-size: clamp(32px, 5vw, 40px);
+          font-size: clamp(2rem, 5vw, 2.5rem);
           font-weight: 700;
           color: var(--color-ink, #0F1115);
           line-height: 1.15;
@@ -152,7 +152,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
         }
 
         .product-price {
-          font-size: clamp(24px, 4vw, 32px);
+          font-size: clamp(1.5rem, 4vw, 2rem);
           font-weight: 800;
           color: var(--color-brand, #1A7F3C);
           letter-spacing: -0.02em;

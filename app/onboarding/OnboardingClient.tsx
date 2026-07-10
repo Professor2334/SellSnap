@@ -106,7 +106,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
         }
         .premium-setup-btn:hover {
           transform: scale(1.01) translateY(-2px);
-          box-shadow: 0 4px 14px rgba(26, 127, 60, 0.25);
+          box-shadow: 0 4px 14px color-mix(in srgb, var(--sys-primary-color-role) 25%, transparent);
         }
         .premium-setup-btn:active {
           transform: scale(0.99) translateY(0);

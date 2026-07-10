@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import {
   Menu,
   X,
@@ -527,8 +528,9 @@ export default function LandingPage() {
             </div>
           </div>
           
-          <div className="footer-bottom">
+          <div className="footer-bottom" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <p>© {new Date().getFullYear()} SellSnap. All rights reserved.</p>
+            <ThemeToggle />
           </div>
         </div>
       </footer>

@@ -185,7 +185,7 @@ export function DashboardView({
 
       {/* Recent Orders */}
       <div style={{ marginTop: 24 }}>
-        <div className="card-container" style={{ padding: '24px', backgroundColor: '#FFFFFF', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)' }}>
+        <div className="card-container" style={{ padding: '24px', backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)' }}>
           <h2 className="text-h2 font-semibold text-ink" style={{ marginBottom: 24 }}>Recent Orders</h2>
           
           {recentOrders.length === 0 ? (
@@ -359,12 +359,10 @@ export function ProductsView({ products }: { products: Product[] }) {
               right: 0,
               marginBottom: '8px',
               width: '160px',
-              backgroundColor: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.4)',
+              backgroundColor: 'var(--sys-neutral-container-lowest)',
+              border: '1px solid var(--color-border)',
               borderRadius: '12px',
-              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04)',
+              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
               padding: '8px',
               zIndex: 50,
               display: 'flex',
@@ -395,8 +393,8 @@ export function ProductsView({ products }: { products: Product[] }) {
                       cursor: 'pointer',
                       border: 'none',
                       transition: 'background-color 150ms ease, color 150ms ease',
-                      backgroundColor: isActive ? 'color-mix(in srgb, var(--color-brand) 8%, transparent)' : isFocused ? 'rgba(0,0,0,0.04)' : 'transparent',
-                      color: isActive ? 'var(--color-brand)' : 'var(--color-ink)',
+                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : isFocused ? 'color-mix(in srgb, var(--color-ink) 4%, transparent)' : 'transparent',
+                      color: isActive ? 'var(--sys-primary-color-role)' : 'var(--color-ink)',
                     }}
                     onMouseEnter={() => setFocusedIndex(index)}
                     onMouseLeave={() => setFocusedIndex(-1)}
@@ -420,7 +418,7 @@ export function ProductsView({ products }: { products: Product[] }) {
         </Link>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: '#FFFFFF', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
         {filteredProducts.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
@@ -484,11 +482,11 @@ function ProductRow({
         alignItems: 'center', 
         justifyContent: 'space-between',
         padding: '20px 24px',
-        borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)',
+        borderBottom: isLast ? 'none' : '1px solid var(--color-border)',
         cursor: 'pointer',
         transition: 'background-color 150ms ease',
       }}
-      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.02)'}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)'}
       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -539,10 +537,10 @@ function ProductRow({
                 className="animate-fade-in-up"
                 style={{
                   width: '180px',
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: 'var(--sys-neutral-container-lowest)',
                   borderRadius: '12px',
-                  boxShadow: '0 20px 40px -8px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05)',
-                  border: 'none',
+                  boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
+                  border: '1px solid var(--color-border)',
                   padding: '8px',
                   zIndex: 100,
                   display: 'flex',
@@ -660,12 +658,10 @@ export function OrdersView({ orders }: { orders: Order[] }) {
               right: 0,
               marginBottom: '8px',
               width: '160px',
-              backgroundColor: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.4)',
+              backgroundColor: 'var(--sys-neutral-container-lowest)',
+              border: '1px solid var(--color-border)',
               borderRadius: '12px',
-              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04)',
+              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
               padding: '8px',
               zIndex: 50,
               display: 'flex',
@@ -694,11 +690,11 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                       cursor: 'pointer',
                       border: 'none',
                       transition: 'background-color 150ms ease, color 150ms ease',
-                      backgroundColor: isActive ? 'color-mix(in srgb, var(--color-brand) 8%, transparent)' : 'transparent',
-                      color: isActive ? 'var(--color-brand)' : 'var(--color-ink)',
+                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : 'transparent',
+                      color: isActive ? 'var(--sys-primary-color-role)' : 'var(--color-ink)',
                     }}
                     onMouseEnter={(e) => {
-                      if (!isActive) e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.02)';
+                      if (!isActive) e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)';
                     }}
                     onMouseLeave={(e) => {
                       if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
@@ -718,7 +714,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
         </div>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: '#FFFFFF', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
         {filteredOrders.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
@@ -741,11 +737,11 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                   alignItems: 'center', 
                   justifyContent: 'space-between', 
                   padding: '16px 24px',
-                  borderBottom: index !== filteredOrders.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                  borderBottom: index !== filteredOrders.length - 1 ? '1px solid var(--color-border)' : 'none',
                   gap: 16,
                   transition: 'background-color 150ms ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.02)'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {/* Left Side */}
@@ -811,10 +807,10 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                           className="animate-fade-in-up"
                           style={{
                             width: '210px',
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'var(--sys-neutral-container-lowest)',
                             borderRadius: '12px',
-                            boxShadow: '0 20px 40px -8px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05)',
-                            border: 'none',
+                            boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
+                            border: '1px solid var(--color-border)',
                             padding: '8px',
                             zIndex: 100,
                             display: 'flex',

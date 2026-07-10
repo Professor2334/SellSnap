@@ -14,6 +14,28 @@
   --color-success: var(--sys-success-color-role);
   --color-warning: var(--sys-warning-color-role);
   --color-danger: var(--sys-error-color-role);
+
+  /* dk-* bridge tokens — light-mode defaults.
+     Dark theme overrides these in [data-theme="dark"] via dark-tokens.css */
+  --dk-card-bg:               #FFFFFF;
+  --dk-card-elevated-bg:      var(--primitive-neutral98);
+  --dk-card-border:           var(--sys-outline-variant-color-role);
+  --dk-sidebar-bg:            #FFFFFF;
+  --dk-sidebar-hover-bg:      var(--primitive-neutral98);
+  --dk-input-bg:              var(--sys-neutral-container-lowest);
+  --dk-input-border:          var(--sys-outline-variant-color-role);
+  --dk-input-hover-border:    var(--sys-outline-variant-color-role);
+  --dk-input-focus-border:    var(--sys-primary-color-role);
+  --dk-input-placeholder:     var(--sys-outline-variant-color-role);
+  --dk-dropdown-bg:           rgba(255, 255, 255, 0.95);
+  --dk-dropdown-border:       rgba(255, 255, 255, 0.4);
+  --dk-dropdown-hover:        var(--primitive-neutral98);
+  --dk-dropdown-shadow:       0 20px 40px -8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  --dk-btn-secondary-bg:      var(--primitive-neutral98);
+  --dk-btn-secondary-text:    var(--sys-on-neutral-color-role);
+  --dk-btn-secondary-border:  var(--sys-outline-variant-color-role);
+  --dk-btn-secondary-hover-bg: var(--sys-neutral-variant-container);
+  --dk-btn-ghost-hover-bg:    var(--sys-neutral-container-low);
 }
 
 * {
@@ -30,7 +52,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-inter), sans-serif;
-  font-size: 16px; /* Base size */
+  font-size: 1rem; /* Base size */
 }
 
 a {
@@ -116,7 +138,7 @@ a {
 
 .navbar-logo {
   font: var(--sys-font-title-large);
-  font-size: clamp(18px, 4vw, 22px);
+  font-size: clamp(1.125rem, 4vw, 1.375rem);
   font-weight: 700;
   color: var(--color-brand);
   letter-spacing: -0.5px;
@@ -132,7 +154,7 @@ a {
 .navbar-link {
   font: var(--sys-font-label-large);
   font-weight: 500;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--color-ink);
   transition: color 0.2s;
 }
@@ -252,7 +274,7 @@ a {
 }
 
 .feature-icon {
-  font-size: 32px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   margin-bottom: 20px;
 }
 
@@ -285,7 +307,7 @@ a {
 
 .benefit-check {
   color: var(--color-success);
-  font-size: 20px;
+  font-size: clamp(1rem, 2vw, 1.25rem);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -444,24 +466,42 @@ a {
   position: sticky;
   top: 0;
   z-index: 40;
-  background-color: var(--color-bg);
   border-radius: 0;
-  margin: 0 -24px 32px -24px;
-  padding: 24px;
+  margin: 0 0 32px 0;
+  padding: 24px 0;
   min-height: 88px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  /* Extend background edge-to-edge via pseudo-element so sticky
+     backdrop covers the full row when content scrolls under it */
+  isolation: isolate;
+}
+
+.dashboard-page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Stretch to the wrapper edges (24px on each side) */
+  left: -24px;
+  right: -24px;
+  background-color: var(--color-bg);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  z-index: -1;
 }
 
 @media (min-width: 1280px) {
   .dashboard-page-header {
-    margin: 0 -32px 40px -32px;
-    padding: 32px;
+    margin: 0 0 40px 0;
+    padding: 32px 0;
+  }
+  .dashboard-page-header::before {
+    left: -32px;
+    right: -32px;
   }
 }
+
 
 /* Dashboard specific */
 .dashboard-search-input {
@@ -595,7 +635,7 @@ a {
   padding: 0 16px;
   min-height: 44px;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   font-family: inherit;
   color: var(--sys-on-neutral-color-role);
@@ -867,14 +907,14 @@ a {
 .btn-sm {
   height: 40px;
   padding: 0 24px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
 }
 
 .btn-md {
   height: 44px;
   padding: 0 20px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .btn-lg {
@@ -932,7 +972,7 @@ a {
   background-color: var(--color-bg);
   color: var(--color-ink);
   font-family: inherit;
-  font-size: 16px;
+  font-size: 1rem;
   transition: all 0.4s;
   outline: none;
 }
@@ -1085,7 +1125,7 @@ a {
   color: #ffffff;
   letter-spacing: -0.5px;
   margin-bottom: 40px;
-  font-size: 22px;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
 }
 
 .auth-brand-headline {
@@ -1120,7 +1160,7 @@ a {
 }
 
 .auth-trust-icon {
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   flex-shrink: 0;
   width: 32px;
   height: 32px;
@@ -1214,7 +1254,7 @@ a {
 
 .auth-form-title {
   font: var(--sys-font-title-medium);
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   font-weight: 500;
   color: var(--color-ink);
 }
@@ -1318,7 +1358,7 @@ a {
   }
 
   .navbar-mobile-menu .navbar-link {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .hero {
@@ -1354,7 +1394,7 @@ a {
   }
 
   .auth-brand-headline {
-    font-size: 24px;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   }
 
   .auth-form-panel {
@@ -1405,6 +1445,11 @@ a {
   .dashboard-main > div {
     padding: 16px !important;
     padding-top: 64px !important;
+  }
+
+  .dashboard-page-header::before {
+    left: -16px;
+    right: -16px;
   }
 
   .dashboard-header {
@@ -1507,7 +1552,7 @@ a {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   font-weight: 700;
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.5px;
@@ -1544,7 +1589,7 @@ a {
 
 .landing-nav-link {
   position: relative;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
   color: color-mix(in srgb, var(--color-ink-muted) 80%, transparent);
@@ -1645,7 +1690,7 @@ a {
   background-color: var(--color-bg);
 }
 .landing-nav-mobile-drawer .landing-nav-link {
-  font-size: 15px;
+  font-size: 0.9375rem;
   padding: 10px 14px;
 }
 .landing-nav-mobile-drawer-actions {
@@ -1751,7 +1796,7 @@ a {
   background-color: #FFFFFF;
   border: 1px solid color-mix(in srgb, var(--color-brand) 15%, transparent);
   box-shadow: 0 4px 24px color-mix(in srgb, var(--color-brand) 15%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-brand) 5%, transparent);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink);
@@ -1801,7 +1846,7 @@ a {
 
 /* Sub-copy */
 .hero-subtext {
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   font-weight: 400;
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
@@ -1866,7 +1911,7 @@ a {
   border: none;
   background-color: #FFFFFF;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink-muted);
@@ -1959,7 +2004,7 @@ a {
   flex: 1;
 }
 .hc-product-name {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink);
@@ -1990,7 +2035,7 @@ a {
   color: var(--color-ink);
 }
 .hc-link-text {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: 'Inter', sans-serif;
   flex: 1;
   min-width: 0;
@@ -2010,7 +2055,7 @@ a {
   margin-bottom: 14px;
 }
 .hc-checkout-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink-muted);
 }
@@ -2018,7 +2063,7 @@ a {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink);
@@ -2034,7 +2079,7 @@ a {
   border-radius: var(--sys-radius-md);
 }
 .hc-checkout-amt-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink-muted);
 }
@@ -2049,7 +2094,7 @@ a {
   border-radius: var(--sys-radius-md);
   background-color: var(--sys-primary-container-role);
   color: var(--sys-on-primary-container-role);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   border: none;
@@ -2101,13 +2146,13 @@ a {
 }
 .hc-success-text { display: flex; flex-direction: column; gap: 2px; }
 .hc-success-title {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink);
 }
 .hc-success-sub {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink-muted);
 }
@@ -2123,7 +2168,7 @@ a {
   gap: 14px;
 }
 .hc-share-label {
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink-subtle);
@@ -2140,7 +2185,7 @@ a {
   border-radius: var(--sys-radius-md);
   background-color: var(--color-bg);
   border: none;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   color: var(--color-ink);
@@ -2194,7 +2239,7 @@ a {
   .hero-subtext { margin-bottom: 24px; }
   .hero-cta-row { flex-direction: column; align-items: flex-start; margin-bottom: 20px; }
   .hero-composition { max-width: 340px; }
-  .hc-share-card { padding: 8px 10px; font-size: 11px; }
+  .hc-share-card { padding: 8px 10px; font-size: 0.6875rem; }
   .hc-share-icon { width: 22px; height: 22px; }
 }
 
@@ -2226,7 +2271,7 @@ a {
   animation: hc-slide-up 0.6s ease-out both;
 }
 .ps-arrow {
-  font-size: 20px;
+  font-size: clamp(1rem, 2vw, 1.25rem);
   color: var(--color-ink-subtle);
   line-height: 1;
   animation: hc-fade-in 0.6s ease-out both;
@@ -2300,7 +2345,7 @@ a {
 .step-badge {
   background-color: var(--sys-primary-container-role, #e0e7ff);
   color: var(--color-brand, #003ce6);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 12px;
@@ -2324,13 +2369,13 @@ a {
   background-color: var(--sys-primary-container-role, #e0e7ff);
 }
 .step-title {
-  font-size: 18px;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
   font-weight: 600;
   color: var(--color-ink);
   margin-bottom: 8px;
 }
 .step-desc {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--color-ink-muted);
   line-height: 1.5;
 }
@@ -2619,7 +2664,7 @@ a {
 }
 
 .sp-card-icon {
-  font-size: 24px;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   margin-bottom: 16px;
 }
 .sp-card-title {
@@ -2732,7 +2777,7 @@ a {
   margin-bottom: 8px;
 }
 .pricing-price {
-  font-size: 48px;
+  font-size: clamp(2.25rem, 4vw, 3rem);
   font-weight: 800;
   color: var(--color-ink);
   letter-spacing: -1px;
@@ -2982,7 +3027,7 @@ a {
 }
 
 .auth-divider-text {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   color: var(--color-ink-muted);
@@ -2998,7 +3043,7 @@ a {
 
 .auth-brand-name-refined {
   font: var(--sys-font-title-large);
-  font-size: 24px;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   font-weight: 700;
   color: var(--color-brand);
   letter-spacing: -0.5px;
@@ -3097,7 +3142,7 @@ a {
   border: 1px solid var(--color-border);
   background-color: var(--color-bg);
   color: var(--color-ink);
-  font-size: 15px;
+  font-size: 0.9375rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
   transition: all 0.2s ease;
 }
@@ -3200,7 +3245,7 @@ a {
   align-items: center;
   transition: background-color 0.18s ease, color 0.18s ease;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   outline: none;
 }
@@ -3228,3 +3273,187 @@ a {
   background-color: color-mix(in srgb, var(--color-danger) 8%, transparent);
   color: var(--color-danger);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE COMPONENT OVERRIDES
+   Fixes every hardcoded primitive reference so it adapts
+   correctly in [data-theme="dark"].
+   ════════════════════════════════════════════════════════ */
+
+/* text-display uses --primitive-neutral20 which is hardcoded dark text.
+   In dark mode it must become near-white. */
+[data-theme="dark"] .text-display {
+  color: var(--color-ink);
+}
+
+/* Sidebar hover uses --primitive-neutral98 (very light grey) */
+[data-theme="dark"] .sidebar-link:hover {
+  background-color: var(--dk-sidebar-hover-bg);
+  color: var(--color-ink);
+}
+
+/* Sidebar itself */
+[data-theme="dark"] .dashboard-sidebar {
+  background-color: var(--dk-sidebar-bg);
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.30);
+}
+
+/* Sidebar active box-shadow — tone down the blue glow */
+[data-theme="dark"] .sidebar-link.active {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--sys-primary-color-role) 35%, transparent), 0 1px 3px color-mix(in srgb, var(--sys-primary-color-role) 20%, transparent);
+}
+
+/* Sidebar profile card popup */
+[data-theme="dark"] .sidebar-profile-card {
+  background-color: var(--dk-sidebar-bg);
+}
+
+/* KPI cards and card containers */
+[data-theme="dark"] .card-stat,
+[data-theme="dark"] .card-container,
+[data-theme="dark"] .stat-card {
+  background-color: var(--dk-card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+}
+
+/* Recent Orders / content cards built with inline #FFFFFF style need
+   the card-container class to handle them — inline styles in JSX will
+   need token vars. The CSS class layer is correct here. */
+
+/* Settings card */
+[data-theme="dark"] .settings-card {
+  background-color: var(--dk-card-bg);
+  border-color: var(--dk-card-border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Input field */
+[data-theme="dark"] .input-field {
+  background-color: var(--dk-input-bg);
+  border-color: var(--dk-input-border);
+  color: var(--color-ink);
+}
+
+[data-theme="dark"] .input-field:hover {
+  background-color: var(--dk-card-elevated-bg);
+  border-color: var(--dk-input-hover-border);
+}
+
+[data-theme="dark"] .input-field:focus {
+  border-color: var(--dk-input-focus-border);
+}
+
+[data-theme="dark"] .input-field::placeholder {
+  color: var(--dk-input-placeholder);
+}
+
+/* Autofill in dark mode */
+[data-theme="dark"] .input-field:-webkit-autofill,
+[data-theme="dark"] .input-field:-webkit-autofill:hover,
+[data-theme="dark"] .input-field:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--dk-input-bg) inset;
+  -webkit-text-fill-color: var(--color-ink);
+  background-color: var(--dk-input-bg) !important;
+}
+
+/* Completed input */
+[data-theme="dark"] .input-field-completed {
+  background-color: var(--dk-card-bg) !important;
+}
+
+/* Dropdown items */
+[data-theme="dark"] .dropdown-item:hover:not(:disabled),
+[data-theme="dark"] .dropdown-item:focus-visible {
+  background-color: var(--dk-dropdown-hover);
+}
+
+/* Onboarding card */
+[data-theme="dark"] .onboarding-card {
+  background-color: var(--dk-card-bg);
+  border-color: var(--dk-card-border);
+}
+
+/* Buttons — secondary uses --color-surface (now dark) which is correct,
+   but the hover uses --sys-neutral-variant-container which also adapts.
+   Only fix what breaks. */
+[data-theme="dark"] .btn-secondary {
+  background-color: var(--dk-btn-secondary-bg);
+  color: var(--dk-btn-secondary-text);
+  border-color: var(--dk-btn-secondary-border);
+}
+
+[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
+  background-color: var(--dk-btn-secondary-hover-bg);
+}
+
+[data-theme="dark"] .btn-ghost:hover:not(:disabled) {
+  background-color: var(--dk-btn-ghost-hover-bg);
+}
+
+/* feature cards on marketing page */
+[data-theme="dark"] .feature:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+}
+
+/* Page-header backdrop */
+[data-theme="dark"] .dashboard-page-header::before {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.20);
+}
+
+/* Mobile menu button */
+[data-theme="dark"] .mobile-menu-btn {
+  background-color: var(--dk-card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
+}
+
+/* Auth split panel — right side in dark */
+[data-theme="dark"] .auth-panel-right {
+  background-color: var(--dk-card-bg);
+}
+
+/* Textarea (settings / support form) */
+[data-theme="dark"] textarea {
+  background-color: var(--dk-input-bg) !important;
+  border-color: var(--dk-input-border) !important;
+  color: var(--color-ink) !important;
+}
+
+[data-theme="dark"] textarea:focus {
+  border-color: var(--dk-input-focus-border) !important;
+}
+
+/* Select elements (Preferences) */
+[data-theme="dark"] select.input-field {
+  background-color: var(--dk-input-bg);
+  border-color: var(--dk-input-border);
+  color: var(--color-ink);
+  /* Re-render the chevron SVG in light colour for dark mode */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%23f0f0f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>') !important;
+}
+
+/* Product page — keep trust elements readable */
+[data-theme="dark"] .checkout-trust-bar {
+  border-top-color: var(--dk-card-border);
+}
+
+/* Scrollbars — subtle dark styling */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--dk-sidebar-bg);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+/* bg-primary-container in dark */
+[data-theme="dark"] .bg-primary-container {
+  background-color: var(--sys-primary-container-role);
+}
+
