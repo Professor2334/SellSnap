@@ -452,7 +452,7 @@ function AuthContent() {
             </form>
           )}
 
-          <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '14px', color: 'var(--color-ink-muted)' }}>
+          <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--color-ink-muted)' }}>
             {mode === 'login' ? (
               <>
                 <span style={{ fontWeight: 400 }}>Don&apos;t have an account?</span>{' '}

@@ -97,7 +97,7 @@
 }
 
 .trust-metric-value {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1;
   font-weight: 700;
   color: var(--color-ink);
@@ -107,16 +107,16 @@
 }
 @media (min-width: 768px) {
   .trust-metric-value {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
 }
 .trust-metric-label {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-ink-muted);
   margin-bottom: 4px;
 }
 .trust-metric-desc {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--color-ink-subtle);
 }

@@ -107,7 +107,7 @@ export function DashboardSidebar({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '11px',
+                fontSize: '0.6875rem',
                 fontWeight: 700,
                 flexShrink: 0,
               }}
@@ -117,7 +117,7 @@ export function DashboardSidebar({
             <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
               <p
                 style={{
-                  fontSize: '13px',
+                  fontSize: '0.8125rem',
                   fontWeight: 600,
                   color: 'var(--color-ink)',
                   whiteSpace: 'nowrap',
@@ -130,7 +130,7 @@ export function DashboardSidebar({
               </p>
               <p
                 style={{
-                  fontSize: '12px',
+                  fontSize: '0.75rem',
                   color: 'var(--sys-on-neutral-variant-role)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
@@ -165,7 +165,7 @@ export function DashboardSidebar({
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <Link href="/dashboard?tab=settings&section=profile" className="hover:bg-gray-50 transition-colors" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
+                <Link href="/dashboard?tab=settings&section=profile" className="hover:bg-gray-50 transition-colors" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
                   My Profile
                 </Link>
                 <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
@@ -177,7 +177,7 @@ export function DashboardSidebar({
           </div>
           
           <div style={{ textAlign: 'center', marginTop: '16px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--sys-on-surface-variant-role)', opacity: 0.6 }}>SellSnap v1.0</span>
+            <span style={{ fontSize: '0.6875rem', color: 'var(--sys-on-surface-variant-role)', opacity: 0.6 }}>SellSnap v1.0</span>
           </div>
         </div>
       </aside>

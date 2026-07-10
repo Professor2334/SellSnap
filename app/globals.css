@@ -3185,3 +3185,46 @@ a {
   border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
 }
+
+/* Dropdown Menu Item */
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--color-ink);
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.18s ease, color 0.18s ease;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+}
+
+.dropdown-item:hover:not(:disabled) {
+  background-color: var(--primitive-neutral98);
+  color: var(--color-ink);
+}
+
+.dropdown-item:focus-visible {
+  background-color: var(--primitive-neutral98);
+  box-shadow: 0 0 0 2px var(--color-brand);
+}
+
+.dropdown-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown-item.danger {
+  color: var(--color-danger);
+}
+
+.dropdown-item.danger:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  color: var(--color-danger);
+}

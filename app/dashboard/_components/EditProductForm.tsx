@@ -127,7 +127,7 @@ export function EditProductForm({ product }: { product: any }) {
                     placeholder="e.g. Handmade Earrings"
                     required
                     className="input-field w-full dashboard-input-soft"
-                    style={{ height: '48px', borderRadius: '12px', fontSize: '15px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                   />
                 </div>
 
@@ -140,7 +140,7 @@ export function EditProductForm({ product }: { product: any }) {
                     onChange={(e) => setProductDescription(e.target.value)}
                     placeholder="Include size, material, colour, condition or anything customers should know."
                     className="input-field w-full dashboard-input-soft"
-                    style={{ height: '110px', borderRadius: '12px', fontSize: '15px', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    style={{ height: '110px', borderRadius: '12px', fontSize: '0.9375rem', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                   />
                 </div>
               </div>
@@ -162,7 +162,7 @@ export function EditProductForm({ product }: { product: any }) {
                       placeholder="0.00"
                       required
                       className="input-field w-full dashboard-input-soft"
-                      style={{ height: '48px', borderRadius: '12px', fontSize: '15px', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                      style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                     />
                   </div>
                 </div>
@@ -234,7 +234,7 @@ export function EditProductForm({ product }: { product: any }) {
                   type="submit" 
                   disabled={loading} 
                   className="btn-primary w-full"
-                  style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '16px' }}
+                  style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '1rem' }}
                 >
                   {loading ? <Loader2 className="spinner mr-2" size={20} /> : 'Save Changes'}
                 </Button>

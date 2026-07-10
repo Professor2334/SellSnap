@@ -131,7 +131,7 @@ export default function NewProductPage() {
                     placeholder="e.g. Handmade Earrings"
                     required
                     className="input-field w-full dashboard-input-soft"
-                    style={{ height: '48px', borderRadius: '12px', fontSize: '15px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                   />
                 </div>
 
@@ -144,7 +144,7 @@ export default function NewProductPage() {
                     onChange={(e) => setProductDescription(e.target.value)}
                     placeholder="Include size, material, colour, condition or anything customers should know."
                     className="input-field w-full dashboard-input-soft"
-                    style={{ height: '110px', borderRadius: '12px', fontSize: '15px', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    style={{ height: '110px', borderRadius: '12px', fontSize: '0.9375rem', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                   />
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function NewProductPage() {
                       placeholder="0.00"
                       required
                       className="input-field w-full dashboard-input-soft"
-                      style={{ height: '48px', borderRadius: '12px', fontSize: '15px', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                      style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
                     />
                   </div>
                 </div>
@@ -179,8 +179,9 @@ export default function NewProductPage() {
                 <div>
                   <label className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px', opacity: 0.8 }}>Product Image</label>
                   <div 
-                    className="w-full flex flex-col items-center justify-center cursor-pointer overflow-hidden upload-zone-soft"
+                    className="upload-zone-soft"
                     style={{ 
+                      width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden',
                       height: imagePreview ? 'auto' : '220px', 
                       borderRadius: '16px'
                     }}
@@ -193,7 +194,7 @@ export default function NewProductPage() {
                         reader.readAsDataURL(file);
                       }
                     }} />
-                    <label htmlFor="product-image" className="flex flex-col items-center justify-center cursor-pointer w-full h-full" style={{ padding: '40px 24px' }}>
+                    <label htmlFor="product-image" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: '100%', height: '100%', padding: '40px 24px' }}>
                       {imagePreview ? (
                         <div style={{ position: 'relative', width: '100%' }}>
                           <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '400px', borderRadius: '12px' }} />
@@ -207,7 +208,7 @@ export default function NewProductPage() {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center text-center gap-2">
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
                           <div style={{ 
                             width: '56px', height: '56px', borderRadius: '50%', 
                             backgroundColor: 'var(--sys-neutral-container-low)', 
@@ -238,7 +239,7 @@ export default function NewProductPage() {
                   type="submit" 
                   disabled={loading} 
                   className="btn-primary w-full"
-                  style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '16px' }}
+                  style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '1rem' }}
                 >
                   {loading ? <Loader2 className="spinner mr-2" size={20} /> : 'Create Product'}
                 </Button>

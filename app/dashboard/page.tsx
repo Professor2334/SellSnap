@@ -77,7 +77,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   const orders = await db.order.findMany({
     where: { product: { userId: session.user.id } },
-    include: { product: { select: { name: true, uniqueSlug: true } } },
+    include: { product: { select: { id: true, name: true, uniqueSlug: true, imageUrl: true } } },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -88,7 +88,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     transactionReference: o.transactionReference,
     buyerEmail: o.buyerEmail,
     createdAt: o.createdAt,
-    product: { name: o.product.name, uniqueSlug: o.product.uniqueSlug },
+    product: { id: o.product.id, name: o.product.name, uniqueSlug: o.product.uniqueSlug, imageUrl: o.product.imageUrl },
   }));
 
   switch (tab) {

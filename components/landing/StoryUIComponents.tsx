@@ -65,7 +65,7 @@ export function CreateProductUI() {
       <Button 
         variant="primary" 
         fullWidth 
-        style={{ height: '44px', borderRadius: '12px', fontSize: '15px' }}
+        style={{ height: '44px', borderRadius: '12px', fontSize: '0.9375rem' }}
         disabled={phase === 'creating'}
       >
         {phase === 'creating' ? (
@@ -267,8 +267,8 @@ export function ReceivePaymentUI() {
             <div className="share-link-icon-wrap" style={{ marginBottom: '16px' }}>
               <CheckCircle2 size={32} />
             </div>
-            <div className="receive-payment-title" style={{ fontSize: '20px' }}>Payment Successful</div>
-            <div className="receive-payment-seller" style={{ fontSize: '14px' }}>Receipt sent to email</div>
+            <div className="receive-payment-title" style={{ fontSize: '1.25rem' }}>Payment Successful</div>
+            <div className="receive-payment-seller" style={{ fontSize: '0.875rem' }}>Receipt sent to email</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -457,7 +457,7 @@ export function WithdrawEarningsUI() {
           <motion.div key="action" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <button 
               className="btn btn-primary"
-              style={{ width: '100%', height: '48px', fontSize: '15px', pointerEvents: 'none' }}
+              style={{ width: '100%', height: '48px', fontSize: '0.9375rem', pointerEvents: 'none' }}
               disabled={phase === 'withdrawing'}
             >
               {phase === 'idle' || phase === 'counting' ? 'Withdraw Funds' : (

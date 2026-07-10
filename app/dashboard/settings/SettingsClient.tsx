@@ -167,21 +167,21 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
           <div className="settings-card" style={{ padding: '32px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }}>
               <Icon name="Settings" size={20} className="text-brand" />
-              <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Preferences</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Preferences</h2>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {/* Currency */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Currency</label>
-                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Display currency for your store</p>
+                <label style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Currency</label>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Display currency for your store</p>
                 <select
                   className="input-field"
                   style={{
                     height: '48px',
                     padding: '0 16px',
                     borderRadius: '10px',
-                    fontSize: '15px',
+                    fontSize: '0.9375rem',
                     fontWeight: 500,
                     width: '100%',
                     appearance: 'none',
@@ -205,15 +205,15 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
               
               {/* Time Zone */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Time Zone</label>
-                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Time zone for orders and analytics</p>
+                <label style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Time Zone</label>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Time zone for orders and analytics</p>
                 <select
                   className="input-field"
                   style={{
                     height: '48px',
                     padding: '0 16px',
                     borderRadius: '10px',
-                    fontSize: '15px',
+                    fontSize: '0.9375rem',
                     fontWeight: 500,
                     width: '100%',
                     appearance: 'none',
@@ -237,15 +237,15 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
 
               {/* Date Format */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Date Format</label>
-                <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Format for displaying dates</p>
+                <label style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Date Format</label>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-ink-subtle)', marginBottom: '16px', marginTop: 0 }}>Format for displaying dates</p>
                 <select
                   className="input-field"
                   style={{
                     height: '48px',
                     padding: '0 16px',
                     borderRadius: '10px',
-                    fontSize: '15px',
+                    fontSize: '0.9375rem',
                     fontWeight: 500,
                     width: '100%',
                     appearance: 'none',
@@ -365,9 +365,9 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
           <div className="settings-card" style={{ padding: '32px', marginTop: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Icon name="Support" size={20} className="text-brand" />
-              <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Support & Legal</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Support & Legal</h2>
             </div>
-            <p style={{ fontSize: '14px', color: 'var(--color-ink-subtle)', marginBottom: '32px', marginTop: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-ink-subtle)', marginBottom: '32px', marginTop: 0 }}>
               Get help, review our policies, and learn how SellSnap works.
             </p>
 
@@ -381,7 +381,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Icon name="Support" size={18} className="text-brand" />
-                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Contact Support</span>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--color-ink)' }}>Contact Support</span>
                 </div>
                 <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
               </button>
@@ -397,7 +397,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Icon name="Terms" size={18} className="text-ink-subtle" />
-                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Terms of Service</span>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--color-ink)' }}>Terms of Service</span>
                 </div>
                 <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
               </button>
@@ -413,7 +413,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Icon name="Security" size={18} className="text-ink-subtle" />
-                  <span style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-ink)' }}>Privacy Policy</span>
+                  <span style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--color-ink)' }}>Privacy Policy</span>
                 </div>
                 <Icon name="ChevronRight" size={18} className="text-ink-subtle chevron" style={{ transition: 'transform 0.2s' }} />
               </button>
@@ -455,7 +455,7 @@ function SupportView({ onBack }: { onBack: () => void }) {
       </div>
 
       <div style={{ maxWidth: '800px', paddingTop: '16px' }}>
-        <p style={{ fontSize: '16px', color: 'var(--color-ink-subtle)', lineHeight: 1.6, marginBottom: '40px' }}>
+        <p style={{ fontSize: '1rem', color: 'var(--color-ink-subtle)', lineHeight: 1.6, marginBottom: '40px' }}>
           Expect a response within 24 hours. Alternatively, you can email us directly at support@sellsnap.com.
         </p>
 
@@ -465,37 +465,37 @@ function SupportView({ onBack }: { onBack: () => void }) {
               <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--sys-success-container-role)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                 <Icon name="Success" size={24} className="text-success" />
               </div>
-              <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Message Sent!</h3>
-              <p style={{ fontSize: '15px', color: 'var(--color-ink-subtle)' }}>We've received your request and will get back to you shortly.</p>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Message Sent!</h3>
+              <p style={{ fontSize: '0.9375rem', color: 'var(--color-ink-subtle)' }}>We've received your request and will get back to you shortly.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div style={{ display: 'flex', gap: '24px' }}>
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Name</label>
+                  <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Name</label>
                   <Input required placeholder="Your name" value={supportData.name} onChange={(e) => setSupportData(prev => ({ ...prev, name: e.target.value }))} />
                 </div>
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Email</label>
+                  <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Email</label>
                   <Input required type="email" placeholder="you@example.com" value={supportData.email} onChange={(e) => setSupportData(prev => ({ ...prev, email: e.target.value }))} />
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Subject</label>
+                <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Subject</label>
                 <Input required placeholder="How can we help?" value={supportData.subject} onChange={(e) => setSupportData(prev => ({ ...prev, subject: e.target.value }))} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-ink)' }}>Message</label>
+                <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Message</label>
                 <textarea 
                   required
-                  style={{ minHeight: '160px', padding: '16px', borderRadius: '10px', border: '1.5px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '16px', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  style={{ minHeight: '160px', padding: '16px', borderRadius: '10px', border: '1.5px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '1rem', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                   placeholder="Please describe your issue in detail..."
                   value={supportData.message}
                   onChange={(e) => setSupportData(prev => ({ ...prev, message: e.target.value }))}
                 />
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ height: '48px', padding: '0 32px', borderRadius: '10px', fontSize: '15px', fontWeight: 500 }}>
+                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ height: '48px', padding: '0 32px', borderRadius: '10px', fontSize: '0.9375rem', fontWeight: 500 }}>
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
               </div>
@@ -524,32 +524,32 @@ function TermsView({ onBack }: { onBack: () => void }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>1. Introduction</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>1. Introduction</h2>
             <p>Welcome to SellSnap. These Terms of Service govern your use of our platform. By creating an account and generating payment links through SellSnap, you agree to abide by these terms. SellSnap is designed exclusively to help merchants create products, generate shareable payment links, and manage incoming customer orders quickly and securely.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>2. User Accounts & Eligibility</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>2. User Accounts & Eligibility</h2>
             <p>To use SellSnap, you must be a registered business or an individual over 18 capable of forming a binding contract. You are responsible for safeguarding your account credentials. You must provide accurate business information and maintain the security of your SellSnap account.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>3. Merchant Responsibilities</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>3. Merchant Responsibilities</h2>
             <p>As a merchant on SellSnap, you are solely responsible for the products you list, the accuracy of your descriptions, and fulfilling orders once a payment is confirmed. SellSnap provides the payment link infrastructure but is not a party to the transaction between you and your buyers.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>4. Payments & Transactions</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>4. Payments & Transactions</h2>
             <p>All payments generated via SellSnap links are processed securely through our trusted payment gateway partners (e.g., Flutterwave). SellSnap does not hold your funds. We reserve the right to delay or decline transactions that trigger our automated fraud detection systems to protect both you and your buyers.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>5. Prohibited Activities</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>5. Prohibited Activities</h2>
             <p>You may not use SellSnap to sell illegal goods, counterfeit items, or highly regulated products without authorization. You must not attempt to manipulate the platform, bypass security measures, or use our payment links to facilitate money laundering or fraudulent activities.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>6. Account Suspension & Termination</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>6. Account Suspension & Termination</h2>
             <p>We reserve the right to suspend or terminate your account immediately if we detect a violation of these Terms of Service, a high volume of chargebacks, or suspicious activity. In such cases, outstanding links will be deactivated.</p>
           </section>
         </div>
@@ -575,27 +575,27 @@ function PrivacyView({ onBack }: { onBack: () => void }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>1. Information We Collect</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>1. Information We Collect</h2>
             <p>When you register for SellSnap, we collect basic account information including your name, email address, and business details. When you create products, we store the product metadata, descriptions, and uploaded images necessary to generate your payment links.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>2. Order & Buyer Information</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>2. Order & Buyer Information</h2>
             <p>When a buyer interacts with your SellSnap payment link, we securely collect the transaction details necessary to verify the payment and notify you. We do not store sensitive payment card details; these are handled directly by our certified payment processors.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>3. How We Use Your Data</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>3. How We Use Your Data</h2>
             <p>We use your data strictly to provide the SellSnap service: generating secure product links, verifying incoming payments, updating your dashboard, and sending transactional email notifications regarding your orders and account security.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>4. Data Protection</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>4. Data Protection</h2>
             <p>We implement industry-standard security measures, including encryption in transit and at rest, to protect your account and product data. Your dashboard is protected by secure authentication protocols to prevent unauthorized access.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>5. Data Retention</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>5. Data Retention</h2>
             <p>We retain your account and order history for as long as your account remains active. If you choose to delete your SellSnap account, your personal information and product links will be permanently removed from our active systems within 30 days.</p>
           </section>
         </div>

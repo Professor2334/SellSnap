@@ -19,18 +19,7 @@ export function DeleteProductButton({ id }: { id: string }) {
     <button 
       onClick={handleDelete} 
       disabled={loading}
-      className="text-body-sm font-medium hover:bg-gray-50 transition-colors"
-      style={{ 
-        width: '100%', 
-        textAlign: 'left', 
-        padding: '8px 12px', 
-        borderRadius: '8px', 
-        color: 'var(--color-danger)', 
-        backgroundColor: 'transparent', 
-        border: 'none', 
-        cursor: loading ? 'not-allowed' : 'pointer',
-        opacity: loading ? 0.7 : 1
-      }}
+      className="dropdown-item danger"
     >
       {loading ? 'Deleting...' : 'Delete'}
     </button>
@@ -87,7 +76,7 @@ export function CopyLinkButton({ slug }: { slug: string }) {
               gap: '8px'
             }}
           >
-            <span style={{ fontSize: '14px', fontWeight: 500 }}>✓ Product link copied to clipboard</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>✓ Product link copied to clipboard</span>
           </div>
         </div>
       )}
