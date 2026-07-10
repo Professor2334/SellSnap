@@ -8,9 +8,18 @@ export default auth((req) => {
   const token = req.auth;
   const isOnboarded = (token?.user as any)?.isOnboarded as boolean | undefined;
   
+  const isRootPage = req.nextUrl.pathname === '/';
   const isAuthPage = req.nextUrl.pathname.startsWith('/auth');
   const isDashboardPage = req.nextUrl.pathname.startsWith('/dashboard');
   const isOnboardingPage = req.nextUrl.pathname.startsWith('/onboarding');
+
+  // Authenticated user visiting the root/landing page → redirect to dashboard or onboarding
+  if (token && isRootPage) {
+    if (!isOnboarded) {
+      return NextResponse.redirect(new URL('/onboarding', req.nextUrl));
+    }
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  }
 
   // Unauthenticated user trying to access a protected page → send to login
   if (!token && (isDashboardPage || isOnboardingPage)) {
@@ -39,5 +48,6 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/onboarding/:path*', '/auth'],
+  // Include '/' so authenticated users are never shown the marketing page
+  matcher: ['/', '/dashboard/:path*', '/onboarding/:path*', '/auth'],
 };

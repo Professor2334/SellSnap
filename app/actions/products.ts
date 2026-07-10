@@ -86,3 +86,55 @@ export async function deleteProduct(id: string) {
     return { success: false, error: 'Something went wrong' };
   }
 }
+
+export async function updateProduct(id: string, formData: FormData) {
+  try {
+    const session = await getSession();
+    if (!session?.user?.id) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const name = formData.get('name') as string | null;
+    const price = formData.get('price') as string | null;
+    const description = formData.get('description') as string | null;
+    const imageFile = formData.get('image') as File | null;
+
+    const parsed = productSchema.safeParse({ name, price, description });
+
+    if (!parsed.success) {
+      return { success: false, error: parsed.error.errors[0].message };
+    }
+
+    const { name: validName, price: validPrice, description: validDescription } = parsed.data;
+
+    // Verify ownership
+    const product = await db.product.findUnique({
+      where: { id },
+    });
+
+    if (!product || product.userId !== session.user.id) {
+      return { success: false, error: 'Product not found or unauthorized' };
+    }
+
+    let imageUrl = product.imageUrl;
+    if (imageFile && imageFile.size > 0 && imageFile.type.startsWith('image/')) {
+      imageUrl = await uploadImage(imageFile);
+    }
+
+    await db.product.update({
+      where: { id },
+      data: {
+        name: validName,
+        price: validPrice,
+        description: validDescription || null,
+        imageUrl,
+      },
+    });
+
+    revalidatePath('/dashboard');
+    return { success: true };
+  } catch (error) {
+    console.error('product.update.failed', { error });
+    return { success: false, error: 'Something went wrong' };
+  }
+}

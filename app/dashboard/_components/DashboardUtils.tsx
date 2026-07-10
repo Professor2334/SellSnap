@@ -41,33 +41,57 @@ export function CopyLinkButton({ slug }: { slug: string }) {
   const [copied, setCopied] = React.useState(false);
 
   async function handleCopy() {
-    const url = `${window.location.origin}/p/${slug}`;
+    if (!slug) return;
+
+    // Always build from the window origin so it works in both dev and prod
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = `${process.env.NEXT_PUBLIC_APP_URL || origin}/p/${slug}`;
+
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback
+      // Clipboard API fallback
       const input = document.createElement('input');
       input.value = url;
       document.body.appendChild(input);
       input.select();
       document.execCommand('copy');
       document.body.removeChild(input);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
+
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
-    <Button
-      onClick={handleCopy}
-      variant="secondary"
-      size="sm"
-      style={{ color: copied ? 'var(--color-success)' : undefined }}
-    >
-      {copied ? 'Copied!' : 'Copy Link'}
-    </Button>
+    <>
+      <Button
+        onClick={handleCopy}
+        variant="primary"
+        size="sm"
+      >
+        {copied ? 'Copied!' : 'Copy Link'}
+      </Button>
+      {copied && (
+        <div style={{ position: 'fixed', bottom: '24px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+          <div 
+            className="animate-fade-in-up"
+            style={{
+              backgroundColor: 'var(--sys-secondary-container-role)',
+              color: 'var(--sys-on-secondary-container-role)',
+              padding: '12px 20px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <span style={{ fontSize: '14px', fontWeight: 500 }}>✓ Product link copied to clipboard</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

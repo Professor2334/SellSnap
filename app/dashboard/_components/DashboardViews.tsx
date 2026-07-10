@@ -331,11 +331,10 @@ function ProductRow({ product }: { product: Product }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Link href={`/p/${product.uniqueSlug}`} target="_blank" style={{ textDecoration: 'none' }}>
-          <Button variant="secondary" size="sm">View Product</Button>
-        </Link>
         <CopyLinkButton slug={product.uniqueSlug} />
-        <Button variant="secondary" size="sm">Edit</Button>
+        <Link href={`/dashboard/products/${product.id}/edit`} style={{ textDecoration: 'none' }}>
+          <Button variant="secondary" size="sm">Edit</Button>
+        </Link>
 
         <div style={{ position: 'relative' }} ref={menuRef}>
           <Button 

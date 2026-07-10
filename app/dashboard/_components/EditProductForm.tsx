@@ -1,17 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { createProduct } from '@/app/actions/products';
+import { updateProduct } from '@/app/actions/products';
 import { Button } from '@/components/ui/Button';
-import { Icon } from '@/components/ui/Icon';
 import { useRouter } from 'next/navigation';
 import { Upload, Loader2, Image as ImageIcon } from 'lucide-react';
-import Link from 'next/link';
 
-export default function NewProductPage() {
+export function EditProductForm({ product }: { product: any }) {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  const [imagePreview, setImagePreview] = React.useState<string | null>(product.imageUrl || null);
   
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -25,9 +23,9 @@ export default function NewProductPage() {
   }, []);
   
   // State for live preview
-  const [productName, setProductName] = React.useState('');
-  const [productPrice, setProductPrice] = React.useState('');
-  const [productDescription, setProductDescription] = React.useState('');
+  const [productName, setProductName] = React.useState(product.name || '');
+  const [productPrice, setProductPrice] = React.useState(product.price ? String(product.price) : '');
+  const [productDescription, setProductDescription] = React.useState(product.description || '');
   
   const router = useRouter();
 
@@ -51,15 +49,16 @@ export default function NewProductPage() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const result = await createProduct(formData);
+      const result = await updateProduct(product.id, formData);
 
       if (result.success) {
         router.push('/dashboard?tab=products');
+        router.refresh(); // Ensure the dashboard reloads with new data
       } else {
         setError(result.error || 'Something went wrong');
       }
     } catch (err) {
-      console.error('create product error', err);
+      console.error('update product error', err);
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -68,7 +67,6 @@ export default function NewProductPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative" style={{ backgroundColor: 'var(--color-bg)' }}>
-
       <main className="w-full flex-1 mx-auto" style={{ maxWidth: '1100px', padding: '32px 24px', paddingBottom: '64px' }}>
         
         {/* Header */}
@@ -93,7 +91,7 @@ export default function NewProductPage() {
             <h1 className="text-display font-bold text-ink" style={{ 
               marginBottom: isScrolled ? '0px' : '8px',
               transition: 'margin 0.2s ease',
-            }}>Create Product</h1>
+            }}>Edit Product</h1>
             <div style={{
               display: 'grid',
               gridTemplateRows: isScrolled ? '0fr' : '1fr',
@@ -102,16 +100,14 @@ export default function NewProductPage() {
             }}>
               <div style={{ overflow: 'hidden' }}>
                 <p className="text-body-sm text-ink-muted" style={{ maxWidth: '420px', opacity: 0.9 }}>
-                  Add a product to instantly generate a shareable payment link.
+                  Update your product details and changes will reflect on the live link.
                 </p>
               </div>
             </div>
           </div>
         </div>
         
-        <form id="create-product-form" onSubmit={handleSubmit} className="w-full">
-          {/* We will use a media query for grid if possible, but inline grid with minmax can work. Actually better to use a custom class or basic flex. */}
-          {/* Let's wrap in a div that handles responsive layout */}
+        <form id="edit-product-form" onSubmit={handleSubmit} className="w-full">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', width: '100%' }}>
             
             {/* Left Column - Form Fields */}
@@ -240,7 +236,7 @@ export default function NewProductPage() {
                   className="btn-primary w-full"
                   style={{ height: '52px', borderRadius: '12px', fontWeight: 600, fontSize: '16px' }}
                 >
-                  {loading ? <Loader2 className="spinner mr-2" size={20} /> : 'Create Product'}
+                  {loading ? <Loader2 className="spinner mr-2" size={20} /> : 'Save Changes'}
                 </Button>
               </div>
 
@@ -290,7 +286,7 @@ export default function NewProductPage() {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   </div>
                   <p className="text-body-sm text-ink-muted font-medium" style={{ paddingTop: '2px' }}>
-                    Shareable payment link will be generated automatically after publishing.
+                    Changes are automatically updated on your live payment link.
                   </p>
                 </div>
               </div>

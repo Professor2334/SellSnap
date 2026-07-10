@@ -7,9 +7,9 @@ import { SignOutButton } from './DashboardUtils';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: 'Dashboard' as const },
-  { href: '/dashboard?tab=products', label: 'Products', icon: 'Products' as const },
-  { href: '/dashboard?tab=orders', label: 'Orders', icon: 'Orders' as const },
-  { href: '/dashboard?tab=settings', label: 'Settings', icon: 'Settings' as const },
+  { href: '/dashboard?tab=products', label: 'Products', icon: 'Products' as const, activePrefix: '/dashboard/products' },
+  { href: '/dashboard?tab=orders', label: 'Orders', icon: 'Orders' as const, activePrefix: '/dashboard/orders' },
+  { href: '/dashboard?tab=settings', label: 'Settings', icon: 'Settings' as const, activePrefix: '/dashboard/settings' },
 ];
 
 export function DashboardSidebar({
