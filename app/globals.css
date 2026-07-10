@@ -1497,7 +1497,7 @@ a {
 }
 
 .landing-nav--scrolled {
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: color-mix(in srgb, var(--color-surface) 75%, transparent);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom-color: transparent;
@@ -1531,19 +1531,19 @@ a {
     pointer-events: auto; /* Re-enable clicks on the pill itself */
     height: auto;
     padding: 16px 32px;
-    background: rgba(255, 255, 255, 0.45);
+    background: color-mix(in srgb, var(--color-surface) 45%, transparent);
     backdrop-filter: saturate(200%) blur(32px);
     -webkit-backdrop-filter: saturate(200%) blur(32px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
     border-radius: var(--sys-radius-full);
-    box-shadow: var(--sys-elevation-level2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    box-shadow: var(--sys-elevation-level2), inset 0 1px 2px color-mix(in srgb, var(--color-surface) 90%, transparent);
   }
   .landing-nav--scrolled .landing-nav-inner {
-    background: rgba(255, 255, 255, 0.55);
+    background: color-mix(in srgb, var(--color-surface) 55%, transparent);
     backdrop-filter: saturate(200%) blur(40px);
     -webkit-backdrop-filter: saturate(200%) blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: var(--sys-elevation-level3), inset 0 1px 2px rgba(255, 255, 255, 1);
+    border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+    box-shadow: var(--sys-elevation-level3), inset 0 1px 2px var(--color-surface);
   }
 }
 
@@ -1793,7 +1793,7 @@ a {
   gap: 8px;
   padding: 6px 14px 6px 12px;
   border-radius: var(--sys-radius-full);
-  background-color: #FFFFFF;
+  background-color: var(--color-surface);
   border: 1px solid color-mix(in srgb, var(--color-brand) 15%, transparent);
   box-shadow: 0 4px 24px color-mix(in srgb, var(--color-brand) 15%, transparent), 0 0 0 1px color-mix(in srgb, var(--color-brand) 5%, transparent);
   font-size: 0.8125rem;
@@ -1909,7 +1909,7 @@ a {
   padding: 14px 24px;
   border-radius: 999px;
   border: none;
-  background-color: #FFFFFF;
+  background-color: var(--color-surface);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
   font-size: 0.875rem;
   font-weight: 500;
@@ -2326,7 +2326,7 @@ a {
   }
 }
 .step-card {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: color-mix(in srgb, var(--color-surface) 90%, transparent);
   border-radius: 20px;
   padding: 24px;
   display: flex;
@@ -2527,7 +2527,7 @@ a {
 .sc-pos-5 { left: 80.9%; top: 2.5%; }
 
 .sc-float-inner {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: color-mix(in srgb, var(--color-surface) 90%, transparent);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 12px;
@@ -2815,7 +2815,7 @@ a {
 /* ── Section 6: Final CTA ── */
 .final-cta-section {
   padding: 160px 0;
-  background-color: var(--primitive-neutral99);
+  background-color: var(--color-bg);
 }
 .final-cta-card {
   background-color: var(--sys-primary-container-role);
@@ -2952,7 +2952,7 @@ a {
   display: flex;
   flex-direction: column;
   background: radial-gradient(circle at top center, color-mix(in srgb, var(--color-brand) 5%, transparent) 0%, color-mix(in srgb, var(--color-brand) 2%, transparent) 30%, transparent 70%);
-  background-color: #FFFFFF;
+  background-color: var(--color-bg);
   padding: 40px 20px;
 }
 
@@ -2968,7 +2968,7 @@ a {
 /* Google Button overrides */
 .google-auth-btn-refined {
   height: 56px !important;
-  background-color: #FFFFFF !important;
+  background-color: var(--color-surface) !important;
   border: none !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
   color: var(--color-ink) !important;
@@ -2984,7 +2984,7 @@ a {
 .google-auth-btn-refined:hover:not(:disabled) {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03) !important;
   transform: translateY(-1px) !important;
-  background-color: #FAFAFA !important;
+  background-color: var(--color-bg) !important;
 }
 
 /* Input overrides */
