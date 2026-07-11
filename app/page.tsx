@@ -79,6 +79,23 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Mobile menu scroll lock and escape key handling
+  React.useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setMenuOpen(false);
+      };
+      window.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleEscape);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [menuOpen]);
+
   return (
     <div className="min-h-screen">
       {/* ── Sticky Navigation ───────────────────────────────── */}
@@ -111,28 +128,34 @@ export default function LandingPage() {
           </div>
 
           <button
-            className="landing-nav-mobile-toggle"
+            className={`landing-nav-mobile-toggle ${menuOpen ? 'open' : ''}`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            <div className="landing-nav-toggle-icon-wrapper">
+              <Menu className="landing-nav-icon-menu" size={24} />
+              <X className="landing-nav-icon-close" size={24} />
+            </div>
           </button>
         </div>
 
         {menuOpen && (
-          <div className="landing-nav-mobile-drawer" role="menu">
-            <a href="#hero" className={`landing-nav-link${activeSection === '#hero' ? ' active' : ''}`} onClick={() => { setActiveSection('#hero'); setMenuOpen(false); }} role="menuitem">Home</a>
-            <a href="#features" className={`landing-nav-link${activeSection === '#features' ? ' active' : ''}`} onClick={() => { setActiveSection('#features'); setMenuOpen(false); }} role="menuitem">Features</a>
-            <a href="#how-it-works" className={`landing-nav-link${activeSection === '#how-it-works' ? ' active' : ''}`} onClick={() => { setActiveSection('#how-it-works'); setMenuOpen(false); }} role="menuitem">How it Works</a>
-            <a href="#pricing" className={`landing-nav-link${activeSection === '#pricing' ? ' active' : ''}`} onClick={() => { setActiveSection('#pricing'); setMenuOpen(false); }} role="menuitem">Pricing</a>
-            <a href="#faq" className={`landing-nav-link${activeSection === '#faq' ? ' active' : ''}`} onClick={() => { setActiveSection('#faq'); setMenuOpen(false); }} role="menuitem">FAQ</a>
-            <div className="landing-nav-mobile-drawer-actions">
-              <Link href="/auth" onClick={() => setMenuOpen(false)} style={{ width: '100%' }}>
-                <Button size="md" variant="primary" fullWidth>Get Started</Button>
-              </Link>
+          <>
+            <div className="landing-nav-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+            <div className="landing-nav-mobile-drawer" role="menu">
+              <a href="#hero" className={`landing-nav-link${activeSection === '#hero' ? ' active' : ''}`} onClick={() => { setActiveSection('#hero'); setMenuOpen(false); }} role="menuitem">Home</a>
+              <a href="#features" className={`landing-nav-link${activeSection === '#features' ? ' active' : ''}`} onClick={() => { setActiveSection('#features'); setMenuOpen(false); }} role="menuitem">Features</a>
+              <a href="#how-it-works" className={`landing-nav-link${activeSection === '#how-it-works' ? ' active' : ''}`} onClick={() => { setActiveSection('#how-it-works'); setMenuOpen(false); }} role="menuitem">How it Works</a>
+              <a href="#pricing" className={`landing-nav-link${activeSection === '#pricing' ? ' active' : ''}`} onClick={() => { setActiveSection('#pricing'); setMenuOpen(false); }} role="menuitem">Pricing</a>
+              <a href="#faq" className={`landing-nav-link${activeSection === '#faq' ? ' active' : ''}`} onClick={() => { setActiveSection('#faq'); setMenuOpen(false); }} role="menuitem">FAQ</a>
+              <div className="landing-nav-mobile-drawer-actions">
+                <Link href="/auth" onClick={() => setMenuOpen(false)} style={{ width: '100%' }}>
+                  <Button size="lg" variant="primary" fullWidth>Get Started</Button>
+                </Link>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </nav>
 

@@ -122,8 +122,8 @@
 
   /* Inputs */
   --dk-input-bg:            #1a1a1a;
-  --dk-input-border:        rgba(255, 255, 255, 0.12);
-  --dk-input-hover-border:  rgba(255, 255, 255, 0.20);
+  --dk-input-border:        rgba(255, 255, 255, 0.08);
+  --dk-input-hover-border:  rgba(255, 255, 255, 0.14);
   --dk-input-focus-border:  var(--color-brand);
   --dk-input-placeholder:   #5c5c5c;
 
@@ -221,8 +221,8 @@
     --dk-card-elevated-bg:    #202020;
     --dk-card-border:         rgba(255, 255, 255, 0.07);
     --dk-input-bg:            #1a1a1a;
-    --dk-input-border:        rgba(255, 255, 255, 0.12);
-    --dk-input-hover-border:  rgba(255, 255, 255, 0.20);
+    --dk-input-border:        rgba(255, 255, 255, 0.08);
+    --dk-input-hover-border:  rgba(255, 255, 255, 0.14);
     --dk-input-focus-border:  var(--color-brand);
     --dk-input-placeholder:   #5c5c5c;
     --dk-dropdown-bg:         #242424;

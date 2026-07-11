@@ -94,7 +94,11 @@ function AuthContent() {
 
     setLoading(false);
     if (result?.error) {
-      setError(result.error);
+      if (result.error === 'Configuration' || result.error === 'CredentialsSignin') {
+        setError('Invalid credentials');
+      } else {
+        setError(result.error);
+      }
     } else {
       router.push('/dashboard');
     }
@@ -214,7 +218,11 @@ function AuthContent() {
       });
 
       if (signInResult?.error) {
-        setError(signInResult.error);
+        if (signInResult.error === 'Configuration' || signInResult.error === 'CredentialsSignin') {
+          setError('Invalid credentials');
+        } else {
+          setError(signInResult.error);
+        }
         setLoading(false);
       } else {
         router.push('/onboarding');
