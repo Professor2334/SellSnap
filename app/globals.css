@@ -47,7 +47,9 @@
 html,
 body {
   scroll-behavior: smooth;
-  max-width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  max-width: 100%;
   overflow-x: clip;
   background-color: var(--color-bg);
   color: var(--color-ink);
@@ -382,7 +384,7 @@ a {
 .gap-6 { gap: 24px; }
 .gap-8 { gap: 32px; }
 .w-full { width: 100%; }
-.min-h-screen { min-height: 100vh; }
+.min-h-screen { min-height: 100vh; width: 100%; }
 
 /* Grid */
 .grid { display: grid; }
@@ -1896,6 +1898,7 @@ a {
 }
 .hero-headline-accent {
   color: var(--color-brand);
+  white-space: nowrap;
 }
 
 /* Sub-copy */
@@ -1996,6 +1999,8 @@ a {
   position: relative;
   width: 100%;
   max-width: 480px;
+  --float-scale: 1;
+  --float-offset-mult: 1;
 }
 
 /* Ambient glow */
@@ -2170,8 +2175,8 @@ a {
 /* Success card */
 .hc-success-card {
   position: absolute;
-  bottom: -20px;
-  right: -40px;
+  bottom: calc(-20px * var(--float-offset-mult));
+  right: calc(-40px * var(--float-offset-mult));
   width: auto;
   max-width: 320px;
   padding: 16px 24px;
@@ -2186,13 +2191,14 @@ a {
   
   /* State-driven animation */
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(20px) scale(var(--float-scale));
+  transform-origin: bottom right;
   pointer-events: none;
   transition: opacity 0.3s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .hc-success-card.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(var(--float-scale));
 }
 .hc-success-icon-wrap {
   display: flex;
@@ -2221,12 +2227,14 @@ a {
 /* ── Share sidebar ── */
 .hc-share-stack {
   position: absolute;
-  top: 20px;
-  right: -80px;
+  top: calc(20px * var(--float-offset-mult));
+  right: calc(-30px * var(--float-offset-mult));
   z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  transform: scale(var(--float-scale));
+  transform-origin: top right;
 }
 .hc-share-label {
   font-size: 0.625rem;
@@ -2241,8 +2249,8 @@ a {
 .hc-share-card {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
+  justify-content: center;
+  padding: 10px;
   border-radius: var(--sys-radius-md);
   background-color: var(--color-bg);
   border: none;
@@ -2288,20 +2296,58 @@ a {
   .hero-v2 { padding: 150px 0 64px; min-height: unset; }
   .hero-v2-container { grid-template-columns: minmax(0, 1fr); gap: 48px; width: 100%; }
   .hero-v2-left { max-width: 100%; min-width: 0; width: 100%; }
-  .hero-composition { max-width: 440px; margin: 0 auto; }
+  .hero-composition { 
+    max-width: 440px; 
+    margin: 0 auto; 
+    --float-scale: 0.95; 
+    --float-offset-mult: 0.8; 
+  }
 }
 
 @media (max-width: 767px) {
+  .hero-v2 { padding-top: 198px; }
+  .hero-v2-container { gap: 76px; }
   .hero-headline {
-    font-size: clamp(1.875rem, 9vw, 2.5rem);
-    letter-spacing: -1.8px;
+    font-size: clamp(1.75rem, 8.5vw, 2.5rem);
+    letter-spacing: -1.5px;
     margin-bottom: 16px;
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
   }
   .hero-subtext { margin-bottom: 24px; }
-  .hero-cta-row { flex-direction: column; align-items: flex-start; margin-bottom: 20px; }
-  .hero-composition { max-width: 340px; }
-  .hc-share-card { padding: 8px 10px; font-size: 0.6875rem; }
-  .hc-share-icon { width: 22px; height: 22px; }
+  .hero-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  .hero-cta-row a {
+    width: 100%;
+    display: block;
+  }
+  .hero-cta-primary,
+  .hero-cta-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-v2-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .hero-composition {
+    width: min(90vw, 420px);
+    max-width: 100%;
+    margin: 0 auto;
+    height: auto;
+    overflow: visible;
+    --float-scale: 0.9;
+    --float-offset-mult: 0.35;
+  }
 }
 
 /* ── Section 1: Problem → Solution ── */
@@ -2784,6 +2830,12 @@ a {
 .pricing-section {
   padding: 120px 0;
   background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+}
+@media (max-width: 767px) {
+  .pricing-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
 
 .pricing-grid {

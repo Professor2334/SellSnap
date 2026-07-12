@@ -97,7 +97,7 @@ export default function LandingPage() {
   }, [menuOpen]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full">
       {/* ── Sticky Navigation ───────────────────────────────── */}
       <nav className={`landing-nav${scrolled ? ' landing-nav--scrolled' : ''}`} aria-label="Main navigation">
         <div className="landing-nav-inner">
@@ -169,8 +169,7 @@ export default function LandingPage() {
             </div>
 
             <h1 className="hero-headline">
-              Sell online<br />
-              using one{' '}
+              Sell online using one{' '}
               <span className="hero-headline-accent">Payment link.</span>
             </h1>
 
@@ -285,15 +284,12 @@ export default function LandingPage() {
               <div className="hc-share-stack">
                 <div className="hc-share-card">
                   <span className="hc-share-icon hc-share-icon--whatsapp"><MessageCircle size={13} /></span>
-                  WhatsApp
                 </div>
                 <div className="hc-share-card">
                   <span className="hc-share-icon hc-share-icon--instagram"><Instagram size={13} /></span>
-                  Instagram
                 </div>
                 <div className="hc-share-card">
                   <span className="hc-share-icon hc-share-icon--facebook"><Facebook size={13} /></span>
-                  Facebook
                 </div>
               </div>
             </div>

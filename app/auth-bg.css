@@ -114,3 +114,17 @@
     transform: translate(20px, 30px) rotate(5deg);
   }
 }
+
+@media (max-width: 767px) {
+  .auth-edge-pattern-left,
+  .auth-edge-pattern-right {
+    opacity: 0.04;
+  }
+  .auth-glow-center {
+    opacity: 0.008;
+  }
+  .auth-orb-tl,
+  .auth-orb-br {
+    opacity: 0.008;
+  }
+}
