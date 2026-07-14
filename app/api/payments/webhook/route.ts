@@ -8,6 +8,7 @@ import { sendSellerPaymentReceived } from '@/lib/email';
 export async function POST(req: NextRequest) {
   // 1. Signature verification
   const signature = req.headers.get('verif-hash');
+  console.log('[DEBUG - /api/payments/webhook] Received webhook request. Signature:', signature);
   if (!signature || signature !== env.FLW_WEBHOOK_HASH) {
     console.warn('flutterwave.webhook.bad_signature');
     return NextResponse.json({ success: false, error: 'Invalid signature' }, { status: 401 });
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
   let payload: any;
   try {
     payload = await req.json();
+    console.log('[DEBUG - /api/payments/webhook] Parsed payload:', payload);
   } catch (error) {
     console.error('flutterwave.webhook.parse_failed', { error });
     return NextResponse.json({ success: false, error: 'Invalid payload' }, { status: 400 });
@@ -62,28 +64,26 @@ export async function POST(req: NextRequest) {
 
   // 5. Persist idempotently
   try {
-    await db.$transaction(async (tx) => {
-      // Check if payment already exists
-      const existingPayment = await tx.payment.findUnique({
-        where: { orderId: order.id },
-      });
-
-      if (existingPayment) return;
-
-      await tx.payment.create({
-        data: {
-          orderId: order.id,
-          gatewayReference: String(verified.data.id),
-          status: 'paid',
-          paidAt: new Date(),
-        },
-      });
-
-       await tx.order.update({
-         where: { id: order.id },
-         data: { status: 'PAID' as any },
-       });
+    const existingPayment = await db.payment.findUnique({
+      where: { orderId: order.id },
     });
+
+    if (!existingPayment) {
+      await db.$transaction([
+        db.payment.create({
+          data: {
+            orderId: order.id,
+            gatewayReference: String(verified.data.id),
+            status: 'paid',
+            paidAt: new Date(),
+          },
+        }),
+        db.order.update({
+          where: { id: order.id },
+          data: { status: 'PAID' as any },
+        }),
+      ]);
+    }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ success: true }, { status: 200 });

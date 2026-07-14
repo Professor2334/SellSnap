@@ -45,3 +45,17 @@ export async function verifyTransaction(transactionId: string) {
   const data = await response.json();
   return data;
 }
+
+export async function verifyTransactionByRef(txRef: string) {
+  const response = await fetch(
+    `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${txRef}`,
+    {
+      headers: {
+        Authorization: `Bearer ${env.FLW_SECRET_KEY}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+  return data;
+}

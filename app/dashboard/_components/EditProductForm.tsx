@@ -71,10 +71,8 @@ export function EditProductForm({ product }: { product: any }) {
         
         {/* Header */}
         <div 
+          className="editor-page-header"
           style={{ 
-            position: 'sticky',
-            top: 0,
-            zIndex: 40,
             backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'var(--color-bg)',
             backdropFilter: isScrolled ? 'blur(12px)' : 'none',
             WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',

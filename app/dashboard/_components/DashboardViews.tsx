@@ -80,18 +80,20 @@ function PageHeader({
   title,
   subtitle,
   action,
+  staticOnMobile = false,
 }: {
   title: string;
   subtitle: string;
   action?: React.ReactNode;
+  staticOnMobile?: boolean;
 }) {
   return (
-    <div className="dashboard-page-header">
+    <div className={`dashboard-page-header ${staticOnMobile ? 'static-mobile' : ''}`}>
       <div>
         <h1 className="text-display font-bold text-ink" style={{ marginBottom: 8 }}>{title}</h1>
         <p className="text-body-sm text-ink-muted" style={{ opacity: 0.9 }}>{subtitle}</p>
       </div>
-      {action && <div style={{ flexShrink: 0 }}>{action}</div>}
+      {action && <div className="dashboard-page-header-action">{action}</div>}
     </div>
   );
 }
@@ -134,12 +136,13 @@ export function DashboardView({
   recentOrders: Order[];
 }) {
   return (
-    <div className="w-full animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="w-full animate-fade-in-up dashboard-view-container">
 
       {/* Elevated header card */}
       <PageHeader
         title="Dashboard"
         subtitle="Manage your products, orders, and sales in one place."
+        staticOnMobile
         action={
           <Link href="/dashboard/products/new">
             <Button size="lg" variant="primary">Create Product</Button>
@@ -148,7 +151,7 @@ export function DashboardView({
       />
 
       {/* KPI Cards */}
-      <div className="dashboard-stats-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+      <div className="dashboard-stats-row">
         <div className="card-stat">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <p className="card-stat-label">Total Revenue</p>
@@ -184,22 +187,18 @@ export function DashboardView({
       </div>
 
       {/* Recent Orders */}
-      <div style={{ marginTop: 24 }}>
+      <div className="recent-orders-container">
         <div className="card-container" style={{ padding: '24px', backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)' }}>
           <h2 className="text-h2 font-semibold text-ink" style={{ marginBottom: 24 }}>Recent Orders</h2>
           
           {recentOrders.length === 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 16px', textAlign: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '2rem' }}>📦</span>
               <div>
                 <h3 className="text-body font-bold text-ink" style={{ marginBottom: 4 }}>No orders yet</h3>
                 <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto' }}>
                   Your first customer orders will appear here.
                 </p>
               </div>
-              <Link href="/dashboard/products" style={{ marginTop: 8 }}>
-                <Button variant="secondary" size="sm">View Products</Button>
-              </Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -323,7 +322,7 @@ export function ProductsView({ products }: { products: Product[] }) {
         subtitle="Manage your products and their shareable payment links."
       />
 
-      <div style={{ display: 'flex', gap: '16px', alignItems: 'center', padding: '0 28px' }}>
+      <div className="dashboard-toolbar">
         <div style={{ position: 'relative', flex: 1, opacity: products.length === 0 ? 0.6 : 1 }}>
           <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 1, display: 'flex', pointerEvents: 'none', opacity: 0.5 }}>
             <Icon name="Search" size={18} className="text-ink-subtle" />
@@ -411,26 +410,20 @@ export function ProductsView({ products }: { products: Product[] }) {
             </div>
           )}
         </div>
-        <Link href="/dashboard/products/new" style={{ textDecoration: 'none' }}>
-          <Button variant="primary" style={{ height: '48px', padding: '0 24px', borderRadius: '12px', fontSize: '0.875rem', fontWeight: 600 }}>
-            Create Product
-          </Button>
-        </Link>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredProducts.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '2rem' }}>📦</span>
               <div>
                 <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 4 }}>No products yet</h3>
                 <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto', opacity: 0.85 }}>
                   Create your first product to start selling online.
                 </p>
               </div>
-              <Link href="/dashboard/products/new" style={{ marginTop: 12 }}>
-                <Button size="md" variant="primary">Create Product</Button>
+              <Link href="/dashboard/products/new" className="btn-full-mobile" style={{ marginTop: 12 }}>
+                <Button size="md" variant="primary" className="btn-full-mobile">Create Product</Button>
               </Link>
             </div>
           </div>
@@ -452,7 +445,7 @@ export function ProductsView({ products }: { products: Product[] }) {
   );
 }
 
-function ProductRow({ 
+export function ProductRow({ 
   product, 
   isLast,
   isOpen,
@@ -478,10 +471,6 @@ function ProductRow({
       className="product-row"
       onClick={handleRowClick}
       style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        padding: '20px 24px',
         borderBottom: isLast ? 'none' : '1px solid var(--color-border)',
         cursor: 'pointer',
         transition: 'background-color 150ms ease',
@@ -489,7 +478,7 @@ function ProductRow({
       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)'}
       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div className="product-row-main">
         <div className="product-row-image" style={{ width: 56, height: 56, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'var(--color-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--color-border)' }}>
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.name} fill style={{ objectFit: 'cover' }} sizes="56px" />
@@ -497,81 +486,96 @@ function ProductRow({
             <Icon name="Products" size={24} className="text-ink-subtle" />
           )}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <h3 className="text-ink" style={{ fontSize: '1rem', fontWeight: 600 }}>{product.name}</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <p className="text-brand" style={{ fontSize: '0.875rem', fontWeight: 600 }}>₦{product.price.toLocaleString()}</p>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: 'var(--color-border)' }} />
-            <p className="text-ink-muted" style={{ fontSize: '0.75rem' }}>
-              Created {new Date(product.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-            </p>
+        <div className="product-row-info">
+          <h3 className="text-ink" style={{ fontSize: '1rem', fontWeight: 600, wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.name}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', color: 'var(--color-ink-muted)', fontSize: '0.875rem' }}>
+            <span className="text-brand" style={{ fontWeight: 600 }}>₦{product.price.toLocaleString()}</span>
+            <span style={{ margin: '0 8px' }}>•</span>
+            <span>Created {new Date(product.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
           </div>
+        </div>
+
+        {/* Unified Overflow Menu (Top Right on Mobile) */}
+        <div className="hide-on-desktop flex-shrink-0" style={{ marginLeft: 8, marginTop: -4 }} onClick={preventNav}>
+          <ProductOverflowMenu product={product} isOpen={isOpen} onOpenChange={onOpenChange} />
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} onClick={preventNav}>
-        <CopyLinkButton slug={product.uniqueSlug} />
+      <div className="product-row-actions" onClick={preventNav}>
+        <CopyLinkButton slug={product.uniqueSlug} className="btn-full-mobile" />
         
-        <Link href={`/dashboard/products/${product.id}/edit`} style={{ textDecoration: 'none' }} onClick={preventNav}>
-          <Button variant="secondary" size="sm">Edit</Button>
+        <Link href={`/dashboard/products/${product.id}/edit`} style={{ textDecoration: 'none' }} className="btn-full-mobile" onClick={preventNav}>
+          <Button variant="secondary" size="sm" className="btn-full-mobile">Edit Product</Button>
         </Link>
 
-        <div onClick={preventNav}>
-          <DropdownMenu.Root open={isOpen} onOpenChange={onOpenChange}>
-            <DropdownMenu.Trigger asChild>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                style={{ padding: '0 8px' }}
-                aria-label="More actions"
-              >
-                <Icon name="More" size={18} />
-              </Button>
-            </DropdownMenu.Trigger>
-
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content 
-                side="bottom" 
-                align="end" 
-                sideOffset={4}
-                className="animate-fade-in-up"
-                style={{
-                  width: '180px',
-                  backgroundColor: 'var(--sys-neutral-container-lowest)',
-                  borderRadius: '12px',
-                  boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
-                  border: '1px solid var(--color-border)',
-                  padding: '8px',
-                  zIndex: 100,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px'
-                }}
-              >
-                <DropdownMenu.Item asChild>
-                  <button disabled className="dropdown-item">
-                    Duplicate
-                  </button>
-                </DropdownMenu.Item>
-                <DropdownMenu.Item asChild>
-                  <button disabled className="dropdown-item">
-                    Archive
-                  </button>
-                </DropdownMenu.Item>
-                
-                <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
-                
-                <DropdownMenu.Item asChild>
-                  <div onClick={() => onOpenChange?.(false)} style={{ cursor: 'pointer' }}>
-                    <DeleteProductButton id={product.id} />
-                  </div>
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+        {/* Desktop Overflow Menu */}
+        <div className="hide-on-mobile" onClick={preventNav}>
+          <ProductOverflowMenu product={product} isOpen={isOpen} onOpenChange={onOpenChange} />
         </div>
       </div>
     </div>
+  );
+}
+
+function ProductOverflowMenu({ product, isOpen, onOpenChange }: any) {
+  return (
+    <DropdownMenu.Root open={isOpen} onOpenChange={onOpenChange}>
+      <DropdownMenu.Trigger asChild>
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          style={{ padding: '0 8px' }}
+          aria-label="More actions"
+        >
+          <Icon name="MoreVertical" size={18} />
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content 
+          side="bottom" 
+          align="end" 
+          sideOffset={4}
+          className="animate-fade-in-up"
+          style={{
+            width: '180px',
+            backgroundColor: 'var(--sys-neutral-container-lowest)',
+            borderRadius: '12px',
+            boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
+            border: '1px solid var(--color-border)',
+            padding: '8px',
+            zIndex: 100,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px'
+          }}
+        >
+          <DropdownMenu.Item asChild>
+            <button disabled className="dropdown-item">
+              Duplicate Product
+            </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <button disabled className="dropdown-item">
+              Share Product
+            </button>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <button disabled className="dropdown-item">
+              Archive Product
+            </button>
+          </DropdownMenu.Item>
+          
+          <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
+          
+          <DropdownMenu.Item asChild>
+            <div onClick={() => onOpenChange?.(false)} style={{ cursor: 'pointer' }}>
+              <DeleteProductButton id={product.id} />
+            </div>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
 
@@ -622,7 +626,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
         subtitle="Track and manage your sales performance and customer orders."
       />
 
-      <div style={{ display: 'flex', gap: '16px', alignItems: 'center', padding: '0 28px' }}>
+      <div className="dashboard-toolbar">
         <div style={{ position: 'relative', flex: 1, opacity: orders.length === 0 ? 0.6 : 1 }}>
           <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 1, display: 'flex', pointerEvents: 'none', opacity: 0.5 }}>
             <Icon name="Search" size={18} className="text-ink-subtle" />
@@ -714,11 +718,10 @@ export function OrdersView({ orders }: { orders: Order[] }) {
         </div>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredOrders.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '2rem' }}>📦</span>
               <div>
                 <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 4 }}>No orders yet</h3>
                 <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto', opacity: 0.85 }}>

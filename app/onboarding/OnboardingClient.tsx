@@ -179,6 +179,35 @@ export default function OnboardingClient({ userName, businessName: initialBusine
           background-color: color-mix(in srgb, var(--color-brand) 4%, transparent) !important;
           border-color: color-mix(in srgb, var(--color-brand) 30%, transparent) !important;
         }
+        .onboarding-card-padding {
+          padding: 40px;
+        }
+        .onboarding-card-padding-step3 {
+          padding: 24px 40px;
+        }
+        @media (max-width: 639px) {
+          .onboarding-card-padding {
+            padding: 40px 16px;
+          }
+          .onboarding-card-padding-step3 {
+            padding: 24px 16px;
+          }
+          .onboarding-logo {
+            margin-bottom: 48px !important;
+          }
+          .onboarding-step-indicator-wrapper {
+            margin-bottom: 56px !important;
+          }
+          .onboarding-step1-title {
+            margin-bottom: 24px !important;
+          }
+          .onboarding-step1-text-wrapper {
+            margin-bottom: 48px !important;
+          }
+          .onboarding-step1-cta-wrapper {
+            margin-bottom: 24px !important;
+          }
+        }
       `}} />
       {/* Decorative Premium Background */}
       <div className="onboarding-bg-container">
@@ -209,9 +238,8 @@ export default function OnboardingClient({ userName, businessName: initialBusine
 
         {/* The Card */}
         <div 
-          className="onboarding-card onboarding-premium-fade" 
+          className={clsx("onboarding-card onboarding-premium-fade", step === 3 ? "onboarding-card-padding-step3" : "onboarding-card-padding")}
           style={{ 
-            padding: step === 3 ? '24px 40px' : '40px 40px',
             border: 'none',
             outline: 'none',
             boxShadow: 'none',
@@ -219,27 +247,24 @@ export default function OnboardingClient({ userName, businessName: initialBusine
           }}
         >
           {step === 1 && (
-              <div key={1} className="onboarding-premium-fade flex flex-col items-center">
-              <div className="text-center" style={{ marginBottom: '32px' }}>
+            <div key={1} className="onboarding-premium-fade flex flex-col items-center w-full">
+              <div className="text-center onboarding-step1-text-wrapper" style={{ marginBottom: '32px', width: '100%' }}>
                 <h2 className="onboarding-step1-title tracking-tight" style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '1.75rem', fontWeight: '700', lineHeight: '1.2', marginBottom: '16px' }}>
                   Welcome to SellSnap <span className="wave-emoji">👋</span>
                 </h2>
                 <div style={{ lineHeight: '1.5', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '480px', margin: '0 auto' }}>
                   <p style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '1rem', fontWeight: '500' }}>
-                    Hi {userName.split(' ')[0]}, let's get your store ready in less than a minute.
-                  </p>
-                  <p style={{ color: 'var(--sys-on-neutral-variant-role)', fontSize: '0.9375rem', fontWeight: '400', opacity: 0.85 }}>
-                    We'll help you create your first product and start accepting payments in minutes.
+                    Let's get your store ready in under a minute.
                   </p>
                 </div>
               </div>
 
-              <div className="w-full flex flex-col items-center gap-4">
+              <div className="w-full flex flex-col items-center gap-4 onboarding-step1-cta-wrapper">
                 <Button 
                   onClick={handleStep1} 
                   disabled={loading || skipLoading}
                   className="btn-primary btn-lg rounded-xl premium-setup-btn"
-                  style={{ height: '56px', fontSize: '1rem', paddingLeft: '28px', paddingRight: '28px', width: '100%', maxWidth: '400px' }}
+                  style={{ height: '56px', fontSize: '1rem', width: '100%' }}
                 >
                   Start Setup &rarr;
                 </Button>
@@ -301,13 +326,13 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                   borderRadius: '12px', 
                   overflow: 'hidden'
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
-                    <span style={{ fontSize: '0.875rem', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)', opacity: 0.7 }}>Full name</span>
-                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>{userName}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(100px, 1.2fr) 2fr', alignItems: 'center', gap: '16px', padding: '20px 24px', borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)', opacity: 0.7, textAlign: 'left' }}>Full name</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)', textAlign: 'left', wordBreak: 'break-word' }}>{userName}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px' }}>
-                    <span style={{ fontSize: '0.875rem', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)', opacity: 0.7 }}>Business name</span>
-                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)' }}>{initialBusinessName || userName}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(100px, 1.2fr) 2fr', alignItems: 'center', gap: '16px', padding: '20px 24px' }}>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '400', color: 'var(--sys-on-neutral-variant-role)', opacity: 0.7, textAlign: 'left' }}>Business name</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--sys-on-neutral-color-role)', textAlign: 'left', wordBreak: 'break-word' }}>{initialBusinessName || userName}</span>
                   </div>
                 </div>
               </div>
@@ -317,7 +342,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                   onClick={handleStep2Continue} 
                   disabled={loading || skipLoading}
                   className="btn-primary btn-lg btn-full rounded-xl premium-setup-btn"
-                  style={{ height: '56px', fontSize: '1rem' }}
+                  style={{ height: '56px', fontSize: '1rem', width: '100%' }}
                 >
                   Looks Good, Continue
                 </Button>

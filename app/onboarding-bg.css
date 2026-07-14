@@ -17,8 +17,8 @@
   height: 100vh;
   background: radial-gradient(
     circle at top center,
-    color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent) 0%,
-    color-mix(in srgb, var(--sys-primary-color-role) 3%, transparent) 35%,
+    color-mix(in srgb, var(--sys-primary-color-role) 5%, transparent) 0%,
+    color-mix(in srgb, var(--sys-primary-color-role) 1.5%, transparent) 35%,
     transparent 75%
   );
 }
@@ -46,6 +46,13 @@
   right: 0;
   mask-image: linear-gradient(to left, black, transparent);
   -webkit-mask-image: linear-gradient(to left, black, transparent);
+}
+
+@media (max-width: 767px) {
+  .onboarding-edge-pattern-left,
+  .onboarding-edge-pattern-right {
+    opacity: 0.04;
+  }
 }
 
 /* Floating Shapes */

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { notFound, useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { CheckCircle, Loader2 } from 'lucide-react';
@@ -22,74 +22,118 @@ export default function PaymentSuccessPage() {
 
 function PaymentStatus() {
   const searchParams = useSearchParams();
-  const txRef = searchParams.get('tx_ref');
+  const router = useRouter();
+  
+  let txRef = searchParams.get('tx_ref');
+  let transactionId = searchParams.get('transaction_id');
+
+  // Flutterwave occasionally encodes the entire response into a "resp" JSON query parameter
+  const respParam = searchParams.get('resp');
+  if (respParam && !txRef) {
+    try {
+      // The resp param might be URL encoded, but searchParams.get already decodes it once.
+      const parsed = JSON.parse(respParam);
+      if (parsed.tx_ref) txRef = parsed.tx_ref;
+      if (parsed.transaction_id || parsed.id) transactionId = String(parsed.transaction_id || parsed.id);
+    } catch (e) {
+      console.error('Failed to parse Flutterwave resp parameter:', e);
+    }
+  }
 
   const [status, setStatus] = React.useState<'PENDING' | 'PAID' | 'FAILED' | 'TIMEOUT'>('PENDING');
 
-  const transactionId = searchParams.get('transaction_id');
+  // Temporary debug logging
+  React.useEffect(() => {
+    console.log('[DEBUG - Success Page] Full URL:', window.location.href);
+    console.log('[DEBUG - Success Page] txRef:', txRef);
+    console.log('[DEBUG - Success Page] transactionId:', transactionId);
+  }, [txRef, transactionId]);
 
   React.useEffect(() => {
     if (!txRef) return;
 
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 30;
+    const maxAttempts = 60;
 
-    async function verify() {
-      if (cancelled) return;
-
-      // First attempt: verify directly with Flutterwave
-      if (attempts === 0 && transactionId) {
-        try {
-          const res = await fetch('/api/payments/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tx_ref: txRef, transaction_id: transactionId }),
-          });
-          const data = await res.json();
-          if (data.status === 'PAID') {
-            setStatus('PAID');
-            return;
-          }
-        } catch {
-          // fall through to polling
-        }
+    const poll = async () => {
+      if (cancelled || attempts >= maxAttempts) {
+        if (!cancelled) setStatus('TIMEOUT');
+        return;
       }
 
-      const poll = async () => {
-        if (cancelled || attempts >= maxAttempts) {
-          if (!cancelled) setStatus('TIMEOUT');
+      attempts++;
+
+      try {
+        // Always try direct Flutterwave verification first
+        // Pass both tx_ref and transaction_id (which may be null)
+        const verifyRes = await fetch('/api/payments/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tx_ref: txRef, transaction_id: transactionId }),
+        });
+        
+        const verifyData = await verifyRes.json();
+        console.log('[DEBUG - Success Page] /api/payments/verify response:', verifyData);
+        
+        if (verifyData.status === 'PAID') {
+          setStatus('PAID');
+          return;
+        }
+        
+        if (verifyData.status === 'FAILED') {
+          setStatus('FAILED');
           return;
         }
 
-        attempts++;
-        try {
-          const res = await fetch(`/api/payments/status?tx_ref=${encodeURIComponent(txRef!)}`);
-          const data = await res.json();
-          if (data.status === 'PAID') {
-            setStatus('PAID');
-            return;
-          }
-          if (data.status === 'FAILED') {
-            setStatus('FAILED');
-            return;
-          }
-        } catch {
-          // retry
+        if (verifyData.status === 'PENDING') {
+          // Do nothing, just continue polling
+        } else if (verifyData.success === false && attempts > 3) {
+          // If the verification explicitly fails with an error (like DB connection failure)
+          // and we've tried a few times, assume it failed.
+          console.warn('[DEBUG - Success Page] Verification explicitly failed after 3 attempts');
+          setStatus('FAILED');
+          return;
         }
 
-        setTimeout(poll, 1000);
-      };
+        // Also check local DB in case webhook already updated it
+        const statusRes = await fetch(`/api/payments/status?tx_ref=${encodeURIComponent(txRef!)}`);
+        const statusData = await statusRes.json();
+        if (statusData.status === 'PAID') {
+          setStatus('PAID');
+          return;
+        }
+        if (statusData.status === 'FAILED') {
+          setStatus('FAILED');
+          return;
+        }
+      } catch {
+        // retry on network error
+      }
 
-      poll();
-    }
+      // Poll every 3 seconds to avoid hammering the API
+      setTimeout(poll, 3000);
+    };
 
-    verify();
+    poll();
     return () => { cancelled = true; };
   }, [txRef, transactionId]);
 
+  // Redirect to home if no transaction reference (instead of notFound() which crashes in client components)
+  React.useEffect(() => {
+    if (!txRef) {
+      router.replace('/');
+    }
+  }, [txRef, router]);
+
   if (!txRef) {
-    notFound();
+    return (
+      <main className="min-h-screen flex items-center justify-center py-12 px-4">
+        <div className="w-full max-w-md text-center flex flex-col items-center gap-6">
+          <Loader2 size={48} className="spinner" style={{ color: 'var(--color-brand)' }} />
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -118,6 +162,27 @@ function PaymentStatus() {
                 Your payment is taking longer than expected. It should be confirmed shortly. Check your orders later.
               </p>
             </div>
+          </>
+        ) : status === 'FAILED' ? (
+          <>
+            <div className="rounded-full p-4" style={{ backgroundColor: 'var(--sys-error-container-role, #fce4ec)' }}>
+              <Loader2 size={48} style={{ color: 'var(--sys-error-color-role, #e53935)' }} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h1 className="text-h1">Verification Failed</h1>
+              <p className="text-body" style={{ color: 'var(--color-ink-muted)' }}>
+                We could not verify your payment. If you were charged, please contact support with your transaction reference.
+              </p>
+            </div>
+            <Button 
+              fullWidth 
+              variant="secondary" 
+              onClick={() => {
+                setStatus('PENDING');
+              }}
+            >
+              Try Verifying Again
+            </Button>
           </>
         ) : (
           <>

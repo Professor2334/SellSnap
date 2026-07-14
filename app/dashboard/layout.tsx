@@ -20,7 +20,14 @@ export default async function DashboardLayout({
         businessName={session.user.businessName}
         email={session.user.email || ''}
       />
-      <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full bg-surface">
+      <main className="dashboard-main flex-1 flex flex-col min-w-0 w-full bg-surface" style={{ paddingTop: 'var(--mobile-app-bar-height, 0px)' }}>
+        <style>{`
+          @media (max-width: 767px) {
+            .dashboard-main {
+              --mobile-app-bar-height: 64px;
+            }
+          }
+        `}</style>
         <div className="dashboard-content-wrapper">
           {children}
         </div>

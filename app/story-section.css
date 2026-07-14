@@ -2,6 +2,12 @@
 .story-section {
   height: 500vh;
   position: relative;
+  margin-top: -8rem;
+}
+@media (min-width: 1024px) {
+  .story-section {
+    margin-top: 0;
+  }
 }
 .story-sticky-container {
   position: sticky;

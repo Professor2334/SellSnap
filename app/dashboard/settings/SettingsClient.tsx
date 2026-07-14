@@ -76,7 +76,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
   if (activeView === 'privacy') return <PrivacyView onBack={() => setActiveView('settings')} />;
 
   return (
-    <div className="flex flex-col relative pb-24 h-full w-full animate-fade-in-up">
+    <div className="flex flex-col relative pb-24 h-full w-full">
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
@@ -112,7 +112,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
           
           {/* Profile Information Card */}
           <div className="settings-card">
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2 mb-6 sm:mb-8">
               <Icon name="User" size={20} className="text-brand" />
               <h2 className="text-body font-bold text-ink">Profile Information</h2>
             </div>
@@ -136,26 +136,26 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                 </div>
                 
                 <div className="h-px bg-border w-full my-2" />
-                <div className="flex justify-start gap-3">
-                  <Button variant="primary" onClick={() => setIsEditingProfile(false)}>Done</Button>
+                <div className="flex justify-start gap-3 w-full sm:w-auto">
+                  <Button variant="primary" className="btn-full-mobile" onClick={() => setIsEditingProfile(false)}>Done</Button>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-row items-start animate-in fade-in duration-300" style={{ gap: '24px' }}>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start animate-in fade-in duration-300 gap-4 sm:gap-6 w-full">
                 <div 
                   className="flex items-center justify-center text-2xl font-bold flex-shrink-0"
                   style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: 'var(--sys-primary-container-role)', color: 'var(--sys-on-primary-container-role)' }}
                 >
                   {initials}
                 </div>
-                <div className="flex flex-col min-w-0" style={{ alignItems: 'flex-start', flex: 1 }}>
-                  <h3 className="text-h2 font-bold text-ink truncate" style={{ marginBottom: '12px' }}>{formData.name}</h3>
-                  <div className="text-ink-subtle text-body-sm truncate" style={{ marginBottom: '24px' }}>
+                <div className="flex flex-col items-center sm:items-start min-w-0 w-full sm:flex-1">
+                  <h3 className="text-h2 font-bold text-ink truncate mb-2 sm:mb-3 text-center sm:text-left w-full">{formData.name}</h3>
+                  <div className="text-ink-subtle text-body-sm truncate mb-6 text-center sm:text-left w-full">
                     {formData.email}
                   </div>
-                  <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-border)', opacity: 0.5, marginBottom: '24px' }} />
-                  <div>
-                    <Button variant="primary" onClick={() => setIsEditingProfile(true)}>Edit Profile</Button>
+                  <div className="hidden sm:block w-full h-px bg-border opacity-50 mb-6" />
+                  <div className="w-full sm:w-auto">
+                    <Button variant="primary" className="btn-full-mobile" onClick={() => setIsEditingProfile(true)}>Edit Profile</Button>
                   </div>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
 
           {/* Preferences Card */}
           {/* Preferences Card */}
-          <div className="settings-card" style={{ padding: '32px' }}>
+          <div className="settings-card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }}>
               <Icon name="Settings" size={20} className="text-brand" />
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Preferences</h2>
@@ -277,6 +277,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                 variant="primary" 
                 onClick={handleSave} 
                 disabled={isSaving || !(formData.currency !== initialData.currency || formData.timeZone !== initialData.timeZone || formData.dateFormat !== initialData.dateFormat)}
+                className="btn-full-mobile"
                 style={{ height: '44px', paddingLeft: '24px', paddingRight: '24px', borderRadius: '10px', fontWeight: 500 }}
               >
                 {isSaving ? 'Saving...' : 'Save Changes'}
@@ -289,7 +290,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
         <div className="settings-column">
           
           {/* Security Card */}
-          <div className="settings-card" style={{ maxWidth: '85%' }}>
+          <div className="settings-card">
             <div className="flex items-center gap-2 mb-6">
               <Icon name="Security" size={20} className="text-brand" />
               <h2 className="text-body font-bold text-ink">Security</h2>
@@ -313,23 +314,27 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
               ) : (
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-4" style={{ width: '100%' }}>
-                    <Input 
-                      placeholder="Current Password" 
-                      type="password" 
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)' }}
-                    />
-                    <Input 
-                      placeholder="New Password" 
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)' }}
-                    />
+                    <div style={{ width: '100%' }}>
+                      <Input 
+                        placeholder="Current Password" 
+                        type="password" 
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)', width: '100%' }}
+                      />
+                    </div>
+                    <div style={{ width: '100%' }}>
+                      <Input 
+                        placeholder="New Password" 
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        style={{ borderColor: 'color-mix(in srgb, var(--color-border) 85%, transparent)', width: '100%' }}
+                      />
+                    </div>
                   </div>
                   <div>
-                    <Button variant="secondary">Update Password</Button>
+                    <Button variant="secondary" className="btn-full-mobile">Update Password</Button>
                   </div>
                 </div>
               )}
@@ -342,7 +347,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                 <h3 className="text-sm font-bold text-ink">Sign Out</h3>
                 <p className="text-body-sm text-ink-subtle">End your session on this device.</p>
               </div>
-              <div>
+              <div className="w-full sm:w-auto">
                 <Button 
                   variant="danger" 
                   onClick={async () => {
@@ -351,7 +356,8 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                       router.push('/login');
                     }
                   }}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                  className="btn-full-mobile"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -365,7 +371,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
           </div>
 
           {/* Support & Legal Card */}
-          <div className="settings-card" style={{ padding: '32px', marginTop: '24px' }}>
+          <div className="settings-card" style={{ marginTop: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Icon name="Support" size={20} className="text-brand" />
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', margin: 0 }}>Support & Legal</h2>

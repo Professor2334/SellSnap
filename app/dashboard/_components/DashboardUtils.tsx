@@ -26,7 +26,7 @@ export function DeleteProductButton({ id }: { id: string }) {
   );
 }
 
-export function CopyLinkButton({ slug }: { slug: string }) {
+export function CopyLinkButton({ slug, className }: { slug: string, className?: string }) {
   const [copied, setCopied] = React.useState(false);
 
   async function handleCopy() {
@@ -58,6 +58,7 @@ export function CopyLinkButton({ slug }: { slug: string }) {
         onClick={handleCopy}
         variant="primary"
         size="sm"
+        className={className}
       >
         {copied ? 'Copied!' : 'Copy Link'}
       </Button>
