@@ -266,7 +266,6 @@ export function ProductsView({ products }: { products: Product[] }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const filterRef = useRef<HTMLDivElement>(null);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const filterOptions = [
     { label: 'All Products', value: 'All Products' },
@@ -412,7 +411,7 @@ export function ProductsView({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
+      <div className="card-container" style={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredProducts.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
@@ -434,8 +433,6 @@ export function ProductsView({ products }: { products: Product[] }) {
                 key={product.id} 
                 product={product} 
                 isLast={index === filteredProducts.length - 1} 
-                isOpen={openMenuId === product.id}
-                onOpenChange={(open) => setOpenMenuId(open ? product.id : null)}
               />
             ))}
           </div>
@@ -447,14 +444,10 @@ export function ProductsView({ products }: { products: Product[] }) {
 
 export function ProductRow({ 
   product, 
-  isLast,
-  isOpen,
-  onOpenChange 
+  isLast 
 }: { 
   product: Product, 
-  isLast?: boolean,
-  isOpen?: boolean,
-  onOpenChange?: (open: boolean) => void 
+  isLast?: boolean 
 }) {
   const router = useRouter();
 
@@ -479,7 +472,7 @@ export function ProductRow({
       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
     >
       <div className="product-row-main">
-        <div className="product-row-image" style={{ width: 56, height: 56, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'var(--color-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--color-border)' }}>
+        <div className="product-row-image" style={{ width: 56, height: 56, borderRadius: 8, overflow: 'hidden', position: 'relative', backgroundColor: 'var(--dk-card-elevated-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--color-border)' }}>
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.name} fill style={{ objectFit: 'cover' }} sizes="56px" />
           ) : (
@@ -497,7 +490,7 @@ export function ProductRow({
 
         {/* Unified Overflow Menu (Top Right on Mobile) */}
         <div className="hide-on-desktop flex-shrink-0" style={{ marginLeft: 8, marginTop: -4 }} onClick={preventNav}>
-          <ProductOverflowMenu product={product} isOpen={isOpen} onOpenChange={onOpenChange} />
+          <ProductOverflowMenu product={product} />
         </div>
       </div>
 
@@ -510,16 +503,16 @@ export function ProductRow({
 
         {/* Desktop Overflow Menu */}
         <div className="hide-on-mobile" onClick={preventNav}>
-          <ProductOverflowMenu product={product} isOpen={isOpen} onOpenChange={onOpenChange} />
+          <ProductOverflowMenu product={product} />
         </div>
       </div>
     </div>
   );
 }
 
-function ProductOverflowMenu({ product, isOpen, onOpenChange }: any) {
+function ProductOverflowMenu({ product }: any) {
   return (
-    <DropdownMenu.Root open={isOpen} onOpenChange={onOpenChange}>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button 
           variant="secondary" 
@@ -569,7 +562,7 @@ function ProductOverflowMenu({ product, isOpen, onOpenChange }: any) {
           <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
           
           <DropdownMenu.Item asChild>
-            <div onClick={() => onOpenChange?.(false)} style={{ cursor: 'pointer' }}>
+            <div style={{ cursor: 'pointer' }}>
               <DeleteProductButton id={product.id} />
             </div>
           </DropdownMenu.Item>
@@ -586,7 +579,6 @@ export function OrdersView({ orders }: { orders: Order[] }) {
   const [filter, setFilter] = useState<'All Orders' | 'PENDING' | 'PAID' | 'REFUNDED'>('All Orders');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isFilterOpen) return;
@@ -718,7 +710,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
         </div>
       </div>
 
-      <div className="card-container" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
+      <div className="card-container" style={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredOrders.length === 0 ? (
           <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
@@ -749,7 +741,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
               >
                 {/* Left Side */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 8, backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 8, backgroundColor: 'var(--dk-card-elevated-bg)', border: '1px solid var(--color-border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
                     {order.product.imageUrl ? (
                       <Image src={order.product.imageUrl} alt={order.product.name} fill style={{ objectFit: 'cover' }} sizes="48px" />
                     ) : (
@@ -790,7 +782,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                   </p>
                   
                   <div onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenu.Root open={openMenuId === order.id} onOpenChange={(open) => setOpenMenuId(open ? order.id : null)}>
+                    <DropdownMenu.Root modal={false}>
                       <DropdownMenu.Trigger asChild>
                         <Button 
                           variant="secondary" 
@@ -822,12 +814,12 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                           }}
                         >
                           <DropdownMenu.Item asChild>
-                            <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item" onClick={() => setOpenMenuId(null)}>
+                            <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">
                               Open Product
                             </Link>
                           </DropdownMenu.Item>
                           <DropdownMenu.Item asChild>
-                            <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="dropdown-item" onClick={() => setOpenMenuId(null)}>
+                            <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="dropdown-item">
                               Preview Customer Page
                             </Link>
                           </DropdownMenu.Item>
@@ -835,7 +827,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                           <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
                           
                           <DropdownMenu.Item asChild>
-                            <div onClick={() => setOpenMenuId(null)} style={{ cursor: 'pointer' }}>
+                            <div style={{ cursor: 'pointer' }}>
                               <DeleteProductButton id={order.product.id} />
                             </div>
                           </DropdownMenu.Item>

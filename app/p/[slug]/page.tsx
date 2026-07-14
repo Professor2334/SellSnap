@@ -48,7 +48,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-          background-color: #FFFFFF; 
+          background-color: var(--color-bg); 
           font-family: var(--font-inter, system-ui, sans-serif); 
         }
 
@@ -85,7 +85,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
           max-width: 460px; /* Reduced from 560px */
           max-height: 420px; /* Reduced from 480px */
           aspect-ratio: 4/3;
-          background-color: var(--color-surface, #F7F7F5);
+          background-color: var(--color-surface);
           border-radius: 16px;
           border: 1px solid var(--color-border, #E5E7EB);
           box-shadow: 0 8px 30px rgba(0,0,0,0.04);
@@ -111,12 +111,12 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
           position: relative;
           overflow: hidden;
           cursor: pointer;
-          background-color: var(--color-surface, #F7F7F5);
+          background-color: var(--color-surface);
           transition: border-color 0.2s ease;
         }
         
         .thumbnail:hover {
-          border-color: var(--color-border, #E5E7EB);
+          border-color: var(--color-border);
         }
         
         .thumbnail.active {
@@ -137,7 +137,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
 
         .seller-name {
           font-size: 0.875rem;
-          color: var(--color-ink-muted, #5A6270);
+          color: var(--color-ink-muted);
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -146,7 +146,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
         .product-title {
           font-size: clamp(2rem, 5vw, 2.5rem);
           font-weight: 700;
-          color: var(--color-ink, #0F1115);
+          color: var(--color-ink);
           line-height: 1.15;
           letter-spacing: -0.02em;
         }
@@ -154,14 +154,14 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
         .product-price {
           font-size: clamp(1.5rem, 4vw, 2rem);
           font-weight: 800;
-          color: var(--color-brand, #1A7F3C);
+          color: var(--color-brand);
           letter-spacing: -0.02em;
         }
 
         .product-description {
           font-size: 1rem;
           line-height: 1.6;
-          color: var(--color-ink-muted, #5A6270);
+          color: var(--color-ink-muted);
         }
 
         .product-cta-container {
@@ -182,17 +182,17 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
           align-items: center;
           gap: 12px;
           font-size: 0.875rem;
-          color: var(--color-ink-muted, #5A6270);
+          color: var(--color-ink-muted);
           font-weight: 400; /* Softer text weight */
         }
         
         .trust-icon {
-          color: var(--color-brand, #1A7F3C); /* Brand color for hierarchy */
+          color: var(--color-brand); /* Brand color for hierarchy */
           opacity: 0.9;
         }
       `}</style>
 
-      <main style={{ minHeight: '100dvh', backgroundColor: '#FFFFFF' }}>
+      <main style={{ minHeight: '100dvh', backgroundColor: 'var(--color-bg)' }}>
         <div className="checkout-container">
           
           {/* Left Column: Image Gallery */}
@@ -215,7 +215,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--color-ink-subtle, #9AA1AD)',
+                    color: 'var(--color-ink-subtle)',
                   }}
                 >
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

@@ -1,4 +1,4 @@
-import { LucideIcon, LayoutDashboard, Package, ShoppingBag, LogOut, Plus, Search, Mail, Lock, User, CheckCircle2, ShieldCheck, Zap, Settings, HelpCircle, FileText, ChevronRight, ArrowLeft, MoreHorizontal, Edit2, MoreVertical } from 'lucide-react';
+import { LucideIcon, LayoutDashboard, Package, ShoppingBag, LogOut, Plus, Search, Mail, Lock, User, CheckCircle2, ShieldCheck, Zap, Settings, HelpCircle, FileText, ChevronRight, ChevronLeft, ArrowLeft, MoreHorizontal, Edit2, MoreVertical } from 'lucide-react';
 
 export const Icons = {
   Dashboard: LayoutDashboard,
@@ -17,6 +17,7 @@ export const Icons = {
   Support: HelpCircle,
   Terms: FileText,
   ChevronRight: ChevronRight,
+  ChevronLeft: ChevronLeft,
   ArrowLeft: ArrowLeft,
   More: MoreHorizontal,
   MoreVertical: MoreVertical,

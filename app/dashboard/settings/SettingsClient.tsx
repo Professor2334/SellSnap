@@ -128,7 +128,8 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-ink">Business Description</label>
                   <textarea
-                    className="w-full rounded-lg bg-transparent px-3 py-2 text-ink placeholder:text-ink-subtle border border-border focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand min-h-[100px]"
+                    className="w-full"
+                    style={{ minHeight: '100px', padding: '12px 16px', borderRadius: '10px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '0.9375rem', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                     value={formData.businessDescription}
                     onChange={(e) => handleChange('businessDescription', e.target.value)}
                     placeholder="Briefly describe what you sell..."
@@ -141,20 +142,19 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col sm:flex-row items-center sm:items-start animate-in fade-in duration-300 gap-4 sm:gap-6 w-full">
+              <div className="flex flex-col items-center animate-in fade-in duration-300 gap-4 sm:gap-6 w-full pt-4 pb-2">
                 <div 
                   className="flex items-center justify-center text-2xl font-bold flex-shrink-0"
-                  style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: 'var(--sys-primary-container-role)', color: 'var(--sys-on-primary-container-role)' }}
+                  style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'var(--sys-primary-container-role)', color: 'var(--sys-on-primary-container-role)' }}
                 >
                   {initials}
                 </div>
-                <div className="flex flex-col items-center sm:items-start min-w-0 w-full sm:flex-1">
-                  <h3 className="text-h2 font-bold text-ink truncate mb-2 sm:mb-3 text-center sm:text-left w-full">{formData.name}</h3>
-                  <div className="text-ink-subtle text-body-sm truncate mb-6 text-center sm:text-left w-full">
+                <div className="flex flex-col items-center min-w-0 w-full max-w-md">
+                  <h3 className="text-h2 font-bold text-ink truncate mb-1 text-center w-full">{formData.name}</h3>
+                  <div className="text-ink-subtle text-body-sm truncate mb-6 text-center w-full">
                     {formData.email}
                   </div>
-                  <div className="hidden sm:block w-full h-px bg-border opacity-50 mb-6" />
-                  <div className="w-full sm:w-auto">
+                  <div className="flex justify-center w-full">
                     <Button variant="primary" className="btn-full-mobile" onClick={() => setIsEditingProfile(true)}>Edit Profile</Button>
                   </div>
                 </div>
@@ -454,9 +454,11 @@ function SupportView({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
       <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
-          <Icon name="ArrowLeft" size={18} /> Back to Settings
-        </button>
+        <div className="hide-on-desktop w-full" style={{ marginBottom: '16px' }}>
+          <button aria-label="Go back" onClick={onBack} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', cursor: 'pointer', color: 'var(--color-ink)', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-bg)'}>
+            <Icon name="ChevronLeft" size={20} />
+          </button>
+        </div>
         <div>
           <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Contact Support</h1>
           <p className="text-body-sm text-ink-muted">Need help with your SellSnap account? Our support team is here to assist you.</p>
@@ -478,33 +480,34 @@ function SupportView({ onBack }: { onBack: () => void }) {
               <p style={{ fontSize: '0.9375rem', color: 'var(--color-ink-subtle)' }}>We've received your request and will get back to you shortly.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ display: 'flex', gap: '24px' }}>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6 w-full">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full">
+                <div className="flex-1 flex flex-col gap-2 w-full">
                   <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Name</label>
-                  <Input required placeholder="Your name" value={supportData.name} onChange={(e) => setSupportData(prev => ({ ...prev, name: e.target.value }))} />
+                  <div className="w-full"><Input required placeholder="Your name" value={supportData.name} onChange={(e) => setSupportData(prev => ({ ...prev, name: e.target.value }))} /></div>
                 </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="flex-1 flex flex-col gap-2 w-full">
                   <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Email</label>
-                  <Input required type="email" placeholder="you@example.com" value={supportData.email} onChange={(e) => setSupportData(prev => ({ ...prev, email: e.target.value }))} />
+                  <div className="w-full"><Input required type="email" placeholder="you@example.com" value={supportData.email} onChange={(e) => setSupportData(prev => ({ ...prev, email: e.target.value }))} /></div>
                 </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="flex flex-col gap-2 w-full">
                 <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Subject</label>
-                <Input required placeholder="How can we help?" value={supportData.subject} onChange={(e) => setSupportData(prev => ({ ...prev, subject: e.target.value }))} />
+                <div className="w-full"><Input required placeholder="How can we help?" value={supportData.subject} onChange={(e) => setSupportData(prev => ({ ...prev, subject: e.target.value }))} /></div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="flex flex-col gap-2 w-full">
                 <label style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)' }}>Message</label>
                 <textarea 
                   required
-                  style={{ minHeight: '160px', padding: '16px', borderRadius: '10px', border: '1.5px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '1rem', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  className="w-full"
+                  style={{ minHeight: '140px', padding: '16px', borderRadius: '10px', border: '1.5px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontSize: '1rem', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                   placeholder="Please describe your issue in detail..."
                   value={supportData.message}
                   onChange={(e) => setSupportData(prev => ({ ...prev, message: e.target.value }))}
                 />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                <Button type="submit" variant="primary" disabled={isSubmitting} style={{ height: '48px', padding: '0 32px', borderRadius: '10px', fontSize: '0.9375rem', fontWeight: 500 }}>
+              <div className="flex sm:justify-end mt-2 sm:mt-0 w-full">
+                <Button type="submit" variant="primary" disabled={isSubmitting} className="btn-full-mobile w-full sm:w-auto" style={{ height: '48px', padding: '0 32px', borderRadius: '10px', fontSize: '0.9375rem', fontWeight: 500 }}>
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
               </div>
@@ -520,9 +523,11 @@ function TermsView({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
       <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
-          <Icon name="ArrowLeft" size={18} /> Back to Settings
-        </button>
+        <div className="hide-on-desktop w-full" style={{ marginBottom: '16px' }}>
+          <button aria-label="Go back" onClick={onBack} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', cursor: 'pointer', color: 'var(--color-ink)', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-bg)'}>
+            <Icon name="ChevronLeft" size={20} />
+          </button>
+        </div>
         <div>
           <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Terms of Service</h1>
           <p className="text-body-sm text-ink-muted">Last Updated: October 2023</p>
@@ -531,34 +536,34 @@ function TermsView({ onBack }: { onBack: () => void }) {
       
       <div style={{ maxWidth: '720px', paddingTop: '16px' }}>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink-muted)', lineHeight: 1.7, fontWeight: 400 }}>
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>1. Introduction</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>1. Introduction</h2>
             <p>Welcome to SellSnap. These Terms of Service govern your use of our platform. By creating an account and generating payment links through SellSnap, you agree to abide by these terms. SellSnap is designed exclusively to help merchants create products, generate shareable payment links, and manage incoming customer orders quickly and securely.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>2. User Accounts & Eligibility</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>2. User Accounts & Eligibility</h2>
             <p>To use SellSnap, you must be a registered business or an individual over 18 capable of forming a binding contract. You are responsible for safeguarding your account credentials. You must provide accurate business information and maintain the security of your SellSnap account.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>3. Merchant Responsibilities</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>3. Merchant Responsibilities</h2>
             <p>As a merchant on SellSnap, you are solely responsible for the products you list, the accuracy of your descriptions, and fulfilling orders once a payment is confirmed. SellSnap provides the payment link infrastructure but is not a party to the transaction between you and your buyers.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>4. Payments & Transactions</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>4. Payments & Transactions</h2>
             <p>All payments generated via SellSnap links are processed securely through our trusted payment gateway partners (e.g., Flutterwave). SellSnap does not hold your funds. We reserve the right to delay or decline transactions that trigger our automated fraud detection systems to protect both you and your buyers.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>5. Prohibited Activities</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>5. Prohibited Activities</h2>
             <p>You may not use SellSnap to sell illegal goods, counterfeit items, or highly regulated products without authorization. You must not attempt to manipulate the platform, bypass security measures, or use our payment links to facilitate money laundering or fraudulent activities.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>6. Account Suspension & Termination</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>6. Account Suspension & Termination</h2>
             <p>We reserve the right to suspend or terminate your account immediately if we detect a violation of these Terms of Service, a high volume of chargebacks, or suspicious activity. In such cases, outstanding links will be deactivated.</p>
           </section>
         </div>
@@ -571,9 +576,11 @@ function PrivacyView({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col relative pb-24 h-full w-full animate-in fade-in duration-300">
       <div className="dashboard-page-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', background: 'transparent', cursor: 'pointer', marginBottom: '8px', color: 'var(--color-ink-subtle)', fontWeight: 500 }}>
-          <Icon name="ArrowLeft" size={18} /> Back to Settings
-        </button>
+        <div className="hide-on-desktop w-full" style={{ marginBottom: '16px' }}>
+          <button aria-label="Go back" onClick={onBack} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', cursor: 'pointer', color: 'var(--color-ink)', transition: 'background-color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--sys-surface-container-low-role)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-bg)'}>
+            <Icon name="ChevronLeft" size={20} />
+          </button>
+        </div>
         <div>
           <h1 className="text-display font-bold text-ink" style={{ marginBottom: 4 }}>Privacy Policy</h1>
           <p className="text-body-sm text-ink-muted">Last Updated: October 2023</p>
@@ -582,29 +589,29 @@ function PrivacyView({ onBack }: { onBack: () => void }) {
       
       <div style={{ maxWidth: '720px', paddingTop: '16px' }}>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink)', lineHeight: 1.7 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'var(--color-ink-muted)', lineHeight: 1.7, fontWeight: 400 }}>
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>1. Information We Collect</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>1. Information We Collect</h2>
             <p>When you register for SellSnap, we collect basic account information including your name, email address, and business details. When you create products, we store the product metadata, descriptions, and uploaded images necessary to generate your payment links.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>2. Order & Buyer Information</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>2. Order & Buyer Information</h2>
             <p>When a buyer interacts with your SellSnap payment link, we securely collect the transaction details necessary to verify the payment and notify you. We do not store sensitive payment card details; these are handled directly by our certified payment processors.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>3. How We Use Your Data</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>3. How We Use Your Data</h2>
             <p>We use your data strictly to provide the SellSnap service: generating secure product links, verifying incoming payments, updating your dashboard, and sending transactional email notifications regarding your orders and account security.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>4. Data Protection</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>4. Data Protection</h2>
             <p>We implement industry-standard security measures, including encryption in transit and at rest, to protect your account and product data. Your dashboard is protected by secure authentication protocols to prevent unauthorized access.</p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>5. Data Retention</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px', color: 'var(--color-ink)' }}>5. Data Retention</h2>
             <p>We retain your account and order history for as long as your account remains active. If you choose to delete your SellSnap account, your personal information and product links will be permanently removed from our active systems within 30 days.</p>
           </section>
         </div>

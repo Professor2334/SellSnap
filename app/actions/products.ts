@@ -75,8 +75,27 @@ export async function deleteProduct(id: string) {
       return { success: false, error: 'Product not found or unauthorized' };
     }
 
-    await db.product.delete({
-      where: { id },
+    // We must manually cascade delete payments and orders because the schema uses RESTRICT
+    await db.$transaction(async (tx) => {
+      const orders = await tx.order.findMany({
+        where: { productId: id },
+        select: { id: true },
+      });
+      const orderIds = orders.map((o) => o.id);
+
+      if (orderIds.length > 0) {
+        await tx.payment.deleteMany({
+          where: { orderId: { in: orderIds } },
+        });
+
+        await tx.order.deleteMany({
+          where: { productId: id },
+        });
+      }
+
+      await tx.product.delete({
+        where: { id },
+      });
     });
 
     revalidatePath('/dashboard');
