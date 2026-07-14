@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import * as React from 'react';
+import nodemailer from 'nodemailer';
 
 // Auth Templates
 import { WelcomeEmail } from '@/components/emails/templates/auth/WelcomeEmail';
@@ -235,4 +236,41 @@ export async function sendAccountDeleted(to: string, name: string) {
     'Your SellSnap account has been deleted',
     React.createElement(AccountDeleted, { name })
   );
+}
+
+// ==========================================
+// SUPPORT SYSTEM (NODEMAILER)
+// ==========================================
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+export async function sendSupportNotification(ticket: { name: string; email: string; subject: string; message: string; id: string }) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+    console.warn('Nodemailer not configured — skipping support notification email');
+    return { success: false, error: 'SMTP not configured' };
+  }
+
+  const supportEmail = process.env.SUPPORT_EMAIL || 'admin@sellsnap.com';
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"SellSnap Support" <${process.env.SMTP_USER}>`,
+      to: supportEmail,
+      subject: `New Support Ticket: ${ticket.subject} [${ticket.id}]`,
+      text: `Name: ${ticket.name}\nEmail: ${ticket.email}\nSubject: ${ticket.subject}\n\nMessage:\n${ticket.message}`,
+      replyTo: ticket.email,
+    });
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Failed to send support notification via nodemailer:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to send email' };
+  }
 }

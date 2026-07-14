@@ -45,6 +45,17 @@ export function DashboardSidebar({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showLogout]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const nameParts = userName.split(' ').filter(Boolean);
   const initials = (nameParts.length >= 2
     ? nameParts[0][0] + nameParts[1][0]

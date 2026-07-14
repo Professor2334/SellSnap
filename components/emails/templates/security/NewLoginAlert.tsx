@@ -34,7 +34,7 @@ export function NewLoginAlert({ name, deviceInfo, location, time }: NewLoginAler
         If this was you, you can safely ignore this email.
       </Text>
       <Text style={paragraph}>
-        If you don't recognize this activity, please log in and change your password immediately to secure your account.
+        If you don&apos;t recognize this activity, please log in and change your password immediately to secure your account.
       </Text>
     </Layout>
   );

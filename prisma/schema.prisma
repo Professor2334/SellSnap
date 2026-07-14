@@ -76,7 +76,7 @@ model Order {
 model Payment {
   id               String    @id @default(cuid())
   orderId          String    @unique
-  gatewayReference String
+  gatewayReference String    @unique
   status           String
   paidAt           DateTime?
   order            Order     @relation(fields: [orderId], references: [id])
@@ -115,4 +115,14 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
 }

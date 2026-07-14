@@ -6,6 +6,7 @@ import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/FormPrimitives';
 import { Button } from '@/components/ui/Button';
 import { updateSettings, disconnectGoogle, signOutAllDevices } from '@/app/actions/settings';
+import { submitSupportTicket } from '@/app/actions/support';
 
 export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogleAccount: boolean }) {
   const router = useRouter();
@@ -441,14 +442,29 @@ function SupportView({ onBack }: { onBack: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   const [supportData, setSupportData] = useState({ name: '', email: '', subject: '', message: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    
+    const formData = new FormData();
+    formData.append('name', supportData.name);
+    formData.append('email', supportData.email);
+    formData.append('subject', supportData.subject);
+    formData.append('message', supportData.message);
+
+    const res = await submitSupportTicket(formData);
+    
+    setIsSubmitting(false);
+    
+    if (res.success) {
       setSubmitted(true);
-      setTimeout(() => { setSubmitted(false); setSupportData({ name: '', email: '', subject: '', message: '' }); }, 3000);
-    }, 1500);
+      setTimeout(() => { 
+        setSubmitted(false); 
+        setSupportData({ name: '', email: '', subject: '', message: '' }); 
+      }, 3000);
+    } else {
+      alert(res.error || 'Failed to submit ticket');
+    }
   };
 
   return (

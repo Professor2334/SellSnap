@@ -26,7 +26,7 @@ export function ForgotPassword({ name, resetUrl }: ForgotPasswordProps) {
         <Link href={resetUrl} style={link}>{resetUrl}</Link>
       </Text>
       <Text style={paragraph}>
-        If you didn't request a password reset, you can safely ignore this email. Your password will not change.
+        If you didn&apos;t request a password reset, you can safely ignore this email. Your password will not change.
       </Text>
     </Layout>
   );

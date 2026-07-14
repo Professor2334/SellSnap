@@ -17,7 +17,7 @@ export function AccountDeleted({ name }: AccountDeletedProps) {
         Your SellSnap account and all associated data have been permanently deleted as requested.
       </Text>
       <Text style={paragraph}>
-        We're sorry to see you go! If you ever want to sell with SellSnap again, you can always create a new account.
+        We&apos;re sorry to see you go! If you ever want to sell with SellSnap again, you can always create a new account.
       </Text>
     </Layout>
   );

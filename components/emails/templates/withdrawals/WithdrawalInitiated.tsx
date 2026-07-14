@@ -29,7 +29,7 @@ export function WithdrawalInitiated({
         Hi {name},
       </Text>
       <Text style={paragraph}>
-        We've started processing your withdrawal for <strong>₦{amount.toLocaleString()}</strong>.
+        We&apos;ve started processing your withdrawal for <strong>₦{amount.toLocaleString()}</strong>.
       </Text>
 
       <div style={detailsBox}>

@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { DeleteProductButton, CopyLinkButton } from './DashboardUtils';
 import { Input } from '@/components/ui/FormPrimitives';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { EmptyState } from './EmptyState';
 
 type Product = {
   id: string;
@@ -263,54 +264,49 @@ export function DashboardView({
 ══════════════════════════════════════════════════════ */
 export function ProductsView({ products }: { products: Product[] }) {
   const [filter, setFilter] = useState<'All Products' | 'Active'>('All Products');
+  const [sort, setSort] = useState<'Newest' | 'Oldest' | 'Price: High to Low' | 'Price: Low to High'>('Newest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [isSortOpen, setIsSortOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
   const filterOptions = [
     { label: 'All Products', value: 'All Products' },
     { label: 'Active', value: 'Active' },
   ];
 
+  const sortOptions = [
+    { label: 'Newest', value: 'Newest' },
+    { label: 'Oldest', value: 'Oldest' },
+    { label: 'Price: High to Low', value: 'Price: High to Low' },
+    { label: 'Price: Low to High', value: 'Price: Low to High' },
+  ];
+
   useEffect(() => {
-    if (!isFilterOpen) {
-      setFocusedIndex(-1);
-      return;
-    }
-    
     function handleClick(e: MouseEvent) {
       if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
         setIsFilterOpen(false);
       }
-    }
-    
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setIsFilterOpen(false);
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setFocusedIndex(prev => (prev < filterOptions.length - 1 ? prev + 1 : prev));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setFocusedIndex(prev => (prev > 0 ? prev - 1 : prev));
-      } else if (e.key === 'Enter' && focusedIndex >= 0) {
-        e.preventDefault();
-        setFilter(filterOptions[focusedIndex].value as any);
-        setIsFilterOpen(false);
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setIsSortOpen(false);
       }
     }
     
     document.addEventListener('mousedown', handleClick);
-    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('mousedown', handleClick);
-      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isFilterOpen, focusedIndex, filterOptions.length]);
+  }, []);
 
   const filteredProducts = products.filter(product => {
     // Placeholder logic for 'Active' since the database lacks the field
     return true; 
+  }).sort((a, b) => {
+    if (sort === 'Newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (sort === 'Oldest') return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    if (sort === 'Price: High to Low') return b.price - a.price;
+    if (sort === 'Price: Low to High') return a.price - b.price;
+    return 0;
   });
 
   return (
@@ -369,8 +365,6 @@ export function ProductsView({ products }: { products: Product[] }) {
             }}>
               {filterOptions.map((option, index) => {
                 const isActive = filter === option.value;
-                const isFocused = focusedIndex === index;
-                
                 return (
                   <button
                     key={option.value}
@@ -391,11 +385,81 @@ export function ProductsView({ products }: { products: Product[] }) {
                       cursor: 'pointer',
                       border: 'none',
                       transition: 'background-color 150ms ease, color 150ms ease',
-                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : isFocused ? 'color-mix(in srgb, var(--color-ink) 4%, transparent)' : 'transparent',
+                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : 'transparent',
                       color: isActive ? 'var(--sys-primary-color-role)' : 'var(--color-ink)',
                     }}
-                    onMouseEnter={() => setFocusedIndex(index)}
-                    onMouseLeave={() => setFocusedIndex(-1)}
+                  >
+                    {option.label}
+                    {isActive && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div style={{ position: 'relative' }} ref={sortRef}>
+          <Button 
+            variant="secondary" 
+            className="dashboard-filter-button"
+            disabled={products.length === 0}
+            onClick={() => setIsSortOpen(!isSortOpen)}
+            style={{ opacity: products.length === 0 ? 0.6 : 1, cursor: products.length === 0 ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}
+          >
+            {sortOptions.find(o => o.value === sort)?.label}
+            <svg 
+              width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transform: isSortOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 150ms ease' }}
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </Button>
+
+          {isSortOpen && (
+            <div className="animate-fade-in-up" style={{
+              position: 'absolute',
+              bottom: '100%',
+              right: 0,
+              marginBottom: '8px',
+              width: '180px',
+              backgroundColor: 'var(--sys-neutral-container-lowest)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '12px',
+              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
+              padding: '8px',
+              zIndex: 50,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              {sortOptions.map((option) => {
+                const isActive = sort === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setSort(option.value as any);
+                      setIsSortOpen(false);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      border: 'none',
+                      transition: 'background-color 150ms ease, color 150ms ease',
+                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : 'transparent',
+                      color: isActive ? 'var(--sys-primary-color-role)' : 'var(--color-ink)',
+                    }}
                   >
                     {option.label}
                     {isActive && (
@@ -413,19 +477,12 @@ export function ProductsView({ products }: { products: Product[] }) {
 
       <div className="card-container" style={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredProducts.length === 0 ? (
-          <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
-            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <div>
-                <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 4 }}>No products yet</h3>
-                <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto', opacity: 0.85 }}>
-                  Create your first product to start selling online.
-                </p>
-              </div>
-              <Link href="/dashboard/products/new" className="btn-full-mobile" style={{ marginTop: 12 }}>
-                <Button size="md" variant="primary" className="btn-full-mobile">Create Product</Button>
-              </Link>
-            </div>
-          </div>
+          <EmptyState 
+            title="No products yet" 
+            description="Create your first product to start selling online." 
+            actionLabel="Create Product" 
+            actionHref="/dashboard/products/new" 
+          />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {filteredProducts.map((product, index) => (
@@ -526,7 +583,7 @@ function ProductOverflowMenu({ product }: any) {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content 
-          side="bottom" 
+          side="top" 
           align="end" 
           sideOffset={4}
           className="animate-fade-in-up"
@@ -712,56 +769,47 @@ export function OrdersView({ orders }: { orders: Order[] }) {
 
       <div className="card-container" style={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden', marginTop: 24 }}>
         {filteredOrders.length === 0 ? (
-          <div style={{ minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
-            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <div>
-                <h3 className="text-h2 font-bold text-ink" style={{ marginBottom: 4 }}>No orders yet</h3>
-                <p className="text-body-sm text-ink-muted" style={{ maxWidth: 300, margin: '0 auto', opacity: 0.85 }}>
-                  Paid orders will automatically appear here.
-                </p>
-              </div>
-            </div>
-          </div>
+          <EmptyState 
+            title="No orders yet" 
+            description="Paid orders will automatically appear here." 
+          />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {filteredOrders.map((order, index) => (
               <div 
                 key={order.id}
+                className="product-row"
                 style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between', 
-                  padding: '16px 24px',
                   borderBottom: index !== filteredOrders.length - 1 ? '1px solid var(--color-border)' : 'none',
-                  gap: 16,
                   transition: 'background-color 150ms ease'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                {/* Left Side */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 8, backgroundColor: 'var(--dk-card-elevated-bg)', border: '1px solid var(--color-border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+                {/* Left Side / Main Info */}
+                <div className="product-row-main">
+                  <div className="product-row-image" style={{ width: 48, height: 48, borderRadius: 8, backgroundColor: 'var(--dk-card-elevated-bg)', border: '1px solid var(--color-border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
                     {order.product.imageUrl ? (
                       <Image src={order.product.imageUrl} alt={order.product.name} fill style={{ objectFit: 'cover' }} sizes="48px" />
                     ) : (
                       <Icon name="Products" size={20} className="text-ink-subtle" />
                     )}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <h3 className="text-body-sm font-bold text-ink">{order.product.name}</h3>
+                  <div className="product-row-info">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                      <h3 className="text-body-sm font-bold text-ink" style={{ wordBreak: 'break-word', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{order.product.name}</h3>
                       <span className="text-caption font-semibold"
                         style={{
                           padding: '2px 8px', borderRadius: 4,
                           textTransform: 'uppercase', letterSpacing: '0.04em', fontSize: '0.6875rem',
                           backgroundColor: order.status === 'PAID' ? 'color-mix(in srgb, var(--color-success) 12%, transparent)' : 'color-mix(in srgb, var(--color-warning) 12%, transparent)',
                           color: order.status === 'PAID' ? 'var(--color-success)' : 'var(--color-warning)',
+                          whiteSpace: 'nowrap'
                         }}>
                         {order.status}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 2 }}>
                       <p className="text-caption font-semibold text-ink">₦{order.amount.toLocaleString()}</p>
                       <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--color-ink-subtle)' }} />
                       <p className="text-caption text-ink-muted">{new Date(order.createdAt).toLocaleDateString()}</p>
@@ -772,71 +820,73 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                         </>
                       )}
                     </div>
+                    {/* Reference ID aligned with text */}
+                    <div style={{ marginTop: 4 }}>
+                      <p className="text-caption font-mono text-ink-subtle" style={{ textTransform: 'uppercase' }}>
+                        #{order.transactionReference.split('_').pop()}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Right Side */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <p className="text-caption font-mono text-ink-subtle" style={{ textTransform: 'uppercase' }}>
-                    #{order.transactionReference.split('_').pop()}
-                  </p>
-                  
-                  <div onClick={(e) => e.stopPropagation()}>
+                  {/* Unified Overflow Menu (Top Right on Mobile) */}
+                  <div className="hide-on-desktop flex-shrink-0" style={{ marginLeft: 8, marginTop: -4 }} onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu.Root modal={false}>
                       <DropdownMenu.Trigger asChild>
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
-                          style={{ padding: '0 8px' }}
-                          aria-label="More actions"
-                        >
-                          <Icon name="More" size={18} />
+                        <Button variant="secondary" size="sm" style={{ padding: '0 8px' }} aria-label="More actions">
+                          <Icon name="MoreVertical" size={18} />
                         </Button>
                       </DropdownMenu.Trigger>
-
                       <DropdownMenu.Portal>
-                        <DropdownMenu.Content 
-                          side="bottom" 
-                          align="end" 
-                          sideOffset={4}
-                          className="animate-fade-in-up"
-                          style={{
-                            width: '210px',
-                            backgroundColor: 'var(--sys-neutral-container-lowest)',
-                            borderRadius: '12px',
-                            boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
-                            border: '1px solid var(--color-border)',
-                            padding: '8px',
-                            zIndex: 100,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '4px'
-                          }}
-                        >
+                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="animate-fade-in-up" style={{ width: '210px', backgroundColor: 'var(--sys-neutral-container-lowest)', borderRadius: '12px', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)', border: '1px solid var(--color-border)', padding: '8px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <DropdownMenu.Item asChild>
-                            <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">
-                              Open Product
-                            </Link>
+                            <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">Open Product</Link>
                           </DropdownMenu.Item>
                           <DropdownMenu.Item asChild>
-                            <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="dropdown-item">
-                              Preview Customer Page
-                            </Link>
+                            <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="dropdown-item">Preview Customer Page</Link>
                           </DropdownMenu.Item>
-                          
                           <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
-                          
                           <DropdownMenu.Item asChild>
-                            <div style={{ cursor: 'pointer' }}>
-                              <DeleteProductButton id={order.product.id} />
-                            </div>
+                            <div style={{ cursor: 'pointer' }}><DeleteProductButton id={order.product.id} /></div>
                           </DropdownMenu.Item>
                         </DropdownMenu.Content>
                       </DropdownMenu.Portal>
                     </DropdownMenu.Root>
                   </div>
                 </div>
+
+                {/* Right Side / Actions */}
+                <div className="hide-on-mobile" onClick={(e) => e.stopPropagation()}>
+                  <div className="product-row-actions">
+                  
+                  {/* Desktop Overflow Menu */}
+                  <div>
+                    <DropdownMenu.Root modal={false}>
+                      <DropdownMenu.Trigger asChild>
+                        <Button variant="secondary" size="sm" style={{ padding: '0 8px' }} aria-label="More actions">
+                          <Icon name="MoreVertical" size={18} />
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="animate-fade-in-up" style={{ width: '210px', backgroundColor: 'var(--sys-neutral-container-lowest)', borderRadius: '12px', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)', border: '1px solid var(--color-border)', padding: '8px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <DropdownMenu.Item asChild>
+                            <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">Open Product</Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item asChild>
+                            <Link href={`/p/${order.product.uniqueSlug}`} target="_blank" className="dropdown-item">Preview Customer Page</Link>
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Separator style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
+                          <DropdownMenu.Item asChild>
+                            <div style={{ cursor: 'pointer' }}><DeleteProductButton id={order.product.id} /></div>
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </div>
+                  </div>
+                </div>
               </div>
+
+
             ))}
           </div>
         )}
