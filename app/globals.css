@@ -3277,6 +3277,14 @@ a {
   padding-top: 4vh;
 }
 
+@media (max-width: 767px) {
+  .reset-password-mobile-layout {
+    padding-top: 0;
+    margin: auto 0;
+    justify-content: center;
+  }
+}
+
 /* Google Button overrides */
 .google-auth-btn-refined {
   height: 56px !important;

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/FormPrimitives';
 import { forgotPassword } from '@/app/actions/auth';
+import { Icon } from '@/components/ui/Icon';
 import Link from 'next/link';
 
 export default function ForgotPasswordPage() {
@@ -71,7 +72,16 @@ export default function ForgotPasswordPage() {
         <div className="auth-floating-shape auth-shape-3"></div>
       </div>
       
-      <div className="auth-form-container">
+      {/* Mobile Back Button */}
+      <div className="hide-on-desktop" style={{ position: 'absolute', top: 'max(env(safe-area-inset-top), 24px)', left: '20px', zIndex: 10 }}>
+        <Link href="/auth?mode=login" style={{ textDecoration: 'none' }}>
+          <Button variant="secondary" style={{ width: '44px', height: '44px', padding: 0, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} aria-label="Go back">
+            <Icon name="ChevronLeft" size={24} />
+          </Button>
+        </Link>
+      </div>
+
+      <div className="auth-form-container reset-password-mobile-layout">
         <div className="auth-header-refined auth-stagger-1">
           <Link href="/" className="auth-brand-name-refined" style={{ textDecoration: 'none' }}>SellSnap</Link>
           <h1 className="auth-form-title-refined">Reset your password</h1>

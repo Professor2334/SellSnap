@@ -2,9 +2,11 @@ import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import { NextResponse } from 'next/server';
 
+import type { NextRequest } from 'next/server';
+
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+const authMiddleware = auth((req) => {
   const token = req.auth;
   const isOnboarded = (token?.user as any)?.isOnboarded as boolean | undefined;
   
@@ -46,6 +48,16 @@ export default auth((req) => {
 
   return NextResponse.next();
 });
+
+export default async function middleware(req: NextRequest) {
+  // WORKAROUND for Next.js body locking bug: 
+  // Bypass NextAuth middleware for Server Actions since they verify their own auth using getSession().
+  if (req.method === 'POST' && req.headers.has('next-action')) {
+    return NextResponse.next();
+  }
+
+  return authMiddleware(req as any, null as any);
+}
 
 export const config = {
   // Include '/' so authenticated users are never shown the marketing page
