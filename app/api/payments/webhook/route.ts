@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 6. Notify seller
-  sendSellerPaymentReceived(
+  await sendSellerPaymentReceived(
     order.product.user.email,
     order.product.user.name,
     order.product.name,

@@ -68,7 +68,7 @@ a {
   font-size: clamp(1.375rem, 4vw, 2.25rem); /* 22px to 36px */
   line-height: normal;
   letter-spacing: var(--sys-font-headline-medium-letter-spacing);
-  color: var(--primitive-neutral20);
+  color: var(--color-ink);
 }
 
 .text-h1 {
@@ -806,7 +806,7 @@ a {
 }
 
 .sidebar-link:hover {
-  background-color: var(--primitive-neutral98);
+  background-color: var(--sys-neutral-container-low);
   color: var(--color-ink);
 }
 
@@ -1053,6 +1053,10 @@ a {
   outline: none;
 }
 
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -1179,7 +1183,7 @@ a {
 }
 
 .input-field:hover {
-  background-color: var(--primitive-neutral99);
+  background-color: var(--sys-neutral-container-low);
 }
 
 .input-field:focus {
@@ -1191,7 +1195,7 @@ a {
 .input-field:-webkit-autofill,
 .input-field:-webkit-autofill:hover,
 .input-field:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px var(--color-bg) inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg) inset !important;
   background-color: var(--color-bg) !important;
 }
 
@@ -1296,7 +1300,7 @@ a {
   width: 420px;
   height: 420px;
   border-radius: 50%;
-  background: var(--primitive-primary90);
+  background: color-mix(in srgb, var(--color-brand) 15%, transparent);
   opacity: 0.4;
   pointer-events: none;
 }
@@ -1309,7 +1313,7 @@ a {
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: var(--primitive-primary95);
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -3485,11 +3489,11 @@ a {
   gap: 16px;
   flex-wrap: wrap;
   padding: 24px 20px;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   border-radius: 12px;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .product-row:hover {
@@ -3502,7 +3506,7 @@ a {
   height: 64px;
   border-radius: 16px;
   border: 1px solid var(--color-border);
-  background-color: var(--primitive-neutral95);
+  background-color: var(--sys-neutral-container-low);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3571,12 +3575,12 @@ a {
 }
 
 .dropdown-item:hover:not(:disabled) {
-  background-color: var(--primitive-neutral98);
+  background-color: var(--sys-neutral-container-low);
   color: var(--color-ink);
 }
 
 .dropdown-item:focus-visible {
-  background-color: var(--primitive-neutral98);
+  background-color: var(--sys-neutral-container-low);
   box-shadow: 0 0 0 2px var(--color-brand);
 }
 
@@ -3672,8 +3676,8 @@ a {
 [data-theme="dark"] .input-field:-webkit-autofill,
 [data-theme="dark"] .input-field:-webkit-autofill:hover,
 [data-theme="dark"] .input-field:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px var(--dk-input-bg) inset;
-  -webkit-text-fill-color: var(--color-ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--dk-input-bg) inset !important;
+  -webkit-text-fill-color: var(--color-ink) !important;
   background-color: var(--dk-input-bg) !important;
 }
 

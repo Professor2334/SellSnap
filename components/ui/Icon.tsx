@@ -34,5 +34,16 @@ interface IconProps extends React.ComponentPropsWithoutRef<'svg'> {
 export function Icon({ name, size = 20, className, ...props }: IconProps) {
   const LucideIcon = Icons[name];
   if (!LucideIcon) return null;
-  return <LucideIcon size={size} className={className} {...props} />;
+  
+  // Hide decorative icons from screen readers unless explicitly labelled
+  const isDecorative = !props['aria-label'] && !props['aria-labelledby'];
+  
+  return (
+    <LucideIcon 
+      size={size} 
+      className={className} 
+      aria-hidden={isDecorative ? "true" : undefined}
+      {...props} 
+    />
+  );
 }

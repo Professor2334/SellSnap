@@ -1,6 +1,7 @@
 'use server';
 
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { uploadImage } from '@/lib/cloudinary';
@@ -12,7 +13,7 @@ const businessSchema = z.object({
 
 const productSchema = z.object({
   name: z.string().min(2, 'Product name is too short'),
-  price: z.coerce.number().min(0, 'Price must be positive'),
+  price: z.preprocess((val) => Number(String(val).replace(/,/g, '')), z.number().min(0, 'Price must be positive')),
   description: z.string().optional(),
 });
 
@@ -57,6 +58,9 @@ export async function createFirstProduct(formData: FormData) {
     let imageUrl: string | null = null;
     if (imageFile && imageFile.size > 0 && imageFile.type.startsWith('image/')) {
       imageUrl = await uploadImage(imageFile);
+      if (!imageUrl) {
+        return { success: false, error: 'Failed to upload image. Please check your network connection.' };
+      }
     }
 
     const slug = `${parsed.data.name.toLowerCase().replace(/ /g, '-')}-${Math.random().toString(36).substring(2, 7)}`;
@@ -82,7 +86,12 @@ export async function createFirstProduct(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error('onboarding.product.failed', error);
-    return { success: false, error: 'Failed to create product' };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return { success: false, error: 'A product with this name already exists.' };
+      }
+    }
+    return { success: false, error: 'Failed to create product. Please try again later.' };
   }
 }
 

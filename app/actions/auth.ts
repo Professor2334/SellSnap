@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { sendPasswordResetEmail } from '@/lib/email';
+import { rateLimit } from '@/lib/rate-limit';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name is too short'),
@@ -24,6 +25,12 @@ export async function signUp(formData: FormData) {
 
     const { password, name, businessName } = parsed.data;
     const email = parsed.data.email.toLowerCase();
+
+    // Rate limit signup by email
+    const rl = await rateLimit(`signup_${email}`, 3, 3600000); // 3 signups per hour per email
+    if (!rl.success) {
+      return { success: false, error: 'Too many signup attempts. Please try again later.' };
+    }
 
     const existingUser = await db.user.findUnique({
       where: { email },
@@ -55,12 +62,19 @@ export async function forgotPassword(formData: FormData) {
   try {
     const rawData = Object.fromEntries(formData);
     const { email } = rawData as { email: string };
+    const normalizedEmail = email?.toLowerCase();
+
+    // Rate limit forgot password by email
+    const rl = await rateLimit(`forgot_${normalizedEmail}`, 3, 3600000); // 3 attempts per hour
+    if (!rl.success) {
+      return { success: false, error: 'Too many requests. Please try again later.' };
+    }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return { success: false, error: 'Enter a valid email address' };
     }
 
-    const user = await db.user.findUnique({ where: { email } });
+    const user = await db.user.findUnique({ where: { email: normalizedEmail } });
     if (!user) {
       return { success: false, error: 'No account found with that email' };
     }
@@ -69,12 +83,12 @@ export async function forgotPassword(formData: FormData) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
     await db.passwordResetToken.create({
-      data: { email, token, expiresAt },
+      data: { email: normalizedEmail, token, expiresAt },
     });
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const resetLink = `${appUrl}/auth/reset-password?token=${token}`;
-    await sendPasswordResetEmail(email, user.name, resetLink);
+    await sendPasswordResetEmail(normalizedEmail, user.name, resetLink);
 
     return { success: true };
   } catch (error) {
@@ -98,6 +112,12 @@ export async function resetPassword(formData: FormData) {
     }
 
     const { token, password } = parsed.data;
+
+    // Rate limit reset attempts by token
+    const rl = await rateLimit(`reset_${token}`, 5, 3600000); // 5 attempts per hour
+    if (!rl.success) {
+      return { success: false, error: 'Too many attempts. Please try again later.' };
+    }
 
     const resetToken = await db.passwordResetToken.findUnique({ where: { token } });
     if (!resetToken) {

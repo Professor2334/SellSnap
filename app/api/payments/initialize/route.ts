@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { createPaymentLink } from '@/lib/flutterwave';
 import { randomBytes } from 'crypto';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,13 +13,20 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/', req.url));
     }
 
+    // Rate limit checkout attempts by IP to prevent card testing
+    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const rl = await rateLimit(`checkout_${ip}`, 10, 60000); // 10 checkouts per minute per IP
+    if (!rl.success) {
+      return NextResponse.redirect(new URL(`/p/${slug}?error=rate_limit`, req.url));
+    }
+
     const product = await db.product.findUnique({
       where: { uniqueSlug: slug },
       include: { user: true },
     });
 
     if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.redirect(new URL(`/p/${slug}?error=product_not_found`, req.url));
     }
 
     const tx_ref = `sellsnap_order_${randomBytes(6).toString('hex')}`;
@@ -51,6 +59,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(paymentLink);
   } catch (error) {
     console.error('payment.init.failed', { error });
-    return NextResponse.json({ error: 'Failed to initialize payment' }, { status: 500 });
+    // Safe fallback URL - attempt to extract slug if available
+    let fallbackUrl = '/';
+    try {
+      const { searchParams } = new URL(req.url);
+      const slug = searchParams.get('slug');
+      if (slug) fallbackUrl = `/p/${slug}?error=payment_init_failed`;
+    } catch (e) {
+      // Ignore
+    }
+    return NextResponse.redirect(new URL(fallbackUrl, req.url));
   }
 }

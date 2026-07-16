@@ -254,7 +254,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                 </h2>
                 <div style={{ lineHeight: '1.5', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '480px', margin: '0 auto' }}>
                   <p style={{ color: 'var(--sys-on-neutral-color-role)', fontSize: '1rem', fontWeight: '500' }}>
-                    Let's get your store ready in under a minute.
+                    Let&apos;s get your store ready in under a minute.
                   </p>
                 </div>
               </div>
@@ -447,10 +447,20 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                     id="price"
                     name="price"
                     label="Price (NGN)"
-                    type="number"
-                    placeholder="e.g. 5000"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="e.g. 5,000"
                     value={productPrice}
-                    onChange={(e) => { setProductPrice(e.target.value); setFieldErrors(prev => ({ ...prev, price: undefined })); }}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/[^0-9]/g, '');
+                      if (!rawValue) {
+                        setProductPrice('');
+                      } else {
+                        const numValue = parseInt(rawValue, 10);
+                        setProductPrice(numValue.toLocaleString('en-US'));
+                      }
+                      setFieldErrors(prev => ({ ...prev, price: undefined }));
+                    }}
                     onBlur={(e) => { if (!e.currentTarget.value.trim()) setFieldErrors(prev => ({ ...prev, price: 'Field cannot be empty' })); }}
                     className="premium-input"
                     error={fieldErrors.price}
@@ -473,7 +483,10 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                       }} />
                       <label htmlFor="product-image" className="flex flex-col items-center w-full h-full justify-center" style={{ cursor: 'pointer', width: '100%', height: '100%' }}>
                         {imagePreview ? (
-                          <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '240px', borderRadius: '12px' }} />
+                          </>
                         ) : (
                           <>
                             <Upload size={24} className="mb-2" style={{ color: 'var(--sys-on-neutral-variant-role)' }} />
@@ -542,7 +555,7 @@ export default function OnboardingClient({ userName, businessName: initialBusine
                       }}
                     >
                       {skipLoading && <Loader2 className="spinner" size={14} />}
-                      I'll do this later
+                      I&apos;ll do this later
                     </button>
                   </div>
                 </div>

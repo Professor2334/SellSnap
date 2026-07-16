@@ -10,8 +10,12 @@ import Link from 'next/link';
 
 export default function NewProductPage() {
   const [error, setError] = React.useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = React.useState<{ name?: string; price?: string; image?: string }>({});
   const [loading, setLoading] = React.useState(false);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const priceRef = React.useRef<HTMLInputElement>(null);
   
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -34,16 +38,28 @@ export default function NewProductPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setFieldErrors({});
 
     const name = productName.trim();
-    const price = productPrice.trim();
+    const priceStr = String(productPrice).replace(/,/g, '');
+    const priceNum = Number(priceStr);
+
+    let hasError = false;
+    const errors: { name?: string; price?: string; image?: string } = {};
 
     if (!name) {
-      setError('Product name is required');
-      return;
+      errors.name = 'Product name is required.';
+      hasError = true;
     }
-    if (!price || Number(price) < 1) {
-      setError('Price must be at least 1');
+    if (!priceStr || priceNum < 1) {
+      errors.price = 'Price must be at least ₦1.';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setFieldErrors(errors);
+      if (errors.name) nameRef.current?.focus();
+      else if (errors.price) priceRef.current?.focus();
       return;
     }
 
@@ -51,16 +67,32 @@ export default function NewProductPage() {
 
     try {
       const formData = new FormData(e.currentTarget);
+
+      const imageFile = formData.get('image') as File | null;
+      if (imageFile && imageFile.size > 0) {
+        if (imageFile.size > 5 * 1024 * 1024) {
+          setFieldErrors({ image: 'Image size must be less than 5MB.' });
+          setLoading(false);
+          return;
+        }
+        if (!imageFile.type.startsWith('image/')) {
+          setFieldErrors({ image: 'Please upload a valid image file.' });
+          setLoading(false);
+          return;
+        }
+      }
+
       const result = await createProduct(formData);
 
       if (result.success) {
         router.push('/dashboard?tab=products');
+        router.refresh();
       } else {
-        setError(result.error || 'Something went wrong');
+        setError(result.error || 'Failed to save changes. Please try again.');
       }
     } catch (err) {
       console.error('create product error', err);
-      setError('An unexpected error occurred');
+      setError('A network error occurred. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -75,7 +107,7 @@ export default function NewProductPage() {
         <div 
           className="editor-page-header"
           style={{ 
-            backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'var(--color-bg)',
+            backgroundColor: isScrolled ? 'color-mix(in srgb, var(--color-bg) 85%, transparent)' : 'var(--color-bg)',
             backdropFilter: isScrolled ? 'blur(12px)' : 'none',
             WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
             borderBottom: 'none',
@@ -122,15 +154,17 @@ export default function NewProductPage() {
                 <div>
                   <label htmlFor="name" className="input-label block font-medium text-ink-muted" style={{ display: 'block', marginBottom: '16px', opacity: 0.8 }}>Product Name</label>
                   <input
+                    ref={nameRef}
                     id="name"
                     name="name"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     placeholder="e.g. Handmade Earrings"
                     required
-                    className="input-field w-full dashboard-input-soft"
-                    style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    className={`input-field w-full dashboard-input-soft ${fieldErrors.name ? 'border-danger' : ''}`}
+                    style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', borderColor: fieldErrors.name ? 'var(--color-danger)' : undefined }}
                   />
+                  {fieldErrors.name && <p className="text-body-sm mt-1 text-danger" style={{ color: 'var(--color-danger)' }}>{fieldErrors.name}</p>}
                 </div>
 
                 <div>
@@ -142,7 +176,7 @@ export default function NewProductPage() {
                     onChange={(e) => setProductDescription(e.target.value)}
                     placeholder="Include size, material, colour, condition or anything customers should know."
                     className="input-field w-full dashboard-input-soft"
-                    style={{ height: '110px', borderRadius: '12px', fontSize: '0.9375rem', padding: '16px', resize: 'none', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                    style={{ height: '110px', borderRadius: '12px', fontSize: '0.9375rem', padding: '16px', resize: 'none' }}
                   />
                 </div>
               </div>
@@ -156,17 +190,28 @@ export default function NewProductPage() {
                   <div style={{ position: 'relative' }}>
                     <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} className="text-ink-muted font-medium">₦</span>
                     <input
+                      ref={priceRef}
                       id="price"
                       name="price"
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={productPrice}
-                      onChange={(e) => setProductPrice(e.target.value)}
-                      placeholder="0.00"
+                      onChange={(e) => {
+                        const rawValue = e.target.value.replace(/[^0-9]/g, '');
+                        if (!rawValue) {
+                          setProductPrice('');
+                        } else {
+                          const numValue = parseInt(rawValue, 10);
+                          setProductPrice(numValue.toLocaleString('en-US'));
+                        }
+                      }}
+                      placeholder="0"
                       required
-                      className="input-field w-full dashboard-input-soft"
-                      style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', paddingLeft: '32px', backgroundColor: 'var(--sys-neutral-container-lowest)' }}
+                      className={`input-field w-full dashboard-input-soft ${fieldErrors.price ? 'border-danger' : ''}`}
+                      style={{ height: '48px', borderRadius: '12px', fontSize: '0.9375rem', paddingLeft: '32px', borderColor: fieldErrors.price ? 'var(--color-danger)' : undefined }}
                     />
                   </div>
+                  {fieldErrors.price && <p className="text-body-sm mt-1 text-danger" style={{ color: 'var(--color-danger)' }}>{fieldErrors.price}</p>}
                 </div>
               </div>
 
@@ -195,7 +240,10 @@ export default function NewProductPage() {
                     <label htmlFor="product-image" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', width: '100%', height: '100%', padding: '40px 24px' }}>
                       {imagePreview ? (
                         <div style={{ position: 'relative', width: '100%' }}>
-                          <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '400px', borderRadius: '12px' }} />
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={imagePreview} alt="Preview" className="w-full object-cover" style={{ maxHeight: '400px', borderRadius: '12px' }} />
+                          </>
                           <div style={{ 
                             position: 'absolute', top: '16px', right: '16px', 
                             backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(4px)',
@@ -223,6 +271,7 @@ export default function NewProductPage() {
                       )}
                     </label>
                   </div>
+                  {fieldErrors.image && <p className="text-body-sm mt-2 text-danger" style={{ color: 'var(--color-danger)' }}>{fieldErrors.image}</p>}
                 </div>
               </div>
               
@@ -256,7 +305,10 @@ export default function NewProductPage() {
                   {/* Image Area */}
                   <div className="w-full flex items-center justify-center" style={{ aspectRatio: '1/1', borderBottom: '1px solid color-mix(in srgb, var(--color-ink) 8%, transparent)', backgroundColor: 'var(--color-surface)', position: 'relative' }}>
                     {imagePreview ? (
-                       <img src={imagePreview} alt="Live Preview" className="w-full h-full object-cover" />
+                       <>
+                         {/* eslint-disable-next-line @next/next/no-img-element */}
+                         <img src={imagePreview} alt="Live Preview" className="w-full h-full object-cover" />
+                       </>
                     ) : (
                        <ImageIcon size={48} className="text-ink-subtle" style={{ opacity: 0.3 }} />
                     )}

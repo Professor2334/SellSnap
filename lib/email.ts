@@ -11,43 +11,62 @@ import { PasswordResetSuccess } from '@/components/emails/templates/auth/Passwor
 
 // Payment Templates
 import { SellerPaymentReceived } from '@/components/emails/templates/payments/SellerPaymentReceived';
-import { CustomerPaymentReceipt } from '@/components/emails/templates/payments/CustomerPaymentReceipt';
+// import { CustomerPaymentReceipt } from '@/components/emails/templates/payments/CustomerPaymentReceipt';
 
 // Withdrawal Templates
-import { WithdrawalInitiated } from '@/components/emails/templates/withdrawals/WithdrawalInitiated';
-import { WithdrawalSuccess } from '@/components/emails/templates/withdrawals/WithdrawalSuccess';
-import { WithdrawalFailed } from '@/components/emails/templates/withdrawals/WithdrawalFailed';
+// import { WithdrawalInitiated } from '@/components/emails/templates/withdrawals/WithdrawalInitiated';
+// import { WithdrawalSuccess } from '@/components/emails/templates/withdrawals/WithdrawalSuccess';
+// import { WithdrawalFailed } from '@/components/emails/templates/withdrawals/WithdrawalFailed';
 
 // Security Templates
-import { NewLoginAlert } from '@/components/emails/templates/security/NewLoginAlert';
-import { EmailChanged } from '@/components/emails/templates/security/EmailChanged';
-import { AccountDeleted } from '@/components/emails/templates/security/AccountDeleted';
+// import { NewLoginAlert } from '@/components/emails/templates/security/NewLoginAlert';
+// import { EmailChanged } from '@/components/emails/templates/security/EmailChanged';
+// import { AccountDeleted } from '@/components/emails/templates/security/AccountDeleted';
+
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const fromEmail = process.env.EMAIL_FROM || 'noreply@sellsnap.com';
 
-async function sendEmail(to: string, subject: string, element: React.ReactElement) {
-  if (!resend) {
-    console.warn(`Resend not configured — skipping email send [${subject}] to [${to}]`);
-    return { success: false, error: 'Resend API Key not configured' };
-  }
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
+async function sendEmail(to: string, subject: string, element: React.ReactElement) {
   try {
     const html = await render(element);
     
-    const { data, error } = await resend.emails.send({
-      from: fromEmail,
-      to,
-      subject,
-      html,
-    });
+    if (resend) {
+      const { data, error } = await resend.emails.send({
+        from: fromEmail,
+        to,
+        subject,
+        html,
+      });
 
-    if (error) {
-      console.error('Failed to send email:', error);
-      return { success: false, error: error.message };
+      if (error) {
+        console.error('Failed to send email:', error);
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, data };
+    } else if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+      const info = await transporter.sendMail({
+        from: `"SellSnap" <${process.env.SMTP_USER}>`,
+        to,
+        subject,
+        html,
+      });
+      return { success: true, data: info.messageId };
+    } else {
+      console.warn(`No email provider configured — skipping email send [${subject}] to [${to}]`);
+      return { success: false, error: 'No email provider configured' };
     }
-
-    return { success: true, data };
   } catch (error) {
     console.error('Error rendering or sending email:', error);
     return { success: false, error: 'Internal server error during email dispatch' };
@@ -115,142 +134,134 @@ export async function sendSellerPaymentReceived(
   );
 }
 
-export async function sendCustomerPaymentReceipt(
-  to: string,
-  productName: string,
-  amount: number,
-  sellerBusinessName: string,
-  transactionReference: string
-) {
-  return sendEmail(
-    to,
-    `Receipt for your purchase of ${productName}`,
-    React.createElement(CustomerPaymentReceipt, {
-      productName,
-      amount,
-      sellerBusinessName,
-      transactionReference,
-    })
-  );
-}
+// export async function sendCustomerPaymentReceipt(
+//   to: string,
+//   productName: string,
+//   amount: number,
+//   sellerBusinessName: string,
+//   transactionReference: string
+// ) {
+//   return sendEmail(
+//     to,
+//     `Receipt for your purchase of ${productName}`,
+//     React.createElement(CustomerPaymentReceipt, {
+//       productName,
+//       amount,
+//       sellerBusinessName,
+//       transactionReference,
+//     })
+//   );
+// }
 
 // ==========================================
 // WITHDRAWAL EMAILS
 // ==========================================
 
-export async function sendWithdrawalInitiated(
-  to: string,
-  name: string,
-  amount: number,
-  bankName: string,
-  accountNumber: string,
-  expectedDate: string
-) {
-  return sendEmail(
-    to,
-    `Your withdrawal of ₦${amount.toLocaleString()} has been initiated`,
-    React.createElement(WithdrawalInitiated, {
-      name,
-      amount,
-      bankName,
-      accountNumber,
-      expectedDate,
-    })
-  );
-}
+// export async function sendWithdrawalInitiated(
+//   to: string,
+//   name: string,
+//   amount: number,
+//   bankName: string,
+//   accountNumber: string,
+//   expectedDate: string
+// ) {
+//   return sendEmail(
+//     to,
+//     `Your withdrawal of ₦${amount.toLocaleString()} has been initiated`,
+//     React.createElement(WithdrawalInitiated, {
+//       name,
+//       amount,
+//       bankName,
+//       accountNumber,
+//       expectedDate,
+//     })
+//   );
+// }
 
-export async function sendWithdrawalSuccess(
-  to: string,
-  name: string,
-  amount: number,
-  bankName: string,
-  accountNumber: string
-) {
-  return sendEmail(
-    to,
-    `Your withdrawal of ₦${amount.toLocaleString()} was successful`,
-    React.createElement(WithdrawalSuccess, {
-      name,
-      amount,
-      bankName,
-      accountNumber,
-    })
-  );
-}
+// export async function sendWithdrawalSuccess(
+//   to: string,
+//   name: string,
+//   amount: number,
+//   bankName: string,
+//   accountNumber: string
+// ) {
+//   return sendEmail(
+//     to,
+//     `Your withdrawal of ₦${amount.toLocaleString()} was successful`,
+//     React.createElement(WithdrawalSuccess, {
+//       name,
+//       amount,
+//       bankName,
+//       accountNumber,
+//     })
+//   );
+// }
 
-export async function sendWithdrawalFailed(
-  to: string,
-  name: string,
-  amount: number,
-  bankName: string,
-  accountNumber: string,
-  reason: string
-) {
-  return sendEmail(
-    to,
-    `Your withdrawal of ₦${amount.toLocaleString()} failed`,
-    React.createElement(WithdrawalFailed, {
-      name,
-      amount,
-      bankName,
-      accountNumber,
-      reason,
-    })
-  );
-}
+// export async function sendWithdrawalFailed(
+//   to: string,
+//   name: string,
+//   amount: number,
+//   bankName: string,
+//   accountNumber: string,
+//   reason: string
+// ) {
+//   return sendEmail(
+//     to,
+//     `Your withdrawal of ₦${amount.toLocaleString()} failed`,
+//     React.createElement(WithdrawalFailed, {
+//       name,
+//       amount,
+//       bankName,
+//       accountNumber,
+//       reason,
+//     })
+//   );
+// }
 
 // ==========================================
 // SECURITY EMAILS
 // ==========================================
 
-export async function sendNewLoginAlert(
-  to: string,
-  name: string,
-  deviceInfo: string,
-  location: string,
-  time: string
-) {
-  return sendEmail(
-    to,
-    'New login to your SellSnap account',
-    React.createElement(NewLoginAlert, {
-      name,
-      deviceInfo,
-      location,
-      time,
-    })
-  );
-}
+// export async function sendNewLoginAlert(
+//   to: string,
+//   name: string,
+//   deviceInfo: string,
+//   location: string,
+//   time: string
+// ) {
+//   return sendEmail(
+//     to,
+//     'New login to your SellSnap account',
+//     React.createElement(NewLoginAlert, {
+//       name,
+//       deviceInfo,
+//       location,
+//       time,
+//     })
+//   );
+// }
 
-export async function sendEmailChanged(to: string, name: string, newEmail: string) {
-  return sendEmail(
-    to,
-    'Your SellSnap email was updated',
-    React.createElement(EmailChanged, { name, newEmail })
-  );
-}
+// export async function sendEmailChanged(to: string, name: string, newEmail: string) {
+//   return sendEmail(
+//     to,
+//     'Your SellSnap email was updated',
+//     React.createElement(EmailChanged, { name, newEmail })
+//   );
+// }
 
-export async function sendAccountDeleted(to: string, name: string) {
-  return sendEmail(
-    to,
-    'Your SellSnap account has been deleted',
-    React.createElement(AccountDeleted, { name })
-  );
-}
+// export async function sendAccountDeleted(to: string, name: string) {
+//   return sendEmail(
+//     to,
+//     'Your SellSnap account has been deleted',
+//     React.createElement(AccountDeleted, { name })
+//   );
+// }
 
 // ==========================================
 // SUPPORT SYSTEM (NODEMAILER)
 // ==========================================
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: process.env.SMTP_PORT === '465',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Transporter is now defined at the top of the file
 
 export async function sendSupportNotification(ticket: { name: string; email: string; subject: string; message: string; id: string }) {
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {

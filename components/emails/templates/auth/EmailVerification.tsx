@@ -16,13 +16,13 @@ export function EmailVerification({ name, verifyUrl }: EmailVerificationProps) {
         Hi {name},
       </Text>
       <Text style={paragraph}>
-        Please verify your email address so we know it's really you. This helps us keep your account secure.
+        Please verify your email address so we know it&apos;s really you. This helps us keep your account secure.
       </Text>
       <EmailButton href={verifyUrl}>
         Verify Email Address
       </EmailButton>
       <Text style={paragraph}>
-        If you didn't create an account with SellSnap, you can safely ignore this email.
+        If you didn&apos;t create an account with SellSnap, you can safely ignore this email.
       </Text>
     </Layout>
   );

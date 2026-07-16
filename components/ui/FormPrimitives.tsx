@@ -24,12 +24,16 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
  * Standard Input component with label and error state support.
  */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, id, labelRight, ...props }, ref) => {
+  ({ label, error, className, id, labelRight, 'aria-describedby': ariaDescribedBy, ...props }, ref) => {
+    const defaultId = React.useId();
+    const inputId = id || defaultId;
+    const errorId = `${inputId}-error`;
+
     return (
       <div className="input-group">
         {label && (
           <div className="input-label-row">
-            <label htmlFor={id} className="input-label">
+            <label htmlFor={inputId} className="input-label">
               {label}
             </label>
             {labelRight && <div className="input-label-right">{labelRight}</div>}
@@ -38,19 +42,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         
         <div className="relative">
           <input
-            id={id}
+            id={inputId}
             ref={ref}
             className={clsx(
               'input-field w-full',
               error && 'input-error',
               className
             )}
+            aria-invalid={!!error}
+            aria-describedby={clsx(error && errorId, ariaDescribedBy)}
             {...props}
           />
         </div>
 
         {error && (
-          <p className="input-error-text">
+          <p id={errorId} className="input-error-text" aria-live="polite">
             {error}
           </p>
         )}

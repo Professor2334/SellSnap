@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (paymentCreated) {
-      sendSellerPaymentReceived(
+      await sendSellerPaymentReceived(
         order.product.user.email,
         order.product.user.name,
         order.product.name,

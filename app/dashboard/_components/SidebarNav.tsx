@@ -56,6 +56,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
               href={item.href}
               onClick={onNavigate}
               className={`sidebar-link ${isActive ? 'active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
             >
               <Icon name={item.icon} size={18} />
               <span>{item.label}</span>

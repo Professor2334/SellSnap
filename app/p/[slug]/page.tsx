@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 import { PayNowButton } from './PayNowButton';
 import { ShieldCheck, Zap, Lock } from 'lucide-react';
 
+export const revalidate = 60; // Cache the page for 60 seconds (ISR)
+
 export async function generateMetadata(
   { params }: { params: { slug: string } }
 ): Promise<Metadata> {
@@ -26,7 +28,7 @@ export async function generateMetadata(
   };
 }
 
-export default async function ProductPublicPage({ params }: { params: { slug: string } }) {
+export default async function ProductPublicPage({ params, searchParams }: { params: { slug: string }, searchParams?: { [key: string]: string | string[] | undefined } }) {
   const product = await db.product.findUnique({
     where: { uniqueSlug: params.slug },
     include: { user: true },
@@ -38,6 +40,13 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
 
   const businessName = product.user.businessName || product.user.name;
   const formattedPrice = `₦${product.price.toLocaleString()}`;
+
+  let errorMessage = null;
+  if (searchParams?.error === 'payment_init_failed') {
+    errorMessage = 'Failed to initialize payment. Please check your internet connection and try again.';
+  } else if (searchParams?.error === 'product_not_found') {
+    errorMessage = 'This product is no longer available.';
+  }
 
   return (
     <>
@@ -236,6 +245,7 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
                     alt={`${product.name} thumbnail`}
                     fill
                     sizes="72px"
+                    loading="lazy"
                     style={{ objectFit: 'cover' }}
                   />
                 </div>
@@ -256,6 +266,16 @@ export default async function ProductPublicPage({ params }: { params: { slug: st
             )}
 
             <div className="product-cta-container">
+              {errorMessage && (
+                <div style={{ padding: '12px', backgroundColor: 'var(--sys-error-container-role)', color: 'var(--sys-error-color-role)', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  {errorMessage}
+                </div>
+              )}
               <PayNowButton slug={product.uniqueSlug} />
               
               <div className="trust-features">

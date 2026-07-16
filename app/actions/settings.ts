@@ -1,5 +1,6 @@
 'use server';
 
+import { Prisma } from '@prisma/client';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
@@ -46,6 +47,11 @@ export async function updateSettings(data: any) {
     return { success: true, data: user };
   } catch (error) {
     console.error('Error updating settings:', error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return { success: false, error: 'That email address is already in use.' };
+      }
+    }
     return { success: false, error: 'Failed to update settings.' };
   }
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/FormPrimitives';
 import { Button } from '@/components/ui/Button';
-import { updateSettings, disconnectGoogle, signOutAllDevices } from '@/app/actions/settings';
+import { updateSettings, signOutAllDevices } from '@/app/actions/settings';
 import { submitSupportTicket } from '@/app/actions/support';
 
 export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogleAccount: boolean }) {
@@ -81,7 +81,7 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
-          <div className={`px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 ${toast.type === 'success' ? 'bg-success text-white' : 'bg-danger text-white'}`}>
+          <div className="px-4 py-3 rounded-lg shadow-lg flex items-center gap-3" style={{ backgroundColor: toast.type === 'success' ? 'var(--color-success)' : 'var(--color-danger)', color: toast.type === 'success' ? 'var(--sys-on-success-role)' : 'var(--sys-on-error-color-role)' }}>
             {toast.type === 'success' ? <Icon name="Success" size={20} /> : <Icon name="Security" size={20} />}
             <span className="text-sm font-medium">{toast.message}</span>
           </div>
@@ -298,19 +298,14 @@ export function SettingsClient({ user, hasGoogleAccount }: { user: any; hasGoogl
             </div>
             
             <div className="flex flex-col gap-6">
-              <h3 className="text-sm font-bold text-ink">Change Password</h3>
+              <h3 className="text-sm font-bold text-ink">
+                {hasGoogleAccount ? 'Authentication Method' : 'Change Password'}
+              </h3>
               
               {hasGoogleAccount ? (
-                <div className="p-4 bg-primary-container rounded-lg">
-                  <p className="text-sm text-ink-subtle mb-3">You sign in using your Google account.</p>
-                  <Button variant="danger" size="sm" onClick={async () => {
-                    const res = await disconnectGoogle();
-                    if (res.success) {
-                      setToast({ message: 'Google account disconnected.', type: 'success' });
-                      setTimeout(() => setToast(null), 3000);
-                      router.refresh();
-                    }
-                  }}>Disconnect Google</Button>
+                <div className="flex flex-col gap-1">
+                  <p className="text-body font-medium text-ink">Google Account</p>
+                  <p className="text-body-sm text-ink-subtle">Your account is secured using your Google account.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
@@ -493,7 +488,7 @@ function SupportView({ onBack }: { onBack: () => void }) {
                 <Icon name="Success" size={24} className="text-success" />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '8px' }}>Message Sent!</h3>
-              <p style={{ fontSize: '0.9375rem', color: 'var(--color-ink-subtle)' }}>We've received your request and will get back to you shortly.</p>
+              <p style={{ fontSize: '0.9375rem', color: 'var(--color-ink-subtle)' }}>We&apos;ve received your request and will get back to you shortly.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6 w-full">

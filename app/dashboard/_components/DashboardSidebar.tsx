@@ -111,10 +111,26 @@ export function DashboardSidebar({
         <div style={{ marginTop: 'auto', padding: '24px 12px 24px' }}>
 
 
-          <div
-            ref={logoutRef}
+          <button
+            ref={logoutRef as unknown as React.RefObject<HTMLButtonElement>}
             className="sidebar-profile-card"
             onClick={() => setShowLogout((prev) => !prev)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setShowLogout(false);
+              }
+            }}
+            aria-haspopup="menu"
+            aria-expanded={showLogout}
+            aria-label="User profile menu"
+            style={{
+              width: '100%',
+              textAlign: 'left',
+              border: 'none',
+              background: 'transparent',
+              padding: '12px',
+              cursor: 'pointer'
+            }}
           >
             <div
               style={{
@@ -131,6 +147,7 @@ export function DashboardSidebar({
                 fontWeight: 700,
                 flexShrink: 0,
               }}
+              aria-hidden="true"
             >
               {initials}
             </div>
@@ -161,7 +178,7 @@ export function DashboardSidebar({
                 {email}
               </p>
             </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sys-on-neutral-variant-role)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.8 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sys-on-neutral-variant-role)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.8 }} aria-hidden="true">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
 
@@ -194,7 +211,7 @@ export function DashboardSidebar({
                 </div>
               </div>
             )}
-          </div>
+          </button>
           
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', padding: '0 4px', position: 'relative', minHeight: '40px' }}>
             <div style={{ position: 'absolute', left: '4px' }}>

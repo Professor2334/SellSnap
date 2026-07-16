@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
+import { rateLimit } from '@/lib/rate-limit';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/lib/db';
 import GoogleProvider from 'next-auth/providers/google';
@@ -27,10 +28,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const email = credentials.email as string;
+        const normalizedEmail = email.toLowerCase();
+
+        // Rate limit by email to prevent brute force
+        const rl = await rateLimit(`login_${normalizedEmail}`, 5, 60000); // 5 attempts per minute
+        if (!rl.success) {
+          throw new Error('Too many login attempts. Please try again later.');
+        }
         const password = credentials.password as string;
 
         const user = await db.user.findUnique({
-          where: { email: email.toLowerCase() },
+          where: { email: normalizedEmail },
         });
 
         // User might exist via Google OAuth and not have a passwordHash

@@ -1,6 +1,7 @@
 'use server';
 
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 import { db } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { generateUniqueSlug } from '@/lib/slug';
@@ -9,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 
 const productSchema = z.object({
   name: z.string().min(2, 'Name is too short'),
-  price: z.preprocess((val) => Number(val), z.number().min(1, 'Price must be at least 1')),
+  price: z.preprocess((val) => Number(String(val).replace(/,/g, '')), z.number().min(1, 'Price must be at least ₦1')),
   description: z.string().optional(),
 });
 
@@ -36,6 +37,9 @@ export async function createProduct(formData: FormData) {
     let imageUrl: string | null = null;
     if (imageFile && imageFile.size > 0 && imageFile.type.startsWith('image/')) {
       imageUrl = await uploadImage(imageFile);
+      if (!imageUrl) {
+        return { success: false, error: 'Failed to upload image. Please check your network connection.' };
+      }
     }
 
     const slug = generateUniqueSlug(validName);
@@ -55,7 +59,12 @@ export async function createProduct(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error('product.create.failed', { error });
-    return { success: false, error: 'Something went wrong' };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return { success: false, error: 'A product with this name already exists.' };
+      }
+    }
+    return { success: false, error: 'Failed to create product. Please try again later.' };
   }
 }
 
@@ -99,10 +108,11 @@ export async function deleteProduct(id: string) {
     });
 
     revalidatePath('/dashboard');
+    revalidatePath(`/p/${product.uniqueSlug}`);
     return { success: true };
   } catch (error) {
     console.error('product.delete.failed', { error });
-    return { success: false, error: 'Something went wrong' };
+    return { success: false, error: 'Failed to delete product. Please try again later.' };
   }
 }
 
@@ -137,7 +147,11 @@ export async function updateProduct(id: string, formData: FormData) {
 
     let imageUrl = product.imageUrl;
     if (imageFile && imageFile.size > 0 && imageFile.type.startsWith('image/')) {
-      imageUrl = await uploadImage(imageFile);
+      const uploadedUrl = await uploadImage(imageFile);
+      if (!uploadedUrl) {
+        return { success: false, error: 'Failed to upload new image. Please check your network connection.' };
+      }
+      imageUrl = uploadedUrl;
     }
 
     await db.product.update({
@@ -151,9 +165,15 @@ export async function updateProduct(id: string, formData: FormData) {
     });
 
     revalidatePath('/dashboard');
+    revalidatePath(`/p/${product.uniqueSlug}`);
     return { success: true };
   } catch (error) {
     console.error('product.update.failed', { error });
-    return { success: false, error: 'Something went wrong' };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return { success: false, error: 'A product with this name already exists.' };
+      }
+    }
+    return { success: false, error: 'Failed to update product. Please try again later.' };
   }
 }

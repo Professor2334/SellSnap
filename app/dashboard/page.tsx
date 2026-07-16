@@ -1,7 +1,9 @@
 import { getSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { redirect } from 'next/navigation';
-import { DashboardView, ProductsView, OrdersView } from './_components/DashboardViews';
+import { DashboardOverview } from './_components/DashboardOverview';
+import { ProductsView } from './_components/ProductsView';
+import { OrdersView } from './_components/OrdersView';
 import { SettingsClient } from './settings/SettingsClient';
 
 type Props = {
@@ -17,85 +19,30 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   const tab = searchParams.tab || 'dashboard';
 
-  const products = await db.product.findMany({
-    where: { userId: session.user.id },
-    include: { orders: true },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  const allOrders = products.flatMap(p => p.orders).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-  const totalProducts = products.length;
-  const totalOrders = allOrders.length;
-  const totalRevenue = allOrders
-    .filter(o => o.status === 'PAID')
-    .reduce((sum, o) => sum + o.amount, 0);
-
-  const now = new Date();
-  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-
-  const thisMonthRevenue = allOrders
-    .filter(o => o.status === 'PAID' && o.createdAt >= thisMonthStart)
-    .reduce((sum, o) => sum + o.amount, 0);
-  const lastMonthRevenue = allOrders
-    .filter(o => o.status === 'PAID' && o.createdAt >= lastMonthStart && o.createdAt <= lastMonthEnd)
-    .reduce((sum, o) => sum + o.amount, 0);
-
-  const thisMonthOrders = allOrders.filter(o => o.createdAt >= thisMonthStart).length;
-  const lastMonthOrders = allOrders.filter(o => o.createdAt >= lastMonthStart && o.createdAt <= lastMonthEnd).length;
-
-  const thisMonthProducts = products.filter(p => p.createdAt >= thisMonthStart).length;
-  const lastMonthProducts = products.filter(p => p.createdAt >= lastMonthStart && p.createdAt <= lastMonthEnd).length;
-
-  function calcGrowth(current: number, previous: number): number {
-    if (previous === 0 && current === 0) return 0;
-    if (previous === 0) return 100;
-    return Math.round(((current - previous) / previous) * 100);
-  }
-
-  const revenueGrowth = calcGrowth(thisMonthRevenue, lastMonthRevenue);
-  const ordersGrowth = calcGrowth(thisMonthOrders, lastMonthOrders);
-  const productsGrowth = calcGrowth(thisMonthProducts, lastMonthProducts);
-
-  const flatProducts = products.map(p => ({
-    id: p.id,
-    name: p.name,
-    price: p.price,
-    description: p.description,
-    imageUrl: p.imageUrl,
-    uniqueSlug: p.uniqueSlug,
-    createdAt: p.createdAt,
-    orders: p.orders.map(o => ({
-      id: o.id,
-      status: o.status,
-      amount: o.amount,
-      createdAt: o.createdAt,
-    })),
-  }));
-
-  const orders = await db.order.findMany({
-    where: { product: { userId: session.user.id } },
-    include: { product: { select: { id: true, name: true, uniqueSlug: true, imageUrl: true } } },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  const flatOrders = orders.map(o => ({
-    id: o.id,
-    amount: o.amount,
-    status: o.status,
-    transactionReference: o.transactionReference,
-    buyerEmail: o.buyerEmail,
-    createdAt: o.createdAt,
-    product: { id: o.product.id, name: o.product.name, uniqueSlug: o.product.uniqueSlug, imageUrl: o.product.imageUrl },
-  }));
-
   switch (tab) {
-    case 'products':
-      return <ProductsView products={flatProducts} />;
-    case 'orders':
-      return <OrdersView orders={flatOrders} />;
+    case 'products': {
+      const products = await db.product.findMany({
+        where: { userId: session.user.id },
+        select: { id: true, name: true, price: true, description: true, imageUrl: true, uniqueSlug: true, createdAt: true },
+        orderBy: { createdAt: 'desc' },
+        take: 100, // Reasonable limit for performance
+      });
+      return <ProductsView products={products.map(p => ({ ...p, orders: [] }))} />;
+    }
+
+    case 'orders': {
+      const orders = await db.order.findMany({
+        where: { product: { userId: session.user.id } },
+        select: { 
+          id: true, amount: true, status: true, transactionReference: true, buyerEmail: true, createdAt: true, 
+          product: { select: { id: true, name: true, uniqueSlug: true, imageUrl: true } } 
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      });
+      return <OrdersView orders={orders} />;
+    }
+
     case 'settings': {
       const user = await db.user.findUnique({
         where: { id: session.user.id },
@@ -106,9 +53,56 @@ export default async function DashboardPage({ searchParams }: Props) {
       // @ts-ignore
       return <SettingsClient user={user} hasGoogleAccount={hasGoogleAccount} />;
     }
-    default:
+
+    default: {
+      const now = new Date();
+      const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+      const [
+        totalProducts, totalOrders,
+        thisMonthProducts, lastMonthProducts,
+        thisMonthOrders, lastMonthOrders,
+        totalRevenueAgg, thisMonthRevenueAgg, lastMonthRevenueAgg,
+        recentOrders
+      ] = await Promise.all([
+        db.product.count({ where: { userId: session.user.id } }),
+        db.order.count({ where: { product: { userId: session.user.id } } }),
+        db.product.count({ where: { userId: session.user.id, createdAt: { gte: thisMonthStart } } }),
+        db.product.count({ where: { userId: session.user.id, createdAt: { gte: lastMonthStart, lte: lastMonthEnd } } }),
+        db.order.count({ where: { product: { userId: session.user.id }, createdAt: { gte: thisMonthStart } } }),
+        db.order.count({ where: { product: { userId: session.user.id }, createdAt: { gte: lastMonthStart, lte: lastMonthEnd } } }),
+        db.order.aggregate({ _sum: { amount: true }, where: { product: { userId: session.user.id }, status: 'PAID' } }),
+        db.order.aggregate({ _sum: { amount: true }, where: { product: { userId: session.user.id }, status: 'PAID', createdAt: { gte: thisMonthStart } } }),
+        db.order.aggregate({ _sum: { amount: true }, where: { product: { userId: session.user.id }, status: 'PAID', createdAt: { gte: lastMonthStart, lte: lastMonthEnd } } }),
+        db.order.findMany({
+          where: { product: { userId: session.user.id } },
+          select: { 
+            id: true, amount: true, status: true, transactionReference: true, buyerEmail: true, createdAt: true, 
+            product: { select: { id: true, name: true, uniqueSlug: true, imageUrl: true } } 
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        })
+      ]);
+
+      const totalRevenue = totalRevenueAgg._sum.amount || 0;
+      const thisMonthRevenue = thisMonthRevenueAgg._sum.amount || 0;
+      const lastMonthRevenue = lastMonthRevenueAgg._sum.amount || 0;
+
+      const calcGrowth = (current: number, previous: number): number => {
+        if (previous === 0 && current === 0) return 0;
+        if (previous === 0) return 100;
+        return Math.round(((current - previous) / previous) * 100);
+      };
+
+      const revenueGrowth = calcGrowth(thisMonthRevenue, lastMonthRevenue);
+      const ordersGrowth = calcGrowth(thisMonthOrders, lastMonthOrders);
+      const productsGrowth = calcGrowth(thisMonthProducts, lastMonthProducts);
+
       return (
-        <DashboardView
+        <DashboardOverview
           userName={session.user.name || 'Merchant'}
           totalRevenue={totalRevenue}
           totalOrders={totalOrders}
@@ -116,8 +110,9 @@ export default async function DashboardPage({ searchParams }: Props) {
           revenueGrowth={revenueGrowth}
           ordersGrowth={ordersGrowth}
           productsGrowth={productsGrowth}
-          recentOrders={flatOrders.slice(0, 5)}
+          recentOrders={recentOrders}
         />
       );
+    }
   }
 }
