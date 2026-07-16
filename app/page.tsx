@@ -151,7 +151,7 @@ export default function LandingPage() {
               <a href="#faq" className={`landing-nav-link${activeSection === '#faq' ? ' active' : ''}`} onClick={() => { setActiveSection('#faq'); setMenuOpen(false); }} role="menuitem">FAQ</a>
               <div className="landing-nav-mobile-drawer-actions">
                 <Link href="/auth" onClick={() => setMenuOpen(false)} style={{ width: '100%' }}>
-                  <Button size="lg" variant="primary" fullWidth>Get Started</Button>
+                  <Button size="lg" variant="primary" fullWidth className="hero-cta-primary">Get Started</Button>
                 </Link>
               </div>
             </div>

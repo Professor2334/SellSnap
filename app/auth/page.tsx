@@ -440,23 +440,7 @@ function AuthContent() {
                 {loading ? <Loader2 size={20} className="spinner" /> : 'Create account'}
               </Button>
 
-              <button
-                type="button"
-                className="auth-form-link"
-                style={{ marginTop: '16px' }}
-                onClick={() => {
-                  setStep(1);
-                  setError(null);
-                  setFieldErrors({});
-                  setNameDone(false);
-                  setEmailDone(false);
-                  setBusinessDone(false);
-                  setPasswordDone(false);
-                  setPasswordReqs(null);
-                }}
-              >
-                ← Back
-              </button>
+
             </form>
           )}
 
