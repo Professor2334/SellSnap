@@ -4,6 +4,7 @@ import { createPaymentLink } from '@/lib/flutterwave';
 import { randomBytes } from 'crypto';
 import { rateLimit } from '@/lib/rate-limit';
 
+export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

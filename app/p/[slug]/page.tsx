@@ -25,6 +25,10 @@ export async function generateMetadata(
       description: product.description ?? undefined,
       images: product.imageUrl ? [product.imageUrl] : [],
     },
+    icons: {
+      icon: '/icon.png',
+      apple: '/icon.png',
+    },
   };
 }
 
