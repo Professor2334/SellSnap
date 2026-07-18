@@ -761,7 +761,7 @@ a {
   box-shadow: 4px 0 32px rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
@@ -772,7 +772,11 @@ a {
     position: fixed;
     left: -260px;
     top: 0;
-    height: 100vh;
+    bottom: 0;
+    height: 100dvh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-sizing: border-box;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 50;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
@@ -865,6 +869,7 @@ a {
   display: none;
   position: fixed;
   inset: 0;
+  height: 100dvh;
   background-color: rgba(0, 0, 0, 0.35);
   z-index: 40;
 }

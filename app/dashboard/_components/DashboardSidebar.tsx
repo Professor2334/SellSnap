@@ -89,7 +89,6 @@ export function DashboardSidebar({
 
       <aside
         className={`dashboard-sidebar ${isOpen ? 'open' : ''}`}
-        style={{ height: '100vh' }}
       >
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '28px 20px 52px' }}>
