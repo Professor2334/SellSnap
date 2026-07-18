@@ -85,52 +85,27 @@ export function OrdersView({ orders }: { orders: Order[] }) {
           </Button>
 
           {isFilterOpen && (
-            <div className="animate-fade-in-up" style={{
+            <div className="dropdown-content animate-fade-in-up" style={{
               position: 'absolute',
               bottom: '100%',
               right: 0,
               marginBottom: '8px',
-              width: '160px',
-              backgroundColor: 'var(--sys-neutral-container-lowest)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '12px',
-              boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)',
-              padding: '8px',
-              zIndex: 50,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px'
+              width: '160px'
             }}>
               {filterOptions.map((option) => {
                 const isActive = filter === option.value;
                 return (
                   <button
                     key={option.value}
+                    className="dropdown-item"
                     onClick={() => {
                       setFilter(option.value);
                       setIsFilterOpen(false);
                     }}
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
                       justifyContent: 'space-between',
-                      width: '100%',
-                      textAlign: 'left',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      cursor: 'pointer',
-                      border: 'none',
-                      transition: 'background-color 150ms ease, color 150ms ease',
-                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : 'transparent',
-                      color: isActive ? 'var(--sys-primary-color-role)' : 'var(--color-ink)',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--color-ink) 4%, transparent)';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
+                      backgroundColor: isActive ? 'color-mix(in srgb, var(--sys-primary-color-role) 8%, transparent)' : undefined,
+                      color: isActive ? 'var(--sys-primary-color-role)' : undefined,
                     }}
                   >
                     {option.label}
@@ -219,7 +194,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Portal>
-                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="animate-fade-in-up" style={{ width: '210px', backgroundColor: 'var(--sys-neutral-container-lowest)', borderRadius: '12px', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)', border: '1px solid var(--color-border)', padding: '8px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="dropdown-content animate-fade-in-up" style={{ width: '210px' }}>
                           <DropdownMenu.Item asChild>
                             <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">Open Product</Link>
                           </DropdownMenu.Item>
@@ -249,7 +224,7 @@ export function OrdersView({ orders }: { orders: Order[] }) {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Portal>
-                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="animate-fade-in-up" style={{ width: '210px', backgroundColor: 'var(--sys-neutral-container-lowest)', borderRadius: '12px', boxShadow: '0 20px 40px -8px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05)', border: '1px solid var(--color-border)', padding: '8px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <DropdownMenu.Content side="top" align="end" sideOffset={4} className="dropdown-content animate-fade-in-up" style={{ width: '210px' }}>
                           <DropdownMenu.Item asChild>
                             <Link href={`/dashboard/products/${order.product.id}/edit`} className="dropdown-item">Open Product</Link>
                           </DropdownMenu.Item>

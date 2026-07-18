@@ -123,6 +123,7 @@ export function DashboardSidebar({
           <button
             ref={logoutRef as unknown as React.RefObject<HTMLButtonElement>}
             className="sidebar-profile-card"
+            data-state={showLogout ? 'open' : 'closed'}
             onClick={() => setShowLogout((prev) => !prev)}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
@@ -193,29 +194,21 @@ export function DashboardSidebar({
 
             {showLogout && (
               <div
+                className="dropdown-content"
                 style={{
                   position: 'absolute',
                   bottom: 'calc(100% + 8px)',
                   left: 0,
                   right: 0,
-                  backgroundColor: 'var(--sys-neutral-container-lowest)',
-                  borderRadius: '16px',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.10)',
-                  border: 'none',
-                  padding: '8px',
-                  zIndex: 50,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
                   cursor: 'default'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <Link href="/dashboard?tab=settings&section=profile" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
+                <Link href="/dashboard?tab=settings&section=profile" className="dropdown-item" onClick={() => setShowLogout(false)}>
                   My Profile
                 </Link>
                 <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
-                <div style={{ padding: '4px 8px' }}>
+                <div style={{ padding: '0' }}>
                   <SignOutButton />
                 </div>
               </div>
