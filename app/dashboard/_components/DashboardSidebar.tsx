@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { SidebarNav } from './SidebarNav';
 import { SignOutButton } from './DashboardUtils';
@@ -47,14 +48,42 @@ export function DashboardSidebar({
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      // Save current scroll position before locking
+      const scrollY = window.scrollY;
+      const html = document.documentElement;
+      const body = document.body;
+
+      // Lock both html and body to prevent Safari viewport resizing
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
+      body.style.position = 'fixed';
+      body.style.width = '100%';
+      body.style.top = `-${scrollY}px`;
+
+      return () => {
+        // Restore everything
+        html.style.overflow = '';
+        body.style.overflow = '';
+        body.style.position = '';
+        body.style.width = '';
+        body.style.top = '';
+        // Restore scroll position
+        window.scrollTo(0, scrollY);
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
+
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const nameParts = userName.split(' ').filter(Boolean);
   const initials = (nameParts.length >= 2
@@ -63,29 +92,10 @@ export function DashboardSidebar({
   ).toUpperCase();
   const displayName = businessName || userName;
 
-  return (
+  // The overlay + sidebar drawer content (shared between portal and inline)
+  const drawerContent = (
     <>
-      <div className="mobile-app-bar">
-        <button
-          onClick={toggleSidebar}
-          className="mobile-app-bar-btn"
-          aria-label="Toggle menu"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-        <Link href="/dashboard" className="text-h2 text-brand font-bold tracking-tight" style={{ lineHeight: 1, textDecoration: 'none' }} onClick={closeSidebar}>
-          SellSnap
-        </Link>
-        <div className="mobile-app-bar-btn" style={{ pointerEvents: 'none' }}></div>
-      </div>
-
-      {isOpen && (
-        <div className="sidebar-overlay" onClick={closeSidebar} />
-      )}
+      <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={closeSidebar} />
 
       <aside
         className={`dashboard-sidebar ${isOpen ? 'open' : ''}`}
@@ -201,7 +211,7 @@ export function DashboardSidebar({
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <Link href="/dashboard?tab=settings&section=profile" className="hover:bg-gray-50 transition-colors" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
+                <Link href="/dashboard?tab=settings&section=profile" style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-ink)', textDecoration: 'none' }} onClick={() => setShowLogout(false)}>
                   My Profile
                 </Link>
                 <div style={{ height: '1px', backgroundColor: 'var(--color-border)', margin: '4px 0' }} />
@@ -220,6 +230,36 @@ export function DashboardSidebar({
           </div>
         </div>
       </aside>
+    </>
+  );
+
+  return (
+    <>
+      <div className="mobile-app-bar">
+        <button
+          onClick={toggleSidebar}
+          className="mobile-app-bar-btn"
+          aria-label="Toggle menu"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <Link href="/dashboard" className="text-h2 text-brand font-bold tracking-tight" style={{ lineHeight: 1, textDecoration: 'none' }} onClick={closeSidebar}>
+          SellSnap
+        </Link>
+        <div className="mobile-app-bar-btn" style={{ pointerEvents: 'none' }}></div>
+      </div>
+
+      {/* On mobile: render through a Portal directly under <body> to avoid
+          parent containers with transform/filter/contain that break position:fixed on Safari.
+          On desktop: render inline so the sticky sidebar stays in the flex flow. */}
+      {mounted && isMobile
+        ? createPortal(drawerContent, document.body)
+        : drawerContent
+      }
     </>
   );
 }

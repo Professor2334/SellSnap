@@ -66,6 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="dark light" />
         {/* 1. Synchronous script — sets data-theme before any paint */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* 2. Critical dark CSS — inline so it's available immediately,

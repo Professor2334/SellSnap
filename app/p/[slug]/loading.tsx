@@ -1,34 +1,35 @@
 import React from 'react';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function CheckoutLoading() {
   return (
-    <div className="min-h-screen bg-[var(--color-surface)] flex justify-center pb-24 md:py-12 animate-pulse">
-      <div className="w-full max-w-[672px] mx-auto md:px-6">
-        <div className="card w-full flex flex-col p-0 md:p-8 md:rounded-[24px] border-none md:border-solid md:border-[var(--color-border)] overflow-hidden bg-[var(--color-bg)]">
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-surface)', display: 'flex', justifyContent: 'center', paddingBottom: '96px', paddingTop: '48px' }}>
+      <div style={{ width: '100%', maxWidth: '672px', margin: '0 auto', padding: '0 24px' }}>
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', borderRadius: '24px' }}>
           {/* Image Placeholder */}
-          <div className="w-full aspect-square bg-[var(--color-border)] opacity-20"></div>
+          <div style={{ width: '100%', aspectRatio: '1 / 1', backgroundColor: 'var(--color-border)' }}></div>
 
           {/* Content Placeholder */}
-          <div className="p-5 md:p-0 md:mt-8 flex flex-col space-y-6">
-            <div className="space-y-3">
-              <div className="h-4 w-32 bg-[var(--color-border)] opacity-30 rounded-md"></div>
-              <div className="h-8 w-64 bg-[var(--color-border)] opacity-40 rounded-md"></div>
+          <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Skeleton style={{ height: '16px', width: '128px' }} />
+              <Skeleton style={{ height: '32px', width: '256px' }} />
             </div>
 
-            <div className="h-10 w-40 bg-[var(--color-border)] opacity-50 rounded-md mt-4"></div>
+            <Skeleton style={{ height: '40px', width: '160px', marginTop: '16px' }} />
 
-            <div className="space-y-3 pt-6 border-t border-[var(--color-border)]">
-              <div className="h-4 w-full bg-[var(--color-border)] opacity-30 rounded-md"></div>
-              <div className="h-4 w-5/6 bg-[var(--color-border)] opacity-30 rounded-md"></div>
-              <div className="h-4 w-4/6 bg-[var(--color-border)] opacity-30 rounded-md"></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '24px', borderTop: '1px solid var(--color-border)' }}>
+              <Skeleton style={{ height: '16px', width: '100%' }} />
+              <Skeleton style={{ height: '16px', width: '83%' }} />
+              <Skeleton style={{ height: '16px', width: '66%' }} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sticky Button Placeholder for Mobile */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[var(--color-bg)] border-t border-[var(--color-border)] md:hidden">
-        <div className="h-14 w-full bg-[var(--color-border)] opacity-40 rounded-xl"></div>
+      {/* Sticky Button Placeholder for Mobile (Hidden on desktop in actual app via CSS, but we'll simulate the fixed block) */}
+      <div style={{ position: 'fixed', bottom: '0', left: '0', right: '0', padding: '16px', backgroundColor: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', zIndex: 10 }}>
+        <Skeleton style={{ height: '56px', width: '100%', borderRadius: '12px' }} />
       </div>
     </div>
   );

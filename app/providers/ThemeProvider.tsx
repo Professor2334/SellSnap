@@ -17,22 +17,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
+    let currentTheme: Theme = 'system';
+    
+    // Read stored theme synchronously during initial effect execution
     try {
       const storedTheme = localStorage.getItem('sellsnap-theme') as Theme | null;
       if (storedTheme) {
-        setThemeState(storedTheme);
+        currentTheme = storedTheme;
+        if (theme === 'system') { // Only update state if it hasn't been changed yet
+           setThemeState(storedTheme);
+        } else {
+           currentTheme = theme;
+        }
+      } else {
+         currentTheme = theme;
       }
     } catch (e) {
-      // ignore
+      currentTheme = theme;
     }
-  }, []);
 
-  useEffect(() => {
     const root = document.documentElement;
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
-    const applyTheme = (currentTheme: Theme) => {
-      const resolvedDark = currentTheme === 'dark' || (currentTheme === 'system' && mediaQuery.matches);
+    const applyTheme = (themeToApply: Theme) => {
+      const resolvedDark = themeToApply === 'dark' || (themeToApply === 'system' && mediaQuery.matches);
       setIsDark(resolvedDark);
       
       if (resolvedDark) {
@@ -42,10 +50,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    applyTheme(theme);
+    applyTheme(currentTheme);
 
     const listener = () => {
-      if (theme === 'system') {
+      if (currentTheme === 'system') {
         applyTheme('system');
       }
     };
