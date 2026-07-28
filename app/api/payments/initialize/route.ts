@@ -57,18 +57,22 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.redirect(paymentLink);
+    return NextResponse.json({
+      success: true,
+      data: {
+        tx_ref,
+        amount: product.price,
+        currency: 'NGN',
+        customer_email: 'customer@sellsnap.app',
+        customer_name: 'SellSnap Customer',
+        title: product.user.businessName || product.user.name,
+        description: product.name,
+        public_key: process.env.FLW_PUBLIC_KEY || process.env.NEXT_PUBLIC_FLW_PUBLIC_KEY,
+        redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/p/${slug}/success`,
+      }
+    });
   } catch (error) {
     console.error('payment.init.failed', { error });
-    // Safe fallback URL - attempt to extract slug if available
-    let fallbackUrl = '/';
-    try {
-      const { searchParams } = new URL(req.url);
-      const slug = searchParams.get('slug');
-      if (slug) fallbackUrl = `/p/${slug}?error=payment_init_failed`;
-    } catch (e) {
-      // Ignore
-    }
-    return NextResponse.redirect(new URL(fallbackUrl, req.url));
+    return NextResponse.json({ success: false, error: 'payment_init_failed' }, { status: 500 });
   }
 }
