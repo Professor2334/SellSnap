@@ -220,6 +220,7 @@ export default function LandingPage() {
               maxWidth: '480px',
               margin: '0 auto'
             }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src="/hero-still-life.png"
                 alt="A curated arrangement of seller products: a skincare serum, a handmade candle, a notebook, gold earrings, and eucalyptus — representing the diversity of what you can sell with SellSnap"
@@ -451,7 +452,7 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <h3 className="text-h2">Anywhere</h3>
-                    <p className="text-body-sm text-ink-muted">It's just a link.</p>
+                    <p className="text-body-sm text-ink-muted">It&apos;s just a link.</p>
                   </div>
                 </div>
               </div>
