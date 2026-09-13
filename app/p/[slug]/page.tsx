@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { PayNowButton } from './PayNowButton';
-import { ShieldCheck, Zap, Lock } from 'lucide-react';
+import { ShieldCheck, Zap, Lock, AlertCircle } from 'lucide-react';
 
 export const revalidate = 60; // Cache the page for 60 seconds (ISR)
 
@@ -133,7 +133,7 @@ export default async function ProductPublicPage({ params, searchParams }: { para
         }
         
         .thumbnail.active {
-          border-color: #0066FF;
+          border-color: var(--color-brand);
         }
 
         .product-info {
@@ -188,6 +188,10 @@ export default async function ProductPublicPage({ params, searchParams }: { para
           flex-direction: column;
           gap: 12px;
           margin-top: 8px;
+          padding: 16px;
+          background-color: var(--color-surface);
+          border-radius: var(--sys-radius-md, 12px);
+          border: 1px solid var(--color-border);
         }
 
         .trust-feature-item {
@@ -196,12 +200,21 @@ export default async function ProductPublicPage({ params, searchParams }: { para
           gap: 12px;
           font-size: 0.875rem;
           color: var(--color-ink-muted);
-          font-weight: 400; /* Softer text weight */
         }
         
         .trust-icon {
-          color: var(--color-brand); /* Brand color for hierarchy */
+          color: var(--color-brand);
           opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+          .mobile-sticky-cta {
+            position: sticky;
+            bottom: 16px;
+            z-index: 10;
+            box-shadow: var(--sys-elevation-level3);
+            border-radius: var(--sys-radius-sm, 8px);
+          }
         }
       `}</style>
 
@@ -228,20 +241,18 @@ export default async function ProductPublicPage({ params, searchParams }: { para
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--color-ink-subtle)',
+                    backgroundColor: 'var(--sys-primary-container-role)',
+                    color: 'var(--color-brand)',
+                    font: 'var(--sys-font-display-large)',
                   }}
                 >
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="3" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <polyline points="21 15 16 10 5 21" />
-                  </svg>
+                  {businessName.substring(0, 2).toUpperCase()}
                 </div>
               )}
             </div>
 
-            {/* Support for future multiple images */}
-            {product.imageUrl && (
+            {/* Only show gallery if there are multiple images */}
+            {product.imageUrl && product.imageUrl.includes(',') && (
               <div className="thumbnails">
                 <div className="thumbnail active">
                   <Image
@@ -271,16 +282,14 @@ export default async function ProductPublicPage({ params, searchParams }: { para
 
             <div className="product-cta-container">
               {errorMessage && (
-                <div style={{ padding: '12px', backgroundColor: 'var(--sys-error-container-role)', color: 'var(--sys-error-color-role)', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
+                <div style={{ padding: '12px', backgroundColor: 'var(--sys-error-container-role)', color: 'var(--sys-error-color-role)', borderRadius: 'var(--sys-radius-sm)', fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AlertCircle size={20} style={{ flexShrink: 0 }} />
                   {errorMessage}
                 </div>
               )}
-              <PayNowButton slug={product.uniqueSlug} />
+              <div className="mobile-sticky-cta">
+                <PayNowButton slug={product.uniqueSlug} />
+              </div>
               
               <div className="trust-features">
                 <div className="trust-feature-item">

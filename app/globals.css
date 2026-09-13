@@ -3,17 +3,18 @@
 @import "./onboarding-bg.css";
 
 :root {
-  --color-bg: var(--sys-neutral-container-lowest);
-  --color-surface: var(--primitive-neutral98);
-  --color-ink: var(--sys-on-neutral-color-role);
-  --color-ink-muted: var(--sys-on-neutral-container-role);
-  --color-ink-subtle: var(--sys-on-neutral-variant-role);
-  --color-border: var(--sys-outline-variant-color-role);
-  --color-brand: var(--sys-primary-color-role);
-  --color-brand-hover: var(--primitive-primary30);
-  --color-success: var(--sys-success-color-role);
-  --color-warning: var(--sys-warning-color-role);
-  --color-danger: var(--sys-error-color-role);
+  --color-bg: #FFFFFF;
+  --color-surface: #F7F7F5;
+  --color-ink: #0F1115;
+  --color-ink-muted: #40464F; /* Darkened for strict AAA contrast */
+  --color-ink-subtle: #9AA1AD;
+  --color-border: #E5E7EB;
+  --color-brand: #1A7F3C;
+  --color-brand-hover: #16692F;
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+  --brand-flutterwave: #F5A623;
 
   /* dk-* bridge tokens — light-mode defaults.
      Dark theme overrides these in [data-theme="dark"] via dark-tokens.css */
@@ -27,10 +28,10 @@
   --dk-input-hover-border:    var(--sys-outline-variant-color-role);
   --dk-input-focus-border:    var(--sys-primary-color-role);
   --dk-input-placeholder:     var(--sys-outline-variant-color-role);
-  --dk-dropdown-bg:           rgba(255, 255, 255, 0.95);
-  --dk-dropdown-border:       rgba(255, 255, 255, 0.4);
+  --dk-dropdown-bg:           var(--sys-neutral-container-lowest);
+  --dk-dropdown-border:       var(--sys-outline-variant-color-role);
   --dk-dropdown-hover:        var(--primitive-neutral98);
-  --dk-dropdown-shadow:       0 20px 40px -8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  --dk-dropdown-shadow:       var(--sys-elevation-level3);
   --dk-btn-secondary-bg:      var(--primitive-neutral98);
   --dk-btn-secondary-text:    var(--sys-on-neutral-color-role);
   --dk-btn-secondary-border:  var(--sys-outline-variant-color-role);
@@ -65,18 +66,18 @@ a {
 
 /* Typography Classes */
 .text-display {
-  font: var(--sys-font-headline-medium);
-  font-size: clamp(1.375rem, 4vw, 2.25rem); /* 22px to 36px */
-  line-height: normal;
-  letter-spacing: var(--sys-font-headline-medium-letter-spacing);
+  font: var(--sys-font-display-large);
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: var(--sys-font-display-large-letter-spacing);
   color: var(--color-ink);
 }
 
 .text-h1 {
-  font: var(--sys-font-headline-large);
-  font-size: clamp(1.5rem, 4vw, 2rem); /* 24px to 32px */
-  line-height: 1.3;
-  letter-spacing: var(--sys-font-headline-large-letter-spacing);
+  font: var(--sys-font-display-medium);
+  font-size: clamp(2rem, 5vw, 2.8125rem);
+  line-height: 1.2;
+  letter-spacing: var(--sys-font-display-medium-letter-spacing);
 }
 
 .text-h2 {
@@ -135,8 +136,8 @@ a {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 24px;
-  height: 64px;
+  gap: var(--sys-space-6);
+  height: var(--sys-space-16);
 }
 
 .navbar-logo {
@@ -150,7 +151,7 @@ a {
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: var(--sys-space-8);
   justify-content: center;
 }
 
@@ -186,12 +187,12 @@ a {
 
 /* Sections */
 .section {
-  padding: 80px 0;
+  padding: var(--sys-space-20) 0;
 }
 
 .section-header {
   max-width: 640px;
-  margin: 0 auto 48px;
+  margin: 0 auto var(--sys-space-12);
   text-align: center;
 }
 
@@ -218,14 +219,14 @@ a {
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  gap: var(--sys-space-8);
   max-width: 960px;
   margin: 0 auto;
 }
 
 .step {
   text-align: center;
-  padding: 32px 24px;
+  padding: var(--sys-space-8) var(--sys-space-6);
 }
 
 .step-number {
@@ -258,22 +259,22 @@ a {
 .features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: var(--sys-space-6);
   max-width: 960px;
   margin: 0 auto;
 }
 
 .feature {
-  padding: 32px;
+  padding: var(--sys-space-8);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 11px;
+  border-radius: var(--sys-radius-md);
   transition: all 0.2s;
 }
 
 .feature:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--sys-elevation-level2);
 }
 
 .feature-icon {
@@ -297,7 +298,7 @@ a {
 .benefits {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+  gap: var(--sys-space-8);
   max-width: 800px;
   margin: 0 auto;
 }
@@ -335,7 +336,7 @@ a {
 /* CTA Section */
 .cta-section {
   background-color: var(--color-brand);
-  padding: 80px 0;
+  padding: var(--sys-space-20) 0;
   text-align: center;
 }
 
@@ -357,7 +358,7 @@ a {
 /* Button hover states */
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 60, 230, 0.3);
+  box-shadow: var(--sys-elevation-level2);
 }
 
 .btn-secondary:hover:not(:disabled),
@@ -372,7 +373,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 120px 0 80px;
+  padding: var(--sys-space-30) 0 var(--sys-space-20);
 }
 
 .flex { display: flex; }
@@ -1596,9 +1597,69 @@ a {
 
   .hero {
     min-height: 100dvh;
-    padding: 80px 20px 60px;
+    padding: var(--sys-space-20) 20px 60px;
   }
+}
 
+/* ── Bento Box Grid ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--sys-space-4);
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.bento-card {
+  background-color: var(--sys-neutral-container-low);
+  border-radius: var(--sys-radius-lg);
+  padding: var(--sys-space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--sys-transition-base);
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  background-color: var(--sys-neutral-container-role);
+}
+
+.bento-card.wide {
+  grid-column: span 8;
+}
+
+.bento-card.tall {
+  grid-column: span 4;
+  grid-row: span 2;
+}
+
+.bento-card.square {
+  grid-column: span 4;
+}
+
+.bento-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--sys-radius-md);
+  background-color: var(--sys-neutral-container-lowest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sys-space-4);
+  box-shadow: var(--sys-elevation-level1);
+}
+
+@media (max-width: 767px) {
+  .bento-card.wide, .bento-card.tall, .bento-card.square {
+    grid-column: span 12;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 767px) {
   .section {
     padding: 48px 20px;
   }
@@ -1892,7 +1953,9 @@ a {
   border: none;
   cursor: pointer;
   color: var(--color-ink);
-  padding: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
   border-radius: 8px;
   transition: background-color 0.15s;
 }
@@ -2050,7 +2113,7 @@ a {
 }
 @media (min-width: 1024px) {
   .hero-v2-container {
-    padding: 0 38px;
+    padding: 0 var(--sys-space-8); /* 32px — matches .landing-nav-inner desktop padding */
     grid-template-columns: 47fr 53fr;
     gap: 48px;
   }
@@ -3881,6 +3944,193 @@ a {
   border-radius: 8px;
 }
 
+/* KPI cards and card containers */
+[data-theme="dark"] .card-stat,
+[data-theme="dark"] .card-container,
+[data-theme="dark"] .stat-card {
+  background-color: var(--dk-card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.30);
+}
+
+/* Recent Orders / content cards built with inline #FFFFFF style need
+   the card-container class to handle them — inline styles in JSX will
+   need token vars. The CSS class layer is correct here. */
+
+/* Settings card */
+[data-theme="dark"] .settings-card {
+  background-color: var(--dk-card-bg);
+  border-color: var(--dk-card-border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Input field */
+[data-theme="dark"] .input-field {
+  background-color: var(--dk-input-bg);
+  border-color: var(--dk-input-border);
+  color: var(--color-ink);
+  caret-color: var(--color-ink);
+}
+
+[data-theme="dark"] .input-field:hover,
+[data-theme="dark"] .input-field:active,
+[data-theme="dark"] .input-field:focus-within {
+  background-color: var(--dk-card-elevated-bg);
+  border-color: var(--dk-input-hover-border);
+}
+
+[data-theme="dark"] .input-field:focus,
+[data-theme="dark"] .input-field:focus-visible {
+  border-color: var(--dk-input-focus-border);
+}
+
+[data-theme="dark"] .input-field::placeholder {
+  color: var(--dk-input-placeholder);
+}
+
+/* Autofill in dark mode */
+[data-theme="dark"] .input-field:-webkit-autofill,
+[data-theme="dark"] .input-field:-webkit-autofill:hover,
+[data-theme="dark"] .input-field:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--dk-input-bg) inset !important;
+  -webkit-text-fill-color: var(--color-ink) !important;
+  background-color: var(--dk-input-bg) !important;
+}
+
+/* Completed input */
+[data-theme="dark"] .input-field-completed {
+  background-color: var(--dk-card-bg) !important;
+}
+
+/* Dropdown & sidebar items */
+[data-theme="dark"] .dropdown-item:hover:not(:disabled),
+[data-theme="dark"] .dropdown-item:active:not(:disabled),
+[data-theme="dark"] .dropdown-item[data-highlighted],
+[data-theme="dark"] .dropdown-item[data-selected],
+[data-theme="dark"] .dropdown-item[aria-selected="true"],
+[data-theme="dark"] .dropdown-item:focus-visible,
+[data-theme="dark"] .dropdown-item[data-state="open"],
+[data-theme="dark"] .sidebar-profile-card:hover,
+[data-theme="dark"] .sidebar-profile-card:active,
+[data-theme="dark"] .sidebar-profile-card:focus-visible,
+[data-theme="dark"] .sidebar-profile-card[data-state="open"],
+[data-theme="dark"] .sidebar-profile-card[aria-expanded="true"] {
+  background-color: var(--dk-dropdown-hover);
+}
+
+/* Dropdown Content */
+[data-theme="dark"] .dropdown-content {
+  background-color: var(--dk-dropdown-bg);
+  border-color: var(--dk-dropdown-border);
+  box-shadow: var(--dk-dropdown-shadow);
+}
+
+/* Onboarding card */
+[data-theme="dark"] .onboarding-card {
+  background-color: var(--dk-card-bg);
+  border-color: var(--dk-card-border);
+}
+
+/* Buttons — secondary uses --color-surface (now dark) which is correct,
+   but the hover uses --sys-neutral-variant-container which also adapts.
+   Only fix what breaks. */
+[data-theme="dark"] .btn-secondary {
+  background-color: var(--dk-btn-secondary-bg);
+  color: var(--dk-btn-secondary-text);
+  border-color: var(--dk-btn-secondary-border);
+}
+
+[data-theme="dark"] .btn-secondary:hover:not(:disabled),
+[data-theme="dark"] .btn-secondary:active:not(:disabled),
+[data-theme="dark"] .btn-secondary:focus-visible:not(:disabled),
+[data-theme="dark"] .btn-secondary[data-state="open"]:not(:disabled),
+[data-theme="dark"] .btn-secondary[aria-expanded="true"]:not(:disabled) {
+  background-color: var(--dk-btn-secondary-hover-bg);
+}
+
+[data-theme="dark"] .btn-ghost:hover:not(:disabled),
+[data-theme="dark"] .btn-ghost:active:not(:disabled),
+[data-theme="dark"] .btn-ghost:focus-visible:not(:disabled),
+[data-theme="dark"] .btn-ghost[data-state="open"]:not(:disabled),
+[data-theme="dark"] .btn-ghost[aria-expanded="true"]:not(:disabled) {
+  background-color: var(--dk-btn-ghost-hover-bg);
+}
+
+/* feature cards on marketing page */
+[data-theme="dark"] .feature:hover,
+[data-theme="dark"] .feature:active,
+[data-theme="dark"] .feature:focus-within {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+}
+
+/* Page-header backdrop */
+[data-theme="dark"] .dashboard-page-header::before {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.20);
+}
+
+/* Mobile menu button */
+[data-theme="dark"] .mobile-menu-btn {
+  background-color: var(--dk-card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
+}
+
+/* Auth split panel — right side in dark */
+[data-theme="dark"] .auth-panel-right {
+  background-color: var(--dk-card-bg);
+}
+
+/* Textarea (settings / support form) */
+[data-theme="dark"] textarea {
+  background-color: var(--dk-input-bg) !important;
+  border-color: var(--dk-input-border) !important;
+  color: var(--color-ink) !important;
+}
+
+[data-theme="dark"] textarea:focus {
+  border-color: var(--dk-input-focus-border) !important;
+}
+
+/* Select elements (Preferences) */
+[data-theme="dark"] select.input-field {
+  background-color: var(--dk-input-bg);
+  border-color: var(--dk-input-border);
+  color: var(--color-ink);
+  /* Re-render the chevron SVG in light colour for dark mode */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%23f0f0f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>') !important;
+}
+
+/* Product page — keep trust elements readable */
+[data-theme="dark"] .checkout-trust-bar {
+  border-top-color: var(--dk-card-border);
+}
+
+/* Scrollbars — subtle dark styling */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--dk-sidebar-bg);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+/* bg-primary-container in dark */
+[data-theme="dark"] .bg-primary-container {
+  background-color: var(--sys-primary-container-role);
+}
+
+
+/* Skeleton Loaders */
+.skeleton {
+  background-color: var(--color-border);
+  border-radius: 8px;
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: .5; }
@@ -3888,4 +4138,323 @@ a {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge-dot,
+  .mobile-drawer-enter,
+  .animate-fade-in-up,
+  .animate-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HIW — How It Works redesign (two-column split)
+   All values use tokens from tokens.css only.
+   ═══════════════════════════════════════════════════════════ */
+
+.hiw-section {
+  background-color: var(--sys-neutral-color-role);
+}
+
+.hiw-header {
+  text-align: center;
+  margin-bottom: var(--sys-space-16);
+}
+
+.hiw-eyebrow {
+  display: inline-block;
+  font: var(--sys-font-label-large);
+  color: var(--sys-primary-color-role);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--sys-space-3);
+}
+
+.hiw-title {
+  font: var(--sys-font-display-small);
+  color: var(--sys-on-neutral-color-role);
+  margin-bottom: var(--sys-space-3);
+  letter-spacing: var(--sys-font-display-small-letter-spacing);
+}
+
+.hiw-subtitle {
+  font: var(--sys-font-body-large);
+  color: var(--color-ink-muted);
+}
+
+/* Two-column body */
+.hiw-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sys-space-12);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hiw-body {
+    grid-template-columns: 45fr 55fr;
+    gap: var(--sys-space-16);
+  }
+}
+
+/* ── Left: steps list ── */
+.hiw-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hiw-step {
+  display: flex;
+  gap: var(--sys-space-5);
+  align-items: flex-start;
+}
+
+.hiw-step-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hiw-step-number {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--sys-radius-full);
+  background-color: var(--sys-primary-container-role);
+  color: var(--sys-on-primary-container-role);
+  font: var(--sys-font-label-large);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hiw-step-number--secondary {
+  background-color: var(--sys-secondary-container-role);
+  color: var(--sys-on-secondary-container-role);
+}
+
+.hiw-step-number--tertiary {
+  background-color: var(--sys-tertiary-container-role);
+  color: var(--sys-on-tertiary-container-role);
+}
+
+.hiw-step-thread {
+  width: 2px;
+  flex: 1;
+  min-height: var(--sys-space-12);
+  background: linear-gradient(
+    to bottom,
+    var(--sys-outline-variant-color-role),
+    transparent
+  );
+  margin-top: var(--sys-space-2);
+}
+
+.hiw-step-body {
+  padding-bottom: var(--sys-space-12);
+  padding-top: var(--sys-space-2);
+}
+
+.hiw-step--last .hiw-step-body {
+  padding-bottom: 0;
+}
+
+.hiw-step-title {
+  font: var(--sys-font-title-large);
+  color: var(--sys-on-neutral-color-role);
+  margin-bottom: var(--sys-space-2);
+}
+
+.hiw-step-desc {
+  font: var(--sys-font-body-large);
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+/* ── Right: vignette ── */
+.hiw-vignette {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .hiw-vignette {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+.hiw-vignette-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sys-outline-color-role);
+  padding: var(--sys-space-2) 0;
+}
+
+.hiw-card {
+  background-color: var(--sys-neutral-container-lowest);
+  border-radius: var(--sys-radius-lg);
+  padding: var(--sys-space-5) var(--sys-space-6);
+  box-shadow: var(--sys-elevation-level2);
+  border: 1px solid var(--sys-outline-variant-color-role);
+  transition: box-shadow var(--sys-transition-base);
+}
+
+.hiw-card:hover {
+  box-shadow: var(--sys-elevation-level3);
+}
+
+.hiw-card-icon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-3);
+  margin-bottom: var(--sys-space-4);
+}
+
+.hiw-card-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--sys-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hiw-card-icon--primary {
+  background-color: var(--sys-primary-container-role);
+  color: var(--sys-on-primary-container-role);
+}
+
+.hiw-card-icon--secondary {
+  background-color: var(--sys-secondary-container-role);
+  color: var(--sys-on-secondary-container-role);
+}
+
+.hiw-card-icon--success {
+  background-color: var(--sys-success-conatiner-role);
+  color: var(--sys-on-success-container-role);
+}
+
+.hiw-card-label {
+  font: var(--sys-font-label-large);
+  color: var(--color-ink-muted);
+}
+
+.hiw-card-product-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sys-space-4);
+}
+
+.hiw-card-img-placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--sys-radius-sm);
+  background: linear-gradient(
+    135deg,
+    var(--sys-tertiary-container-role),
+    var(--sys-accent-container-role)
+  );
+  flex-shrink: 0;
+}
+
+.hiw-card-product-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sys-space-1);
+}
+
+.hiw-card-product-name {
+  font: var(--sys-font-title-medium);
+  color: var(--sys-on-neutral-color-role);
+}
+
+.hiw-card-product-price {
+  font: var(--sys-font-headline-small);
+  color: var(--sys-primary-color-role);
+}
+
+.hiw-link-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sys-space-3);
+  background-color: var(--sys-neutral-container-low);
+  border-radius: var(--sys-radius-full);
+  padding: var(--sys-space-2) var(--sys-space-3) var(--sys-space-2) var(--sys-space-4);
+  margin-bottom: var(--sys-space-3);
+  border: 1px solid var(--sys-outline-variant-color-role);
+}
+
+.hiw-link-url {
+  font: var(--sys-font-body-medium);
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hiw-link-url strong {
+  color: var(--sys-primary-color-role);
+  font-weight: 600;
+}
+
+.hiw-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--sys-radius-full);
+  background-color: var(--sys-primary-color-role);
+  color: var(--sys-on-primary-color-role);
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.hiw-link-share-hint {
+  font: var(--sys-font-body-small);
+  color: var(--color-ink-subtle);
+}
+
+.hiw-paid-amount {
+  font: var(--sys-font-display-small);
+  color: var(--sys-on-neutral-color-role);
+  margin-bottom: var(--sys-space-1);
+  letter-spacing: var(--sys-font-display-small-letter-spacing);
+}
+
+.hiw-paid-sub {
+  font: var(--sys-font-body-small);
+  color: var(--color-ink-subtle);
+}
+
+@media (max-width: 767px) {
+  .hiw-title {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    line-height: 1.2;
+  }
+  .hiw-card {
+    padding: var(--sys-space-4);
+  }
+  .hiw-paid-amount {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  }
 }

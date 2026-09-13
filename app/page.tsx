@@ -37,34 +37,18 @@ export default function LandingPage() {
 
   // Hero Animation State
   const [heroPhase, setHeroPhase] = React.useState<'idle' | 'paying' | 'success'>('idle');
-  const [heroAmount, setHeroAmount] = React.useState(22300);
+  const heroAmount = 25000;
 
   React.useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (heroPhase === 'idle') {
-      setHeroAmount(22300);
       timeout = setTimeout(() => {
         setHeroPhase('paying');
       }, 3000);
     } else if (heroPhase === 'paying') {
-      const startTime = Date.now();
-      const duration = 1000;
-      const startAmount = 22300;
-      const endAmount = 25000;
-      
-      const animateAmount = () => {
-        const elapsed = Date.now() - startTime;
-        if (elapsed < duration) {
-          const progress = elapsed / duration;
-          const easeOut = 1 - Math.pow(1 - progress, 3);
-          setHeroAmount(Math.floor(startAmount + (endAmount - startAmount) * easeOut));
-          requestAnimationFrame(animateAmount);
-        } else {
-          setHeroAmount(endAmount);
-          setHeroPhase('success');
-        }
-      };
-      requestAnimationFrame(animateAmount);
+      timeout = setTimeout(() => {
+        setHeroPhase('success');
+      }, 1000);
     } else if (heroPhase === 'success') {
       timeout = setTimeout(() => {
         setHeroPhase('idle');
@@ -143,7 +127,18 @@ export default function LandingPage() {
         {menuOpen && (
           <>
             <div className="landing-nav-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
-            <div className="landing-nav-mobile-drawer" role="menu">
+            <motion.div 
+              className="landing-nav-mobile-drawer" 
+              role="menu"
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, { offset, velocity }) => {
+                if (offset.y < -50 || velocity.y < -500) {
+                  setMenuOpen(false);
+                }
+              }}
+            >
               <a href="#hero" className={`landing-nav-link${activeSection === '#hero' ? ' active' : ''}`} onClick={() => { setActiveSection('#hero'); setMenuOpen(false); }} role="menuitem">Home</a>
               <a href="#features" className={`landing-nav-link${activeSection === '#features' ? ' active' : ''}`} onClick={() => { setActiveSection('#features'); setMenuOpen(false); }} role="menuitem">Features</a>
               <a href="#how-it-works" className={`landing-nav-link${activeSection === '#how-it-works' ? ' active' : ''}`} onClick={() => { setActiveSection('#how-it-works'); setMenuOpen(false); }} role="menuitem">How it Works</a>
@@ -154,7 +149,7 @@ export default function LandingPage() {
                   <Button size="lg" variant="primary" fullWidth className="hero-cta-primary">Get Started</Button>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </>
         )}
       </nav>
@@ -215,82 +210,42 @@ export default function LandingPage() {
           </div>
 
           <div className="hero-v2-right" aria-hidden="true">
-            <div className="hero-composition">
-              <div className="hc-glow" aria-hidden="true" />
-              <div className="hc-main-flow">
-                <div className="hc-card hc-product-card">
-                  <div className="hc-product-img">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                      <rect width="40" height="40" rx="8" fill="var(--color-surface)" />
-                      <rect x="8" y="16" width="24" height="18" rx="3" fill="var(--color-border)" />
-                      <path d="M15 16v-3a5 5 0 0 1 10 0v3" stroke="var(--color-ink-subtle)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-                      <rect x="17" y="20" width="6" height="4" rx="1.5" fill="var(--color-ink-subtle)" opacity=".6" />
-                    </svg>
-                  </div>
-                  <div className="hc-product-info">
-                    <div className="hc-product-name">Handmade Leather Bag</div>
-                    <div className="hc-product-price">₦25,000</div>
-                    <div className="hc-product-link">
-                      <div className="hc-product-link-btn">
-                        <Link2 size={12} />
-                        <span className="hc-link-text">sellsnap.link/greenbag</span>
-                        <Copy size={12} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="hc-card hc-checkout-card">
-                  <div className="hc-checkout-header">
-                    <span className="hc-checkout-label">Pay with</span>
-                    <div className="hc-checkout-provider">
-                      <span className="hc-flw-logo" aria-label="Flutterwave">
-                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                          <circle cx="7.5" cy="7.5" r="7.5" fill="#F5A623" />
-                          <path d="M4.5 8C4.5 6.5 5.8 5.2 7.5 5.2s3 1.3 3 2.8-1.3 2.8-3 2.8-3-1.3-3-2.8z" fill="white" opacity=".7" />
-                          <circle cx="7.5" cy="8" r="1.4" fill="white" />
-                        </svg>
-                      </span>
-                      Flutterwave
-                    </div>
-                  </div>
-                  <div className="hc-checkout-amount-row">
-                    <span className="hc-checkout-amt-label">Total amount</span>
-                    <span className="hc-checkout-amt">₦{heroAmount.toLocaleString()}</span>
-                  </div>
-                  <button className={`hc-pay-btn ${heroPhase === 'success' ? 'bg-success' : ''}`}>
-                    {heroPhase === 'idle' && 'Pay Now'}
-                    {heroPhase === 'paying' && (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader2 size={16} className="animate-spin" />
-                        Paying...
-                      </span>
-                    )}
-                    {heroPhase === 'success' && 'Paid ✓'}
-                  </button>
-                </div>
-
-                <div className={`hc-card hc-success-card ${heroPhase === 'success' ? 'is-visible' : ''}`}>
-                  <div className="hc-success-icon-wrap">
-                    <CheckCircle2 size={20} />
-                  </div>
-                  <div className="hc-success-text">
-                    <div className="hc-success-title">Payment Successful</div>
-                    <div className="hc-success-sub">₦25,000 received</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hc-share-stack">
-                <div className="hc-share-card">
-                  <span className="hc-share-icon hc-share-icon--whatsapp"><MessageCircle size={13} /></span>
-                </div>
-                <div className="hc-share-card">
-                  <span className="hc-share-icon hc-share-icon--instagram"><Instagram size={13} /></span>
-                </div>
-                <div className="hc-share-card">
-                  <span className="hc-share-icon hc-share-icon--facebook"><Facebook size={13} /></span>
-                </div>
+            <div className="hero-photo-wrapper" style={{ 
+              borderRadius: 'var(--sys-radius-xl)', 
+              overflow: 'hidden', 
+              boxShadow: 'var(--sys-elevation-level3)',
+              position: 'relative',
+              aspectRatio: '4/5',
+              width: '100%',
+              maxWidth: '480px',
+              margin: '0 auto'
+            }}>
+              <img 
+                src="/hero-still-life.png"
+                alt="A curated arrangement of seller products: a skincare serum, a handmade candle, a notebook, gold earrings, and eucalyptus — representing the diversity of what you can sell with SellSnap"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <div style={{
+                position: 'absolute',
+                bottom: '24px',
+                left: '24px',
+                right: '24px',
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                backdropFilter: 'blur(8px)',
+                borderRadius: 'var(--sys-radius-lg)',
+                padding: 'var(--sys-space-4)',
+                boxShadow: 'var(--sys-elevation-level2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                 <div>
+                   <div className="text-body-sm font-medium" style={{ color: 'var(--color-ink-muted)' }}>Sell anything online</div>
+                   <div className="text-h2" style={{ color: 'var(--color-brand)', fontWeight: 'bold' }}>One payment link.</div>
+                 </div>
+                 <div style={{ width: '40px', height: '40px', backgroundColor: 'var(--color-brand)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
+                   <ArrowRight size={20} />
+                 </div>
               </div>
             </div>
           </div>
@@ -304,60 +259,146 @@ export default function LandingPage() {
       <StickyStorySection />
 
       {/* ── 4. How It Works Section ───────────────────────────── */}
-      <section className="section" id="how-it-works">
+      <section className="section hiw-section" id="how-it-works">
         <div className="container">
-          <div className="section-header animate-fade-in-up">
-            <h2 className="section-title">How SellSnap Works</h2>
-            <p className="section-subtitle">Start selling in three simple steps.</p>
+
+          {/* Section header */}
+          <div className="hiw-header animate-fade-in-up">
+            <span className="hiw-eyebrow">Simple by design</span>
+            <h2 className="hiw-title">How SellSnap Works</h2>
+            <p className="hiw-subtitle">Three steps. One link. Paid.</p>
           </div>
-          <motion.div 
-            className="steps-grid"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
-            }}
-          >
-            <motion.div 
-              className="step-card"
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+
+          {/* Two-column body */}
+          <div className="hiw-body">
+
+            {/* LEFT — numbered steps with vertical connector */}
+            <motion.ol
+              className="hiw-steps"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.18 } } }}
             >
-              <div className="step-badge">01</div>
-              <div className="step-icon-wrap"><Upload size={28} /></div>
-              <h3 className="step-title">Upload Product</h3>
-              <p className="step-desc">Create your product with a photo, price, and description.</p>
-            </motion.div>
-            <motion.div 
-              className="step-card"
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+              {/* Step 01 */}
+              <motion.li
+                className="hiw-step"
+                variants={{ hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-step-left">
+                  <div className="hiw-step-number">01</div>
+                  <div className="hiw-step-thread" aria-hidden="true" />
+                </div>
+                <div className="hiw-step-body">
+                  <h3 className="hiw-step-title">Upload your product</h3>
+                  <p className="hiw-step-desc">Add a photo, price, and description. Takes less than a minute — no store, no code.</p>
+                </div>
+              </motion.li>
+
+              {/* Step 02 */}
+              <motion.li
+                className="hiw-step"
+                variants={{ hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-step-left">
+                  <div className="hiw-step-number hiw-step-number--secondary">02</div>
+                  <div className="hiw-step-thread" aria-hidden="true" />
+                </div>
+                <div className="hiw-step-body">
+                  <h3 className="hiw-step-title">Share your payment link</h3>
+                  <p className="hiw-step-desc">SellSnap generates a unique link. Share it anywhere — WhatsApp, Instagram, or any platform your customers use.</p>
+                </div>
+              </motion.li>
+
+              {/* Step 03 */}
+              <motion.li
+                className="hiw-step hiw-step--last"
+                variants={{ hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-step-left">
+                  <div className="hiw-step-number hiw-step-number--tertiary">03</div>
+                </div>
+                <div className="hiw-step-body">
+                  <h3 className="hiw-step-title">Get paid instantly</h3>
+                  <p className="hiw-step-desc">Your customer pays via Flutterwave. You receive a notification and funds settle directly to your account.</p>
+                </div>
+              </motion.li>
+            </motion.ol>
+
+            {/* RIGHT — product flow vignette */}
+            <motion.div
+              className="hiw-vignette"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.22, delayChildren: 0.1 } } }}
+              aria-hidden="true"
             >
-              <div className="step-badge">02</div>
-              <div className="step-icon-wrap"><Link2 size={28} /></div>
-              <h3 className="step-title">Share Link</h3>
-              <p className="step-desc">Share your payment link anywhere your customers are.</p>
+              {/* Card 1 — product created */}
+              <motion.div
+                className="hiw-card hiw-card--product"
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-card-icon-row">
+                  <div className="hiw-card-icon hiw-card-icon--primary"><Upload size={16} /></div>
+                  <span className="hiw-card-label">Product created</span>
+                </div>
+                <div className="hiw-card-product-row">
+                  <div className="hiw-card-img-placeholder" aria-hidden="true" />
+                  <div className="hiw-card-product-info">
+                    <div className="hiw-card-product-name">Handmade Soy Candle</div>
+                    <div className="hiw-card-product-price">₦8,500</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Connector arrow */}
+              <div className="hiw-vignette-arrow" aria-hidden="true">
+                <ArrowRight size={16} />
+              </div>
+
+              {/* Card 2 — link generated */}
+              <motion.div
+                className="hiw-card hiw-card--link"
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-card-icon-row">
+                  <div className="hiw-card-icon hiw-card-icon--secondary"><Link2 size={16} /></div>
+                  <span className="hiw-card-label">Link generated</span>
+                </div>
+                <div className="hiw-link-pill">
+                  <span className="hiw-link-url">sellsnap.io/<strong>soycandle</strong></span>
+                  <span className="hiw-copy-btn"><Copy size={13} /></span>
+                </div>
+                <p className="hiw-link-share-hint">Share anywhere your customers are</p>
+              </motion.div>
+
+              {/* Connector arrow */}
+              <div className="hiw-vignette-arrow" aria-hidden="true">
+                <ArrowRight size={16} />
+              </div>
+
+              {/* Card 3 — payment confirmed */}
+              <motion.div
+                className="hiw-card hiw-card--paid"
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+              >
+                <div className="hiw-card-icon-row">
+                  <div className="hiw-card-icon hiw-card-icon--success"><CheckCircle2 size={16} /></div>
+                  <span className="hiw-card-label">Payment confirmed</span>
+                </div>
+                <div className="hiw-paid-amount">₦8,500</div>
+                <p className="hiw-paid-sub">Received via Flutterwave · Just now</p>
+              </motion.div>
             </motion.div>
-            <motion.div 
-              className="step-card"
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
-            >
-              <div className="step-badge">03</div>
-              <div className="step-icon-wrap"><CreditCard size={28} /></div>
-              <h3 className="step-title">Get Paid</h3>
-              <p className="step-desc">Receive payments instantly and securely into your account.</p>
-            </motion.div>
-          </motion.div>
+
+          </div>
         </div>
       </section>
 
+
       {/* ── 5. Why SellSnap Section ("Built for Social Commerce") */}
       <section className="section" id="social-commerce" style={{ position: 'relative', overflow: 'hidden' }}>
-        <div className="sc-bg-container" style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-          <div className="auth-glow-center"></div>
-          <div className="auth-orb-tl"></div>
-          <div className="auth-orb-br"></div>
-        </div>
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
           <div className="social-commerce-grid">
             <div className="sc-left">
@@ -376,41 +417,41 @@ export default function LandingPage() {
             </div>
             
             <div className="sc-right" aria-hidden="true">
-              <div className="sc-right-container">
-                <div className="sc-orbit-system">
-                  <div className="sc-float-card sc-pos-1">
-                    <div className="sc-float-inner">
-                      <span className="sc-icon sc-icon-wa"><MessageCircle size={16} /></span>
-                      <span className="text-body-sm font-medium">WhatsApp</span>
-                    </div>
+              <div className="bento-grid">
+                <div className="bento-card square">
+                  <div className="bento-icon-wrapper" style={{ color: '#25D366' }}>
+                    <MessageCircle size={24} />
                   </div>
-                  
-                  <div className="sc-float-card sc-pos-2">
-                    <div className="sc-float-inner">
-                      <span className="sc-icon sc-icon-ig"><Instagram size={16} /></span>
-                      <span className="text-body-sm font-medium">Instagram</span>
-                    </div>
+                  <div>
+                    <h3 className="text-h2">WhatsApp</h3>
+                    <p className="text-body-sm text-ink-muted">Close sales directly in DMs.</p>
                   </div>
-                  
-                  <div className="sc-float-card sc-pos-3">
-                    <div className="sc-float-inner">
-                      <span className="sc-icon sc-icon-fb"><Facebook size={16} /></span>
-                      <span className="text-body-sm font-medium">Facebook</span>
-                    </div>
+                </div>
+                <div className="bento-card wide">
+                  <div className="bento-icon-wrapper" style={{ color: '#E1306C' }}>
+                    <Instagram size={24} />
                   </div>
-
-                  <div className="sc-float-card sc-pos-4">
-                    <div className="sc-float-inner">
-                      <span className="sc-icon sc-icon-notify"><Zap size={16} /></span>
-                      <span className="text-body-sm font-medium">Instant Alerts</span>
-                    </div>
+                  <div>
+                    <h3 className="text-h2">Instagram</h3>
+                    <p className="text-body-sm text-ink-muted">Turn followers into customers with link in bio.</p>
                   </div>
-                  
-                  <div className="sc-float-card sc-pos-5">
-                    <div className="sc-float-inner">
-                      <span className="sc-icon sc-icon-pay"><ShieldCheck size={16} /></span>
-                      <span className="text-body-sm font-medium">Secure Payment</span>
-                    </div>
+                </div>
+                <div className="bento-card wide">
+                  <div className="bento-icon-wrapper" style={{ color: '#1877F2' }}>
+                    <Facebook size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-h2">Facebook</h3>
+                    <p className="text-body-sm text-ink-muted">Monetize your audience on Facebook seamlessly.</p>
+                  </div>
+                </div>
+                <div className="bento-card square">
+                  <div className="bento-icon-wrapper" style={{ color: 'var(--color-brand)' }}>
+                    <Zap size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-h2">Anywhere</h3>
+                    <p className="text-body-sm text-ink-muted">It's just a link.</p>
                   </div>
                 </div>
               </div>
@@ -485,22 +526,24 @@ export default function LandingPage() {
       </section>
 
       {/* ── 8. Final Call To Action ───────────────────────────── */}
-      <section className="section final-cta-section" id="cta">
-        <div className="container">
-          <div className="final-cta-card animate-fade-in-up">
-            <h2 className="text-display text-center cta-heading">Start selling today.</h2>
-            <p className="text-body text-center max-w-lg mx-auto cta-subtitle">
+      <section className="section final-cta-section" id="cta" style={{ backgroundColor: 'var(--primitive-primary20)', padding: 'var(--sys-space-30) 20px', margin: 'var(--sys-space-20) 0', borderRadius: 'var(--sys-radius-xl)', overflow: 'hidden' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+          <div className="final-cta-card animate-fade-in-up" style={{ backgroundColor: 'transparent', border: 'none', boxShadow: 'none' }}>
+            <h2 className="text-display text-center cta-heading" style={{ color: 'var(--primitive-primary90)', marginBottom: 'var(--sys-space-6)' }}>Start selling today.</h2>
+            <p className="text-body text-center max-w-lg mx-auto cta-subtitle" style={{ color: 'var(--primitive-primary80)', marginBottom: 'var(--sys-space-8)' }}>
               Create products, generate payment links and receive payments in minutes.
             </p>
             <div className="cta-actions flex justify-center gap-6 flex-wrap">
               <Link href="/auth">
-                <Button size="lg" variant="primary">Create Free Account</Button>
+                <Button size="lg" variant="primary" style={{ backgroundColor: 'var(--primitive-primary90)', color: 'var(--primitive-primary10)', boxShadow: 'var(--sys-elevation-glow)' }}>
+                  Create Free Account
+                </Button>
               </Link>
             </div>
-            <div className="cta-trust-indicators">
-              <div className="cta-trust-item"><Check size={18} /> No monthly fees</div>
-              <div className="cta-trust-item"><Zap size={18} /> Setup in under 60 seconds</div>
-              <div className="cta-trust-item"><ShieldCheck size={18} /> Powered by Flutterwave</div>
+            <div className="cta-trust-indicators" style={{ color: 'var(--primitive-primary70)', marginTop: 'var(--sys-space-12)', display: 'flex', gap: 'var(--sys-space-8)', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div className="cta-trust-item flex items-center gap-2"><Check size={18} /> No monthly fees</div>
+              <div className="cta-trust-item flex items-center gap-2"><Zap size={18} /> Setup in under 60 seconds</div>
+              <div className="cta-trust-item flex items-center gap-2"><ShieldCheck size={18} /> Powered by Flutterwave</div>
             </div>
           </div>
         </div>
