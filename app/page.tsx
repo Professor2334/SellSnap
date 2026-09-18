@@ -530,8 +530,8 @@ export default function LandingPage() {
       <section className="section final-cta-section" id="cta" style={{ backgroundColor: 'var(--primitive-primary20)', padding: 'var(--sys-space-30) 20px', margin: 'var(--sys-space-20) 0', borderRadius: 'var(--sys-radius-xl)', overflow: 'hidden' }}>
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
           <div className="final-cta-card animate-fade-in-up" style={{ backgroundColor: 'transparent', border: 'none', boxShadow: 'none' }}>
-            <h2 className="text-display text-center cta-heading" style={{ color: 'var(--primitive-primary90)', marginBottom: 'var(--sys-space-6)' }}>Start selling today.</h2>
-            <p className="text-body text-center max-w-lg mx-auto cta-subtitle" style={{ color: 'var(--primitive-primary80)', marginBottom: 'var(--sys-space-8)' }}>
+            <h2 className="text-display text-center cta-heading" style={{ color: 'var(--primitive-primary100)', marginBottom: 'var(--sys-space-6)' }}>Start selling today.</h2>
+            <p className="text-body text-center max-w-lg mx-auto cta-subtitle" style={{ color: 'var(--primitive-primary95)', marginBottom: 'var(--sys-space-8)' }}>
               Create products, generate payment links and receive payments in minutes.
             </p>
             <div className="cta-actions flex justify-center gap-6 flex-wrap">
@@ -541,7 +541,7 @@ export default function LandingPage() {
                 </Button>
               </Link>
             </div>
-            <div className="cta-trust-indicators" style={{ color: 'var(--primitive-primary70)', marginTop: 'var(--sys-space-12)', display: 'flex', gap: 'var(--sys-space-8)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="cta-trust-indicators" style={{ color: 'var(--primitive-primary90)', marginTop: 'var(--sys-space-12)', display: 'flex', gap: 'var(--sys-space-8)', justifyContent: 'center', flexWrap: 'wrap' }}>
               <div className="cta-trust-item flex items-center gap-2"><Check size={18} /> No monthly fees</div>
               <div className="cta-trust-item flex items-center gap-2"><Zap size={18} /> Setup in under 60 seconds</div>
               <div className="cta-trust-item flex items-center gap-2"><ShieldCheck size={18} /> Powered by Flutterwave</div>

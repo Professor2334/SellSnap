@@ -83,7 +83,7 @@ export function PageHeader({
   return (
     <div className={`dashboard-page-header ${staticOnMobile ? 'static-mobile' : ''}`}>
       <div>
-        <h1 className="text-display font-bold text-ink" style={{ marginBottom: 8 }}>{title}</h1>
+        <h1 className="font-bold text-ink" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', marginBottom: 4 }}>{title}</h1>
         <p className="text-body-sm text-ink-muted" style={{ opacity: 0.9 }}>{subtitle}</p>
       </div>
       {action && <div className="dashboard-page-header-action">{action}</div>}

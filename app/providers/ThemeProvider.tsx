@@ -8,71 +8,83 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   isDark: boolean;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/** Resolve whether a given preference results in a dark UI. */
+function resolveIsDark(preference: Theme): boolean {
+  if (preference === 'dark') return true;
+  if (preference === 'light') return false;
+  // 'system'
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } catch {
+    return false;
+  }
+}
+
+/** Apply data-theme to the document root immediately. */
+function applyToDOM(dark: boolean): void {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
+  // Start with safe SSR-friendly defaults — never read the DOM or localStorage here.
+  const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [theme, setThemeState] = useState<Theme>('system');
 
+  // On first mount: read persisted preference and sync everything up.
   useEffect(() => {
-    let currentTheme: Theme = 'system';
-    
-    // Read stored theme synchronously during initial effect execution
+    let stored: Theme = 'system';
     try {
-      const storedTheme = localStorage.getItem('sellsnap-theme') as Theme | null;
-      if (storedTheme) {
-        currentTheme = storedTheme;
-        if (theme === 'system') { // Only update state if it hasn't been changed yet
-           setThemeState(storedTheme);
-        } else {
-           currentTheme = theme;
-        }
-      } else {
-         currentTheme = theme;
-      }
-    } catch (e) {
-      currentTheme = theme;
+      const v = localStorage.getItem('sellsnap-theme') as Theme | null;
+      if (v === 'light' || v === 'dark' || v === 'system') stored = v;
+    } catch {
+      // localStorage unavailable — stay on 'system'
     }
+    const dark = resolveIsDark(stored);
+    setThemeState(stored);
+    setIsDark(dark);
+    applyToDOM(dark);
+    setMounted(true);
 
-    const root = document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const applyTheme = (themeToApply: Theme) => {
-      const resolvedDark = themeToApply === 'dark' || (themeToApply === 'system' && mediaQuery.matches);
-      setIsDark(resolvedDark);
-      
-      if (resolvedDark) {
-        root.setAttribute('data-theme', 'dark');
-      } else {
-        root.setAttribute('data-theme', 'light');
+    // Follow OS preference changes when on 'system' mode.
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const onMQChange = (e: MediaQueryListEvent) => {
+      // Only react if the user hasn't pinned a specific theme.
+      let current: Theme = 'system';
+      try {
+        const v = localStorage.getItem('sellsnap-theme') as Theme | null;
+        if (v === 'light' || v === 'dark' || v === 'system') current = v;
+      } catch { /* ignore */ }
+      if (current === 'system') {
+        setIsDark(e.matches);
+        applyToDOM(e.matches);
       }
     };
-
-    applyTheme(currentTheme);
-
-    const listener = () => {
-      if (currentTheme === 'system') {
-        applyTheme('system');
-      }
-    };
-
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, [theme]);
+    mq.addEventListener('change', onMQChange);
+    return () => mq.removeEventListener('change', onMQChange);
+  }, []);
 
   const setTheme = (newTheme: Theme) => {
+    // Persist preference.
     try {
       localStorage.setItem('sellsnap-theme', newTheme);
-      setThemeState(newTheme);
-    } catch (e) {
+    } catch {
       // ignore
     }
+    // Apply immediately — no waiting for a useEffect cycle.
+    const dark = resolveIsDark(newTheme);
+    setThemeState(newTheme);
+    setIsDark(dark);
+    applyToDOM(dark);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+    <ThemeContext.Provider value={{ theme, setTheme, isDark, mounted }}>
       {children}
     </ThemeContext.Provider>
   );

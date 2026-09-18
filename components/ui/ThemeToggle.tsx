@@ -5,7 +5,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/app/providers/ThemeProvider';
 
 export function ThemeToggle() {
-  const { theme, setTheme, isDark } = useTheme();
+  const { theme, setTheme, isDark, mounted } = useTheme();
 
   return (
     <button
@@ -25,10 +25,14 @@ export function ThemeToggle() {
         transition: 'all 0.2s ease',
       }}
     >
-      {isDark ? (
-        <Moon size={16} aria-hidden="true" />
+      {mounted ? (
+        isDark ? (
+          <Moon size={16} aria-hidden="true" />
+        ) : (
+          <Sun size={16} aria-hidden="true" />
+        )
       ) : (
-        <Sun size={16} aria-hidden="true" />
+        <div style={{ width: 16, height: 16 }} />
       )}
     </button>
   );

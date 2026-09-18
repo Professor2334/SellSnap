@@ -48,8 +48,8 @@ export function DashboardOverview({
             <GrowthBadge value={revenueGrowth} />
           </div>
           <div className="card-value-container" style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span className="text-h2 font-bold text-ink-muted">₦</span>
-            <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>
+            <span className="font-bold text-ink-muted" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)' }}>₦</span>
+            <p className="font-bold text-ink" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', lineHeight: 1 }}>
               {totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </p>
           </div>
@@ -61,7 +61,7 @@ export function DashboardOverview({
             <GrowthBadge value={ordersGrowth} />
           </div>
           <div className="card-value-container">
-            <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>{totalOrders}</p>
+            <p className="font-bold text-ink" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', lineHeight: 1 }}>{totalOrders}</p>
           </div>
         </div>
 
@@ -71,7 +71,7 @@ export function DashboardOverview({
             <GrowthBadge value={productsGrowth} />
           </div>
           <div className="card-value-container">
-            <p className="text-h1 font-bold text-ink" style={{ lineHeight: 1 }}>{totalProducts}</p>
+            <p className="font-bold text-ink" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', lineHeight: 1 }}>{totalProducts}</p>
           </div>
         </div>
       </div>

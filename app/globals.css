@@ -382,7 +382,7 @@ a {
 .items-start { align-items: flex-start; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
-.gap-2 { gap: 8px; }
+.gap-2 { gap: var(--sys-space-1); }
 .gap-4 { gap: 16px; }
 .gap-6 { gap: 24px; }
 .gap-8 { gap: 32px; }
@@ -1825,7 +1825,7 @@ a {
 @media (min-width: 1024px) {
   .landing-nav-inner {
     margin: 20px auto;
-    padding: 16px 32px;
+    padding: 12px 32px;
   }
 }
 
@@ -2114,7 +2114,7 @@ a {
 @media (min-width: 1024px) {
   .hero-v2-container {
     padding: 0 var(--sys-space-8); /* 32px — matches .landing-nav-inner desktop padding */
-    grid-template-columns: 47fr 53fr;
+    grid-template-columns: 1fr max-content;
     gap: 48px;
   }
 }
@@ -3265,8 +3265,6 @@ a {
   align-items: center;
   gap: 8px;
   font: var(--sys-font-body-medium);
-  color: var(--sys-on-primary-container-role);
-  opacity: 0.75;
   font-weight: 500;
 }
 
